@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- <ion-title>inner_browser</ion-title> -->
+    <ion-buttons slot="primary" (click)="dismissModal()" class="ion-padding-end">
+      <ion-label color="primary">
+        Close
+      </ion-label>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="!browserLink">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </ng-container>
+  <ng-container *ngIf="browserLink">
+    <iframe [src]='iframeUrl' width="100%" height="100%" scrolling="no" framebroder="0">
+    </iframe>
+  </ng-container>
+  
+  <!-- <iframe src="https://www.bilibili.com/video/BV1Z44y1H76g" width="100%" height="100%">
+  </iframe> -->
+  <!-- http://www.calendar.ubc.ca/okanagan/ -->
+
+</ion-content>
