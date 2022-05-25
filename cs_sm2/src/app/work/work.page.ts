@@ -8,6 +8,8 @@ import { questionList } from '../sharedData/questionList';
 export class WorkPage implements OnInit {
   questionContent = questionList;
   currentString: string;
+  currentSeg: string = 'demo2';
+  
   constructor() {
     console.log(this.questionContent);
     this.assignCurrentString();
