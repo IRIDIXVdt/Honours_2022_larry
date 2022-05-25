@@ -31,3 +31,32 @@
     position: relative;
     transform: translate(-50%, 0);
 }
+
+.centerText {
+    // position: relative;
+    // left: 50%;
+    // transform: translate(-50%, 0);
+    text-align: center;
+    font-size: 32px;
+}
+
+.bottomButtons {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.bottomLeftButtons{
+    position: fixed;
+    bottom: 10px;
+    left: 10%;
+    transform: translate(-10%, 0);
+}
+
+.bottomRightButtons{
+    position: fixed;
+    bottom: 10px;
+    left: 90%;
+    transform: translate(-90%, 0);
+}
