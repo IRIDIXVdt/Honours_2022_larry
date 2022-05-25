@@ -8,7 +8,7 @@ import { WorkPageRoutingModule } from './work-routing.module';
 
 import { WorkPage } from './work.page';
 import { Demo1Page } from './demo1/demo1.page';
-// import {demo1Page}
+import { Demo2Page } from './demo2/demo2.page';
 
 @NgModule({
   imports: [
@@ -21,6 +21,7 @@ import { Demo1Page } from './demo1/demo1.page';
   declarations: [
     WorkPage,
     Demo1Page,
+    Demo2Page,
   ]
 })
 export class WorkPageModule { }

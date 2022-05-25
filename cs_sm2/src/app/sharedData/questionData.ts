@@ -1,4 +1,4 @@
-export class question{
-    term: string[];
-    answer: string[];
+export class deckItem{
+    question: string;
+    answer: string;
 }
