@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list >
+    <!-- [(ngModel)]="qtypeInstance"  -->
+    <ion-radio-group value="mc" (ionChange)="est()">
+      <ion-list-header>
+        <ion-label>Question Type</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-label>Basic</ion-label>
+        <ion-radio slot="start" value="ba"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Multiple Choice</ion-label>
+        <ion-radio slot="start" value="mc"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Coding</ion-label>
+        <ion-radio slot="start" value="co"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>
