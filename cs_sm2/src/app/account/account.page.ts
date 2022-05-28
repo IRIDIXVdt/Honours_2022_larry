@@ -24,7 +24,7 @@ export class AccountPage implements OnInit {
     this.modalCtrol.create({
       component: InnerBrowserPage,
       componentProps: {
-        content: "https://www.desmos.com/calculator",
+        content: "https://jupyterlite.github.io/demo/repl/index.html?kernel=python&toolbar=1",
       }
     }).then(modalres => {
       modalres.present();
