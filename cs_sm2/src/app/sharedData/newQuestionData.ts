@@ -5,7 +5,7 @@ export type questionItem = {
 	answer: string;
 };
 
-export const data: questionItem[] = [
+export const questionList: questionItem[] = [
 	{
 		questionType: "code",
 		tag: "cosc304",
