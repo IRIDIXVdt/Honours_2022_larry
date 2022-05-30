@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { QTypePage } from './q-type/q-type.page';
+import { FirebaseService } from 'src/app/service/firebase.service';
 
 @Component({
   selector: 'app-add',
@@ -14,13 +15,25 @@ export class AddPage implements OnInit {
     public alertController: AlertController,
     private modalCtrol: ModalController,
     public loadingController: LoadingController,
-    ) {
-    
+    private fs: FirebaseService
+  ) {
+
   }
 
   ngOnInit() {
-    
+
   }
+
+  addDataToDataBase(){
+    console.log("add data");
+    const data={
+      first:"name",
+      star:2,
+      thestThird:"thrid"
+    }
+    this.fs.addDataService("NewCollection", data);
+  }
+
   displayModal() {
     console.log("This is modal open action");
 
