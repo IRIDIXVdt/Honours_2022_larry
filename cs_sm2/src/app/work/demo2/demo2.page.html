@@ -13,10 +13,15 @@
       <ion-item-divider></ion-item-divider>
 
       <div class="answer" *ngIf="qList[index].questionType === 'code'">
-        <ion-input (ionFocus)="enableDisplay()" [(ngModel)]="userCode" placeholder="Your code here"></ion-input>
+        <ion-input #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode" placeholder="Your code here">
+        </ion-input>
       </div>
       <div class="answer" *ngIf="qList[index].questionType === 'multi'">
-        <ion-input (ionFocus)="enableDisplay()" [(ngModel)]="userMulti" placeholder="Your selection here"></ion-input>
+        <ion-input #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti" placeholder="Your selection here"
+          maxlength="1"></ion-input>
+      </div>
+      <div class="answer" *ngIf="qList[index].questionType === 'basic'">
+        <p></p>
       </div>
       <div *ngIf="displayAnswer">
         {{qList[index].answer}}
