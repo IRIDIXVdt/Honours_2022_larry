@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-add-question',
@@ -6,8 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-question.page.scss'],
 })
 export class AddQuestionPage implements OnInit {
-
-  constructor() { }
+  public Editor = ClassicEditor;
+  constructor() {
+    
+  }
 
   ngOnInit() {
   }
