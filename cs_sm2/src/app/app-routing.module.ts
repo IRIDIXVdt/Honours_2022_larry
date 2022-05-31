@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'demo1',
-    loadChildren: () => import('./work/demo1/demo1.module').then( m => m.Demo1PageModule)
+    loadChildren: () => import('./demo1/demo1.module').then( m => m.Demo1PageModule)
   },
   {
     path: 'tabs',
