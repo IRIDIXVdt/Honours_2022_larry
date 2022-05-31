@@ -26,6 +26,14 @@ const routes: Routes = [
   {
     path: 'stat',
     loadChildren: () => import('./stat/stat.module').then( m => m.StatPageModule)
+  },
+  {
+    path: 'demo1',
+    loadChildren: () => import('./work/demo1/demo1.module').then( m => m.Demo1PageModule)
+  },
+  {
+    path: 'tabs',
+    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
   }
 ];
 
