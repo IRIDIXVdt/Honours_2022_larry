@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { QTypePage } from './q-type/q-type.page';
-import { FirebaseService } from 'src/app/service/firebase.service';
+import { FirebaseService } from 'src/app/share/service/firebase.service';
 
 @Component({
   selector: 'app-add',

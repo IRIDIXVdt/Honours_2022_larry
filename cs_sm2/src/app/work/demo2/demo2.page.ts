@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { questionList } from 'src/app/sharedData/newQuestionData';
+import { questionList } from 'src/app/share/data/newQuestionData';
 @Component({
   selector: 'app-demo2',
   templateUrl: './demo2.page.html',

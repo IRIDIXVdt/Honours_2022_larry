@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { questionList } from '../../sharedData/questionList';
+import { questionList } from '../../share/data/questionList';
 
 @Component({
   selector: 'app-demo1',
