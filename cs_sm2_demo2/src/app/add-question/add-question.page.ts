@@ -11,6 +11,8 @@ import { FirebaseService } from '../shared/service/firebase.service';
 })
 export class AddQuestionPage implements OnInit {
   public Editor = ClassicEditor;
+  public qType: string = 'ba';
+  public qCourse: string = 'cosc304';
   constructor(
     public alertController: AlertController,
     private modalCtrol: ModalController,
@@ -30,7 +32,8 @@ export class AddQuestionPage implements OnInit {
       star:2,
       thestThird:"thrid"
     }
-    this.fs.addDataService("NewCollection", data);
+    // this.fs.addDataService("NewCollection", data);
+    console.log(data);
   }
 
 
