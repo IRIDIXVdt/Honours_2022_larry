@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { FirebaseService } from '../shared/service/firebase.service';
-import { QTypePage } from './q-type/q-type.page';
+// import { QTypePage } from './q-type/q-type.page';
 
 @Component({
   selector: 'app-add-question',
@@ -33,21 +33,5 @@ export class AddQuestionPage implements OnInit {
     this.fs.addDataService("NewCollection", data);
   }
 
-  displayModal() {
-    console.log("This is modal open action");
-
-    this.modalCtrol.create({
-      component: QTypePage,
-      // componentProps: {
-      //   content: "https://www.desmos.com/calculator",
-      // }
-    }).then(modalres => {
-      modalres.present();
-      modalres.onDidDismiss().then(res => {
-        console.log("cover modal dismiss!");
-      })
-
-    })
-  }
 
 }
