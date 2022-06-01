@@ -5,5 +5,53 @@
 </ion-header>
 
 <ion-content>
+  <ng-container *ngIf="sessionEnd">
+    <!-- Congratulations! You have finished this deck for now. -->
+    <div class="centerText">
+      <p>Congratulations! You have finished this deck for now.</p>
+    </div>
+  </ng-container>
 
+  <ng-container *ngIf="!sessionEnd">
+    <div class="ionMaxContent">
+      <div class="centerText">
+        <p>{{qList[index].question}}</p>
+        <ng-container *ngIf="displayAnswer">
+          <ion-item-divider>
+          </ion-item-divider>
+          <p>{{qList[index].answer}}</p>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="bottomButtons">
+      <!-- the list of buttons indicating how were the user remembers the term -->
+      <ng-container *ngIf="!displayAnswer">
+        <ion-button size="large" class="ion-padding-end" (click)="check()">
+          Display Answer
+        </ion-button>
+      </ng-container>
+
+      <ng-container *ngIf="displayAnswer">
+        <ion-button size="large" class="ion-padding-end" (click)="answer(0)">
+          Again
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(1)">
+          Hard
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(2)">
+          Good
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(3)">
+          Easy
+        </ion-button>
+      </ng-container>
+    </div>
+    <div class="bottomRightButtons">
+      <ion-button size="large" class="ion-padding-end">
+        More
+      </ion-button>
+    </div>
+
+  </ng-container>
 </ion-content>
