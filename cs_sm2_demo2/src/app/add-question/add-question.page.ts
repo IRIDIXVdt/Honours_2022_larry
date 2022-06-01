@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { FirebaseService } from '../shared/service/firebase.service';
+import { AlertService } from '../shared/service/alert.service';
+
+import { LoadingController } from '@ionic/angular';
 // import { QTypePage } from './q-type/q-type.page';
 
 @Component({
@@ -16,17 +18,17 @@ export class AddQuestionPage implements OnInit {
   public modelAnswer;//trakcing answer field
   @ViewChild('editorQuestion') editorQuestion: CKEditorComponent;
   @ViewChild('editorAnswer') editorAnswer: CKEditorComponent;
+  @ViewChild('editorDescription') editorDescription: CKEditorComponent;
 
   public qType: string = 'ba';//question type
   public qCourse: string = 'cosc304';//course type
 
   constructor(
-    public alertController: AlertController,
-    private modalCtrol: ModalController,
     public loadingController: LoadingController,
-    private fs: FirebaseService
+    private fs: FirebaseService,
+    private al: AlertService,
   ) {
-    
+
   }
 
   updateEditorField() {
@@ -41,23 +43,43 @@ export class AddQuestionPage implements OnInit {
       this.editorQuestion.editorInstance.setData('<p>Coding Question:</p>');
       this.editorAnswer.editorInstance.setData('');
     }
+    this.editorDescription.editorInstance.setData('<p>Description:&nbsp;</p>');
   }
 
   ngOnInit() {
   }
 
-  addDataToDataBase() {
+  async addDataToDataBase() {
     console.log("add data");
     const data = {
       qType: this.qType,
       qCourse: this.qCourse,
       question: this.editorQuestion.editorInstance.getData(),
       answer: this.editorAnswer.editorInstance.getData(),
+      description: this.editorDescription.editorInstance.getData(),
     }
-    this.fs.addDataService("QuestionCollection", data);
+
+    const loading = await this.loadingController.create({
+      message: 'Please wait...',
+    });
+    loading.present();
+
+    this.fs.addDataService("QuestionCollection", data).then((res: any) => {
+      console.log(res);
+
+      console.log("Changes saved to cloud!");
+      this.al.displayMessage("Upload Success");
+      loading.dismiss();
+      console.log("need saving to false");
+    }).catch((error) => {
+      loading.dismiss();
+      this.al.alertMessage('Failed to save changes, Try again! ');
+      console.log("error", error);
+    })
     this.updateEditorField();
     console.log(data);
   }
+
 
 
 }
