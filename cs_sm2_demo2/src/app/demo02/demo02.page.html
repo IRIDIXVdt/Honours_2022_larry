@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>demo02</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="sessionEnd">
+    <!-- Congratulations! You have finished this deck for now. -->
+    <div class="centerText">
+      <p>Congratulations! You have finished this deck for now.</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!sessionEnd">
+    <div class="ionMaxContent">
+      <div class="centerText">
+        <p>{{qList[index].question}}</p>
+
+        <ion-item-divider></ion-item-divider>
+
+        <div class="answer" *ngIf="qList[index].questionType === 'code'">
+          <ion-input #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode" placeholder="Your code here">
+          </ion-input>
+        </div>
+        <div class="answer" *ngIf="qList[index].questionType === 'multi'">
+          <ion-input #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti" placeholder="Your selection here"
+            maxlength="1"></ion-input>
+        </div>
+        <div class="answer" *ngIf="qList[index].questionType === 'basic'">
+          <p></p>
+        </div>
+        <div *ngIf="displayAnswer">
+          {{qList[index].answer}}
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="bottomButtons">
+      <!-- the list of buttons indicating how were the user remembers the term -->
+
+      <ion-button size="large" class="ion-padding-end" (click)="check()"
+        *ngIf="!displayAnswer && !disableDisplayAnswer">
+        Display Answer
+      </ion-button>
+      <ion-button size="large" class="ion-padding-end" disabled="true" *ngIf="!displayAnswer && disableDisplayAnswer">
+        Display Answer
+      </ion-button>
+
+
+      <ng-container *ngIf="displayAnswer">
+        <ion-button size="large" class="ion-padding-end" (click)="answer(0)">
+          Again
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(1)">
+          Hard
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(2)">
+          Good
+        </ion-button>
+        <ion-button size="large" class="ion-padding-end" (click)="answer(3)">
+          Easy
+        </ion-button>
+      </ng-container>
+    </div>
+    <div class="bottomRightButtons">
+      <ion-button size="large" class="ion-padding-end">
+        More
+      </ion-button>
+    </div>
+
+  </ng-container>
+</ion-content>

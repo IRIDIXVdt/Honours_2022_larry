@@ -8,7 +8,7 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 export class WorkPage implements OnInit {
   // questionContent = questionList;
   // currentString: string;
-  currentSeg: string = 'demo2';
+  // currentSeg: string = 'demo2';
   // public Editor = ClassicEditor;
   constructor() {
     // console.log(this.questionContent);

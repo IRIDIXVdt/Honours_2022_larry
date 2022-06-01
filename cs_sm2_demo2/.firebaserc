@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "cosc-spaced-repetition": {
+      "hosting": {
+        "app": [
+          "cosc-spaced-repetition"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "cosc-spaced-repetition"
+  }
+}
