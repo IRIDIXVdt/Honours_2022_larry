@@ -1,9 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>browse</ion-title>
+    <ion-title>Question List</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <ng-container *ngIf="questionList">
+    <ion-list>
+      <ion-item *ngFor="let item of questionList">
+        <div [innerHTML]="item.description"></div>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+  <ng-container *ngIf="!questionList">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </ng-container>
 </ion-content>
