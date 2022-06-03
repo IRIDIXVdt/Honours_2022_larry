@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { FirebaseService } from '../shared/service/firebase.service';
-import { AlertService } from '../shared/service/alert.service';
 import { DatabaseService } from '../shared/service/database.service';
-import { LoadingController } from '@ionic/angular';
 // import { QTypePage } from './q-type/q-type.page';
 
 @Component({

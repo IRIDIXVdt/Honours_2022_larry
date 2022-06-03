@@ -14,4 +14,12 @@ export class FirebaseService {
   getDataService() {
     return this.db.collection("TestCollection1").snapshotChanges();
   }
+
+  getUserDataByIdService(collection,userId) {
+    return this.db.collection(collection).doc(userId).snapshotChanges();
+  }
+
+  getCollection(collection){
+    return this.db.collection(collection).snapshotChanges();
+  }
 }

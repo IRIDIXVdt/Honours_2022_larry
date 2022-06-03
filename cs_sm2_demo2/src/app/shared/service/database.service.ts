@@ -28,9 +28,30 @@ export class DatabaseService {
       return true;
     }).catch((error) => {
       loading.dismiss();
-      this.al.alertMessage('Failed to save changes, Try again! ');
+      this.al.alertMessage('Fail to save changes. Try again!');
       console.log("error", error);
     })
     return false;
+  }
+
+  async getQuestionData() {
+    this.fs.getCollection("QuestionCollection").subscribe((res) => {
+      const questionList = res.map(e => {
+        return {
+          id: e.payload.doc.id,
+          qType: e.payload.doc.data()['qType'],
+          qCourse: e.payload.doc.data()['qCourse'],
+          question: e.payload.doc.data()['question'],
+          answer: e.payload.doc.data()['answer'],
+          description: e.payload.doc.data()['description'],
+        }
+      })
+      console.log(questionList);
+      return questionList;
+    }, (err: any) => {
+      console.log(err);
+      this.al.alertMessage('Fail to fetch data from database. Try again!');
+      return null;
+    })
   }
 }
