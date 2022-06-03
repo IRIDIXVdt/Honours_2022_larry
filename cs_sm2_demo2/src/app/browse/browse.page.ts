@@ -8,16 +8,31 @@ import { DatabaseService } from '../shared/service/database.service';
 })
 export class BrowsePage implements OnInit {
 
-  questionList: any[] = [];
+  questionList;
   constructor(
     private dt: DatabaseService,
   ) {
     // this.questionList = this.dt.getQuestionData() as unknown as any[];
-    this.questionList = this.testList;
+    // this.questionList = this.dt.getQuestionData();
+    // console.log(this.dt.returnOne());
+    this.getData();
 
   }
 
   ngOnInit() {
+
+    // console.log(this.questionList.length());
+
+  }
+
+  async getData() {
+    // this.questionList = await this.dt.getQuestionData();
+    this.dt.getQuestionData()
+      .then((v) => {
+        console.log(v);
+        this.questionList = v;
+      })
+
   }
 
   testList = [

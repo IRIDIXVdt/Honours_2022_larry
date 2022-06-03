@@ -9,7 +9,7 @@
   <ng-container *ngIf="questionList">
     <ion-list>
       <ion-item *ngFor="let item of questionList">
-        <div [innerHTML]="item.question"></div>
+        <div [innerHTML]="item.description"></div>
       </ion-item>
     </ion-list>
   </ng-container>

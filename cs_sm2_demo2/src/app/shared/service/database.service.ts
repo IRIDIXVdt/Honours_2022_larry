@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+// import { questionList } from '../data/questionList';
 import { AlertService } from './alert.service';
 import { FirebaseService } from './firebase.service';
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
-
   constructor(
     public loadingController: LoadingController,
     private fs: FirebaseService,
@@ -34,24 +34,27 @@ export class DatabaseService {
     return false;
   }
 
-  async getQuestionData() {
-    this.fs.getCollection("QuestionCollection").subscribe((res) => {
-      const questionList = res.map(e => {
-        return {
-          id: e.payload.doc.id,
-          qType: e.payload.doc.data()['qType'],
-          qCourse: e.payload.doc.data()['qCourse'],
-          question: e.payload.doc.data()['question'],
-          answer: e.payload.doc.data()['answer'],
-          description: e.payload.doc.data()['description'],
-        }
-      })
-      console.log(questionList);
-      return questionList;
-    }, (err: any) => {
-      console.log(err);
-      this.al.alertMessage('Fail to fetch data from database. Try again!');
-      return null;
-    })
+  getQuestionData() {
+    return new Promise((resolve, reject) => {
+      this.fs.getCollection("QuestionCollection")
+        .subscribe((res) => {
+          const receiveValue = res.map(e => {
+            return {
+              id: e.payload.doc.id,
+              qType: e.payload.doc.data()['qType'],
+              qCourse: e.payload.doc.data()['qCourse'],
+              question: e.payload.doc.data()['question'],
+              answer: e.payload.doc.data()['answer'],
+              description: e.payload.doc.data()['description'],
+            }
+          });
+          resolve(receiveValue);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.al.alertMessage('Fail to fetch data from database. Try again!');
+        })
+    });
   }
+  
 }
