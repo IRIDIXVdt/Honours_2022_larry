@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./account/account.module').then( m => m.AccountPageModule)
   },
   {
+    path: 'login',
+    loadChildren: () => import('./account/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
     path: 'add-question',
     loadChildren: () => import('./add-question/add-question.module').then( m => m.AddQuestionPageModule)
   },
