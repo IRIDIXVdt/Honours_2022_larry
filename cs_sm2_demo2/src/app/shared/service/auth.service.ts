@@ -11,10 +11,9 @@ import { AlertController, LoadingController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class AuthService {
-
   userData: any; // Save logged in user data
   authentication: boolean;
-  adminAuth: boolean;
+  adminAuth: boolean; 
   admin: boolean;
   Login: boolean;
   constructor(
@@ -24,34 +23,23 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public alertController: AlertController,
     public loadingController: LoadingController,
-  ) {
+  ) { }
 
-  }
-
-
-  //return true if has logged in
-  isLogin() {
+  isLogin() { //return true if has logged in
     /* console.log("login check ",localStorage.getItem('user')) */
-    if (!JSON.parse(localStorage.getItem('user'))) {
-      return false;
-    } else {
-      return true;
-    }
+    return JSON.parse(localStorage.getItem('user'));
   }
 
-  isAdmin() {
-    if (!JSON.parse(localStorage.getItem('admin'))) {
-      return false;
-    } else {
-      return true;
-    }
+  isAdmin() {//return true if is admin
+    return JSON.parse(localStorage.getItem('admin'));
   }
 
   getUserEmail() {
     if (this.isLogin) {
-      return JSON.parse(localStorage.getItem('user')).email
+      return JSON.parse(localStorage.getItem('user')).email;
     }
   }
+
   // Sign in with email/password
   async SignIn(email, password) {
     // create a loading animation
@@ -66,11 +54,8 @@ export class AuthService {
           localStorage.setItem('user', JSON.stringify(this.userData)); // stored user's info in to local database (refresh page will not reset) 
           this.getIsAdmin();  // check the user is admin or not
           this.SetUserData(result.user);  // update user's info to remote database
-
           loading.dismiss(); //stop the loading animation
-
           this.router.navigate(['tabs/page-space-er']);
-
         } else {
           loading.dismiss(); //stop the loading animation
           this.signInErrorAlert("Email is not verified");
@@ -86,11 +71,7 @@ export class AuthService {
         } else {
           this.signInErrorAlert('Check your internet connection');
         }
-
       })
-
-
-
   }
 
   async signInErrorAlert(message) {
@@ -113,23 +94,21 @@ export class AuthService {
     loading.present();  // present loading animation
     return this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        let articles: any[];
-        let articlesCollection = this.afs.collection('articles').snapshotChanges();
-        const subscription = articlesCollection.subscribe(res => {
-          articles = res.map(e => {
-            return {
-              docId: e.payload.doc.id,
-              segment: e.payload.doc.data()['segment']
-            }
-          })
-          let readArticles = this.initializeUserReadArticles(articles)
-          this.afs.collection("usersCollection").doc(result.user.uid)
-            .set({
-              readArticles: readArticles
-            })
-        });
-
-
+        // let articles: any[];
+        // let articlesCollection = this.afs.collection('articles').snapshotChanges();
+        // const subscription = articlesCollection.subscribe(res => {
+        //   articles = res.map(e => {
+        //     return {
+        //       docId: e.payload.doc.id,
+        //       segment: e.payload.doc.data()['segment']
+        //     }
+        //   })
+        //   let readArticles = this.initializeUserReadArticles(articles)
+        //   this.afs.collection("usersCollection").doc(result.user.uid)
+        //     .set({
+        //       readArticles: readArticles
+        //     })
+        // });
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
         loading.dismiss(); // when get result from firebase, stop the loading animation
@@ -147,17 +126,17 @@ export class AuthService {
       })
   }
 
-  initializeUserReadArticles(articles: any[]) {
-    let data: any[] = [];
-    for (let i = 0; i < articles.length; i++) {
-      let segmentsLength = articles[i]['segment'].length;
-      let segmentRead = Array(segmentsLength).fill(false);//initalize all segments read to be false
-      let newData = { id: articles[i]['docId'], segment: segmentRead };
-      data.push(newData);
-    }
-    console.log(data);
-    return data;
-  }
+  // initializeUserReadArticles(articles: any[]) {
+  //   let data: any[] = [];
+  //   for (let i = 0; i < articles.length; i++) {
+  //     let segmentsLength = articles[i]['segment'].length;
+  //     let segmentRead = Array(segmentsLength).fill(false);//initalize all segments read to be false
+  //     let newData = { id: articles[i]['docId'], segment: segmentRead };
+  //     data.push(newData);
+  //   }
+  //   console.log(data);
+  //   return data;
+  // }
 
   // Send email verfificaiton when new user sign up
   async SendVerificationMail() {
