@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../account/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
       },
       {
+        path: 'account/verify',
+        loadChildren: () => import('../account/email-verify/email-verify.module').then(m => m.EmailVerifyPageModule)
+      },
+      {
         path: 'add',
         loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
       },
