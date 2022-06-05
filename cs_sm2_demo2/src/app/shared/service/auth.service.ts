@@ -12,10 +12,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 })
 export class AuthService {
   userData: any; // Save logged in user data
-  authentication: boolean;
-  adminAuth: boolean; 
   admin: boolean;
-  Login: boolean;
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -235,6 +232,10 @@ export class AuthService {
     return this.AuthLogin(new firebase.auth.GoogleAuthProvider());
   }
 
+  consoleLog(){
+    console.log('one');
+  }
+
   // Auth logic to run auth providers
   AuthLogin(provider) {
     return this.afAuth.signInWithPopup(provider)
@@ -242,7 +243,7 @@ export class AuthService {
         this.ngZone.run(() => {
           this.userData = result.user;
           localStorage.setItem('user', JSON.stringify(this.userData));
-          this.router.navigate(['tabs/page-space-er']);
+          this.router.navigate(['tabs/account']);//new routing 
           this.getIsAdmin();
         })
         this.SetUserData(result.user);
@@ -308,7 +309,7 @@ export class AuthService {
   }
 
 
-  getIsAdmin() {
+  getIsAdmin() {//intended to be used after login, this determines if it is admin
     if (this.isLogin()) {
       const adminAccess = this.afs.collection("adminUsers", ref => ref.where('email', '==', JSON.parse(localStorage.getItem('user')).email)).snapshotChanges();
       const subscription = adminAccess.subscribe(res => {
