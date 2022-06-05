@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('../account/register/register.module').then(m => m.RegisterPageModule)
       },
       {
+        path: 'account/reset',
+        loadChildren: () => import('../account/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
+      },
+      {
         path: 'add',
         loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
       },
