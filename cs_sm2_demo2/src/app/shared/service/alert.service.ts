@@ -20,14 +20,6 @@ export class AlertService {
     });
     await alert2.present();
   }
-  async alertMessage(message) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      message: message,
-      buttons: ['Ok']
-    });
-    await alert.present();
-  }
 
   async VerificationMailAlert(message) {
     const alert = await this.alertController.create({
