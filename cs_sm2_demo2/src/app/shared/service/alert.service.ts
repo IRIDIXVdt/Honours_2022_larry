@@ -21,7 +21,7 @@ export class AlertService {
     await alert2.present();
   }
 
-  async VerificationMailAlert(message) {
+  async verifyMessage(message: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       subHeader: '',
@@ -48,13 +48,24 @@ export class AlertService {
     }
   }
 
-  async signInErrorAlert(message) {
+  async signInErrorAlert(message: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Invalid',
       subHeader: '',
       message: message,
       buttons: ['Retry'],
+    });
+    await alert.present();
+  }
+
+  async warningMessage(message: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Warning',
+      subHeader: '',
+      message: message,
+      buttons: ['Ok']
     });
     await alert.present();
   }

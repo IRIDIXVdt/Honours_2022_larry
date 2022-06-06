@@ -27,7 +27,6 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     
     public loadingController: LoadingController,
-    public alertController: AlertController,
   ) { }
 
   isLogin() { //return true if has logged in
@@ -143,12 +142,12 @@ export class AuthService {
     (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
         loading.dismiss();
-        this.als.VerificationMailAlert('A new verify email has been send to your email address');
+        this.als.verifyMessage('A new verify email has been send to your email address');
         console.log("re-send email");
 
       }).catch((error) => {
         loading.dismiss();
-        this.als.VerificationMailAlert('The request is too frequent. Please try again later');
+        this.als.verifyMessage('The request is too frequent. Please try again later');
       })
   }
 
@@ -162,16 +161,16 @@ export class AuthService {
       .then(() => {
         this.SignOutRestPassword();
         loading.dismiss();
-        this.resetPasswordAlert("A reset password email has been send to you");
+        this.als.displayMessage("A reset password email has been send to you");
       }).catch((error) => {
         this.SignOutRestPassword();
         loading.dismiss();
         console.log(error)
         if (error == 'FirebaseError: Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
-          this.resetPasswordAlert("The email address has not been registered");
+          this.als.displayMessage("The email address has not been registered");
         }
         else {
-          this.resetPasswordAlert("Check your internet Connection");
+          this.als.displayMessage("Check your internet Connection");
         }
 
       })
@@ -183,19 +182,10 @@ export class AuthService {
       localStorage.setItem('user', null);
     }).catch((error) => {
       console.log(error);
-      this.resetPasswordAlert("Check your internet Connection");
+      this.als.displayMessage("Check your internet Connection");
     })
   }
 
-  async resetPasswordAlert(message) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      subHeader: '',
-      message: message,
-      buttons: ['Ok']
-    });
-    await alert.present();
-  }
 
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
@@ -258,7 +248,7 @@ export class AuthService {
           this.router.navigate([this.homeAddress]);
         }).catch((error) => {
           console.log(error);
-          this.resetPasswordAlert("Check your internet Connection");
+          this.als.displayMessage("Check your internet Connection");
         })
       }
     });
@@ -290,28 +280,6 @@ export class AuthService {
     }
   }
 
-  async notAdminAlert() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Warring',
-      subHeader: '',
-      message: 'You are not administrator, you can not edit articles. Contact cyclops@gmail.com for more info',
-      buttons: ['Ok']
-    });
-    await alert.present();
-  }
-
-  async noLoginAlert() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Warring',
-      subHeader: '',
-      message: "Please Log in",
-      buttons: ['Ok']
-    });
-    await alert.present();
-  }
-
   async updateUserName(displayName) {
     const loading = await this.loadingController.create({
       message: 'Please wait...',
@@ -329,7 +297,7 @@ export class AuthService {
     }).catch((error) => {
       console.log(error);
       loading.dismiss();
-      this.resetPasswordAlert("Check your internet Connection");
+      this.als.displayMessage("Check your internet Connection");
     });
 
 
