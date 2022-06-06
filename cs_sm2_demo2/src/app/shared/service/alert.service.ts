@@ -37,7 +37,13 @@ export class AlertService {
     });
     await alert.present();
     const { role } = await alert.onDidDismiss();
-    return role != "cancel";
+    if (role != "cancel") {
+      const loading = await this.loadingController.create({
+        message: 'Please wait...',
+      });
+      loading.present();
+      return loading;
+    }
   }
 
 }
