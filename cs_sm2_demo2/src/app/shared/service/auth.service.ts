@@ -15,6 +15,10 @@ import { AlertService } from './alert.service';
 export class AuthService {
   userData: any; // Save logged in user data
   admin: boolean;
+  
+  verifyAddress: string = 'tabs/account/verify';
+  homeAddress: string = 'tabs/account';
+
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -55,11 +59,10 @@ export class AuthService {
           this.getIsAdmin();  // check the user is admin or not
           this.SetUserData(result.user);  // update user's info to remote database
           loading.dismiss(); //stop the loading animation
-          this.router.navigate(['tabs/page-space-er']);
+          this.router.navigate([this.homeAddress]);
         } else {
           loading.dismiss(); //stop the loading animation
-          this.signInErrorAlert("Email is not verified");
-
+          this.als.signInErrorAlert("Email is not verified");
         }
       }).catch((error) => {
         loading.dismiss();
@@ -67,23 +70,14 @@ export class AuthService {
         console.log("Login error: ", error);
         if (error == 'FirebaseError: Firebase: The password is invalid or the user does not have a password. (auth/wrong-password).'
           || error == 'FirebaseError: Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
-          this.signInErrorAlert('The email or password is invalid');
+          this.als.signInErrorAlert('The email or password is invalid');
         } else {
-          this.signInErrorAlert('Check your internet connection');
+          this.als.signInErrorAlert('Check your internet connection');
         }
       })
   }
 
-  async signInErrorAlert(message) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Invalid',
-      subHeader: '',
-      message: message,
-      buttons: ['Retry']
-    });
-    await alert.present();
-  }
+  
 
   // Sign up with email/password
   async SignUp(email, password) {
@@ -117,10 +111,10 @@ export class AuthService {
         loading.dismiss();
         console.log(error);
         if (error == 'FirebaseError: Firebase: The email address is already in use by another account. (auth/email-already-in-use).') {
-          this.signInErrorAlert('The email address is already in use by another account, try another one');
+          this.als.signInErrorAlert('The email address is already in use by another account, try another one');
         }
         else {
-          this.signInErrorAlert('Check your internet connection');
+          this.als.signInErrorAlert('Check your internet connection');
         }
 
       })
@@ -136,7 +130,7 @@ export class AuthService {
       .then(() => {
         loading.dismiss();
         console.log("send email")
-        this.router.navigate(['verify-email']);
+        this.router.navigate([this.verifyAddress]);
       })
   }
 
@@ -234,12 +228,12 @@ export class AuthService {
         this.ngZone.run(() => {
           this.userData = result.user;
           localStorage.setItem('user', JSON.stringify(this.userData));
-          this.router.navigate(['tabs/account']);//new routing 
+          this.router.navigate([this.homeAddress]);//new routing 
           this.getIsAdmin();
         })
         this.SetUserData(result.user);
       }).catch((error) => {
-        this.signInErrorAlert('Failed login with google');
+        this.als.signInErrorAlert('Failed login with google');
       })
   }
 
@@ -270,7 +264,7 @@ export class AuthService {
           localStorage.setItem('admin', JSON.stringify(false));
           localStorage.setItem('user', null);
           resultLoading.dismiss();
-          this.router.navigate(['tabs/account']);
+          this.router.navigate([this.homeAddress]);
         }).catch((error) => {
           console.log(error);
           this.resetPasswordAlert("Check your internet Connection");

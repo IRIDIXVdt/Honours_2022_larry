@@ -46,4 +46,15 @@ export class AlertService {
     }
   }
 
+  async signInErrorAlert(message) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Invalid',
+      subHeader: '',
+      message: message,
+      buttons: ['Retry'],
+    });
+    await alert.present();
+  }
+
 }
