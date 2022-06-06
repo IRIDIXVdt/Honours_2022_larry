@@ -25,8 +25,9 @@ export class AuthService {
     public als: AlertService,
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
-    public alertController: AlertController,
+    
     public loadingController: LoadingController,
+    public alertController: AlertController,
   ) { }
 
   isLogin() { //return true if has logged in
@@ -142,23 +143,13 @@ export class AuthService {
     (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
         loading.dismiss();
-        this.VerificationMailAlert('A new verify email has been send to your email address');
+        this.als.VerificationMailAlert('A new verify email has been send to your email address');
         console.log("re-send email");
 
       }).catch((error) => {
         loading.dismiss();
-        this.VerificationMailAlert('The request is too frequent. Please try again later');
+        this.als.VerificationMailAlert('The request is too frequent. Please try again later');
       })
-  }
-
-  async VerificationMailAlert(message) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      subHeader: '',
-      message: message,
-      buttons: ['Ok']
-    });
-    await alert.present();
   }
 
   // Reset Forggot password

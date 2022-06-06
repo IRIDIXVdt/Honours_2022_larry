@@ -29,6 +29,16 @@ export class AlertService {
     await alert.present();
   }
 
+  async VerificationMailAlert(message) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      subHeader: '',
+      message: message,
+      buttons: ['Ok']
+    });
+    await alert.present();
+  }
+
   async presentChoice(choiceMessage: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
