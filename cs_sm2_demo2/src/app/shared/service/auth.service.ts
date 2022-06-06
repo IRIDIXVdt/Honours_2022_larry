@@ -15,7 +15,7 @@ import { AlertService } from './alert.service';
 export class AuthService {
   userData: any; // Save logged in user data
   admin: boolean;
-  
+
   verifyAddress: string = 'tabs/account/verify';
   homeAddress: string = 'tabs/account';
 
@@ -25,8 +25,6 @@ export class AuthService {
     public als: AlertService,
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
-    
-    public loadingController: LoadingController,
   ) { }
 
   isLogin() { //return true if has logged in
@@ -44,13 +42,27 @@ export class AuthService {
     }
   }
 
+  async SignOut() {  // Sign out 
+    await this.als.presentChoice("test message").then(async (resultLoading) => {
+      if (resultLoading != null) {
+        return this.afAuth.signOut().then(() => {
+          this.userData = null;
+          localStorage.setItem('admin', JSON.stringify(false));
+          localStorage.setItem('user', null);
+          resultLoading.dismiss();
+          this.router.navigate([this.homeAddress]);
+        }).catch((error) => {
+          console.log(error);
+          this.als.displayMessage("Check your internet Connection");
+        })
+      }
+    });
+  }
+
   // Sign in with email/password
   async SignIn(email, password) {
     // create a loading animation
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
     this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         if (result.user.emailVerified) { // if user's account has been verified
@@ -77,15 +89,12 @@ export class AuthService {
       })
   }
 
-  
+
 
   // Sign up with email/password
   async SignUp(email, password) {
     // create a loading animation
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
     return this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
         // let articles: any[];
@@ -122,10 +131,7 @@ export class AuthService {
 
   // Send email verfificaiton when new user sign up
   async SendVerificationMail() {
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
     return (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
         loading.dismiss();
@@ -135,10 +141,7 @@ export class AuthService {
   }
 
   async reSendVerificationMail() {
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
     (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
         loading.dismiss();
@@ -153,10 +156,7 @@ export class AuthService {
 
   // Reset Forggot password
   async ForgotPassword(passwordResetEmail) {
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
     return this.afAuth.sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
         this.SignOutRestPassword();
@@ -237,24 +237,6 @@ export class AuthService {
     })
   }
 
-  async SignOut() {  // Sign out 
-    await this.als.presentChoice("test message").then(async (resultLoading) => {
-      if (resultLoading != null) {
-        return this.afAuth.signOut().then(() => {
-          this.userData = null;
-          localStorage.setItem('admin', JSON.stringify(false));
-          localStorage.setItem('user', null);
-          resultLoading.dismiss();
-          this.router.navigate([this.homeAddress]);
-        }).catch((error) => {
-          console.log(error);
-          this.als.displayMessage("Check your internet Connection");
-        })
-      }
-    });
-  }
-
-
   getIsAdmin() {//intended to be used after login, this determines if it is admin
     if (this.isLogin()) {
       const adminAccess = this.afs.collection("adminUsers", ref => ref.where('email', '==', JSON.parse(localStorage.getItem('user')).email)).snapshotChanges();
@@ -270,7 +252,6 @@ export class AuthService {
           subscription.unsubscribe();
           return false;
         }
-
       });
     }
     else {
@@ -281,15 +262,11 @@ export class AuthService {
   }
 
   async updateUserName(displayName) {
-    const loading = await this.loadingController.create({
-      message: 'Please wait...',
-    });
-    loading.present();  // present loading animation
+    const loading = await this.als.startLoading();
 
     const profile = {
       displayName: displayName,
     };
-
     (await this.afAuth.currentUser).updateProfile(profile).then(() => {
       console.log('updated userName');
       this.updateUserData();
@@ -299,8 +276,6 @@ export class AuthService {
       loading.dismiss();
       this.als.displayMessage("Check your internet Connection");
     });
-
-
   }
 
   updateUserData() {
@@ -323,7 +298,5 @@ export class AuthService {
   getTime() {
     const myTimestamp = firebase.firestore.FieldValue.serverTimestamp();
     console.log(myTimestamp);
-
-
   }
 }

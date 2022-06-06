@@ -21,16 +21,6 @@ export class AlertService {
     await alert2.present();
   }
 
-  async verifyMessage(message: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      subHeader: '',
-      message: message,
-      buttons: ['Ok']
-    });
-    await alert.present();
-  }
-
   async presentChoice(choiceMessage: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
@@ -39,13 +29,16 @@ export class AlertService {
     });
     await alert.present();
     const { role } = await alert.onDidDismiss();
-    if (role != "cancel") {
-      const loading = await this.loadingController.create({
-        message: 'Please wait...',
-      });
-      loading.present();
-      return loading;
-    }
+    if (role != "cancel")
+      return this.startLoading();
+  }
+
+  async startLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Please wait...',
+    });
+    loading.present();
+    return loading;
   }
 
   async signInErrorAlert(message: string) {
@@ -55,17 +48,6 @@ export class AlertService {
       subHeader: '',
       message: message,
       buttons: ['Retry'],
-    });
-    await alert.present();
-  }
-
-  async warningMessage(message: string) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Warning',
-      subHeader: '',
-      message: message,
-      buttons: ['Ok']
     });
     await alert.present();
   }
