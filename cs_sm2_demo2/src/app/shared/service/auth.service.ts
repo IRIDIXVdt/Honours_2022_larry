@@ -145,12 +145,12 @@ export class AuthService {
     (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
         loading.dismiss();
-        this.als.verifyMessage('A new verify email has been send to your email address');
+        this.als.displayMessage('A new verify email has been send to your email address');
         console.log("re-send email");
 
       }).catch((error) => {
         loading.dismiss();
-        this.als.verifyMessage('The request is too frequent. Please try again later');
+        this.als.displayMessage('The request is too frequent. Please try again later');
       })
   }
 
