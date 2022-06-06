@@ -7,6 +7,8 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { Router } from "@angular/router";
 import { AlertController, LoadingController } from '@ionic/angular';
 
+import { AlertService } from './alert.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +22,7 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public alertController: AlertController,
     public loadingController: LoadingController,
+    public as: AlertService,
   ) { }
 
   isLogin() { //return true if has logged in
@@ -232,7 +235,7 @@ export class AuthService {
     return this.AuthLogin(new firebase.auth.GoogleAuthProvider());
   }
 
-  consoleLog(){
+  consoleLog() {
     console.log('one');
   }
 
@@ -273,39 +276,54 @@ export class AuthService {
 
   // Sign out 
   async SignOut() {
-
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      message: 'Do you want to sign-out?',
-      buttons: ['Cancel', 'Yes']
-    });
-    await alert.present();
-    const { role } = await alert.onDidDismiss();
-    if (role == "cancel") {
-      console.log("cancel!");
-    } else { // if user confirm to logout
-
-      const loading = await this.loadingController.create({
-        message: 'Please wait...',
+    // const alert = await this.alertController.create({
+    //   cssClass: 'my-custom-class',
+    //   message: 'Do you want to sign-out?',
+    //   buttons: ['Cancel', 'Yes']
+    // });
+    // await alert.present();
+    // const { role } = await alert.onDidDismiss();
+    // if (role == "cancel") {
+    //   console.log("cancel!");
+    // } else { // if user confirm to logout
+    //   const loading = await this.loadingController.create({
+    //     message: 'Please wait...',
+    //   });
+    //   loading.present();  // present loading animation
+    //   return this.afAuth.signOut().then(() => {
+    //     /* localStorage.removeItem('user'); */
+    //     this.userData = null;
+    //     localStorage.setItem('admin', JSON.stringify(false));
+    //     localStorage.setItem('user', null);
+    //     loading.dismiss();
+    //     this.router.navigate(['tabs/account']);
+    //   }).catch((error) => {
+    //     console.log(error);
+    //     loading.dismiss();
+    //     this.resetPasswordAlert("Check your internet Connection");
+    //   })
+    // }
+    await this.as.presentChoice("test message")
+      .then(async (result) => {
+        if (result) {
+          const loading = await this.loadingController.create({
+            message: 'Please wait...',
+          });
+          loading.present();
+          return this.afAuth.signOut().then(() => {
+            /* localStorage.removeItem('user'); */
+            this.userData = null;
+            localStorage.setItem('admin', JSON.stringify(false));
+            localStorage.setItem('user', null);
+            loading.dismiss();
+            this.router.navigate(['tabs/account']);
+          }).catch((error) => {
+            console.log(error);
+            loading.dismiss();
+            this.resetPasswordAlert("Check your internet Connection");
+          })
+        }
       });
-      loading.present();  // present loading animation
-
-      return this.afAuth.signOut().then(() => {
-        /* localStorage.removeItem('user'); */
-        this.userData = null;
-        localStorage.setItem('admin', JSON.stringify(false));
-        localStorage.setItem('user', null);
-
-        loading.dismiss();
-        this.router.navigate(['tabs/page-space-er']);
-      }).catch((error) => {
-        console.log(error);
-        loading.dismiss();
-        this.resetPasswordAlert("Check your internet Connection");
-      })
-    }
-
-
   }
 
 

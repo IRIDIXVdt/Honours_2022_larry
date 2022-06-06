@@ -9,14 +9,14 @@ import { AuthService } from '../shared/service/auth.service';
 export class AccountPage implements OnInit {
 
   constructor(
-    public au: AuthService,
+    public aus: AuthService,
   ) { }
 
   ngOnInit() {
   }
 
   displayLogininfo(){
-    console.log(this.au.isLogin());
+    console.log(this.aus.isLogin());
     console.log(localStorage);
   }
 }
