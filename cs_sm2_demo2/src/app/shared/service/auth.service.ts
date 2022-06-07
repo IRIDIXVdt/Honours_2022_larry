@@ -35,12 +35,12 @@ export class AuthService {
   }
 
   isAdmin() {//return true if is admin
-    return JSON.parse(localStorage.getItem('admin'));
+    return JSON.parse(localStorage.getItem('admin')) != null;
   }
 
   getUserEmail() {
     if (this.isLogin()) {
-      console.log('can get email');
+      // console.log('can get email');
       return JSON.parse(localStorage.getItem('user')).email;
     }
   }

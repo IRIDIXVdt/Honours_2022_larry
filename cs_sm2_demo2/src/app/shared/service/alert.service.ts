@@ -21,6 +21,17 @@ export class AlertService {
     await alert2.present();
   }
 
+  async expectFeedback(inputMessage: string) {
+    const alert2 = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      message: inputMessage,
+      buttons: ['OK']
+    });
+    await alert2.present();
+    const { role } = await alert2.onDidDismiss();
+    return role;
+  }
+
   async presentChoice(choiceMessage: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
