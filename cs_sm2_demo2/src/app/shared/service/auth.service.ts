@@ -25,8 +25,13 @@ export class AuthService {
   ) { }
 
   isLogin() { //return true if has logged in
-    /* console.log("login check ",localStorage.getItem('user')) */
-    return JSON.parse(localStorage.getItem('user'));
+    // console.log("login check ", localStorage.getItem('user') != undefined);
+    // return JSON.parse(localStorage.getItem('user'));
+    // if(JSON.parse(localStorage.getItem('user')) != null){
+    //   console.log(JSON.parse(localStorage.getItem('user')));
+    //   return true;
+    // }
+    return JSON.parse(localStorage.getItem('user')) != null;
   }
 
   isAdmin() {//return true if is admin
@@ -34,7 +39,8 @@ export class AuthService {
   }
 
   getUserEmail() {
-    if (this.isLogin) {
+    if (this.isLogin()) {
+      console.log('can get email');
       return JSON.parse(localStorage.getItem('user')).email;
     }
   }
