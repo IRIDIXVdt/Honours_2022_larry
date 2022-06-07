@@ -98,7 +98,7 @@ export class AuthService {
       }).catch((error) => {
         loading.dismiss();
         console.log(error);
-        if (error == 'FirebaseError: Firebase: The email address is already in use by another account. (auth/email-already-in-use).')
+        if (error.toString().includes("email-already-in-use"))
           this.als.signInErrorAlert('The email address is already in use by another account, try another one');
         else
           this.als.signInErrorAlert('Check your internet connection');
