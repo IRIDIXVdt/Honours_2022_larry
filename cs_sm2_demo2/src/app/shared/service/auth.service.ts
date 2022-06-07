@@ -1,12 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
-import { User } from "../data/userSchema";
-import firebase from 'firebase/compat/app';
-
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from "@angular/router";
-import { AlertController, LoadingController } from '@ionic/angular';
 
+import firebase from 'firebase/compat/app';
+
+import { User } from "../data/userSchema";
 import { AlertService } from './alert.service';
 
 @Injectable({
@@ -15,10 +14,8 @@ import { AlertService } from './alert.service';
 export class AuthService {
   userData: any; // Save logged in user data
   admin: boolean;
-
-  verifyAddress: string = 'tabs/account/verify';
+  verifyAddress: string = 'tabs/account/verify';//routing address for verify email address
   homeAddress: string = 'tabs/account';
-
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -42,8 +39,8 @@ export class AuthService {
     }
   }
 
-  async SignOut() {  // Sign out 
-    await this.als.presentChoice("test message").then(async (resultLoading) => {
+  async signOut() {  // Sign out 
+    await this.als.presentChoice("Do you want to sign out?").then(async (resultLoading) => {
       if (resultLoading != null) {
         return this.afAuth.signOut().then(() => {
           this.userData = null;
@@ -60,7 +57,7 @@ export class AuthService {
   }
 
   // Sign in with email/password
-  async SignIn(email, password) {
+  async signIn(email, password) {
     // create a loading animation
     const loading = await this.als.startLoading();
     this.afAuth.signInWithEmailAndPassword(email, password)
@@ -69,7 +66,7 @@ export class AuthService {
           this.userData = result.user; // stored user's info in to local variable (refresh page will reset this variable)
           localStorage.setItem('user', JSON.stringify(this.userData)); // stored user's info in to local database (refresh page will not reset) 
           this.getIsAdmin();  // check the user is admin or not
-          this.SetUserData(result.user);  // update user's info to remote database
+          this.setUserData(result.user);  // update user's info to remote database
           loading.dismiss(); //stop the loading animation
           this.router.navigate([this.homeAddress]);
         } else {
@@ -89,48 +86,27 @@ export class AuthService {
       })
   }
 
-
-
   // Sign up with email/password
-  async SignUp(email, password) {
+  async signUp(email, password) {
     // create a loading animation
     const loading = await this.als.startLoading();
     return this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        // let articles: any[];
-        // let articlesCollection = this.afs.collection('articles').snapshotChanges();
-        // const subscription = articlesCollection.subscribe(res => {
-        //   articles = res.map(e => {
-        //     return {
-        //       docId: e.payload.doc.id,
-        //       segment: e.payload.doc.data()['segment']
-        //     }
-        //   })
-        //   let readArticles = this.initializeUserReadArticles(articles)
-        //   this.afs.collection("usersCollection").doc(result.user.uid)
-        //     .set({
-        //       readArticles: readArticles
-        //     })
-        // });
-        /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
+        //insert question set information
         loading.dismiss(); // when get result from firebase, stop the loading animation
-        this.SendVerificationMail();
+        this.sendVerificationMail();
       }).catch((error) => {
         loading.dismiss();
         console.log(error);
-        if (error == 'FirebaseError: Firebase: The email address is already in use by another account. (auth/email-already-in-use).') {
+        if (error == 'FirebaseError: Firebase: The email address is already in use by another account. (auth/email-already-in-use).')
           this.als.signInErrorAlert('The email address is already in use by another account, try another one');
-        }
-        else {
+        else
           this.als.signInErrorAlert('Check your internet connection');
-        }
-
       })
   }
 
   // Send email verfificaiton when new user sign up
-  async SendVerificationMail() {
+  async sendVerificationMail() {
     const loading = await this.als.startLoading();
     return (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
@@ -140,7 +116,7 @@ export class AuthService {
       })
   }
 
-  async reSendVerificationMail() {
+  async resendVerificationMail() {
     const loading = await this.als.startLoading();
     (await (this.afAuth.currentUser)).sendEmailVerification()
       .then(() => {
@@ -155,15 +131,15 @@ export class AuthService {
   }
 
   // Reset Forggot password
-  async ForgotPassword(passwordResetEmail) {
+  async forgotPassword(passwordResetEmail) {
     const loading = await this.als.startLoading();
     return this.afAuth.sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        this.SignOutRestPassword();
+        this.signOutAndResetPassword();
         loading.dismiss();
         this.als.displayMessage("A reset password email has been send to you");
       }).catch((error) => {
-        this.SignOutRestPassword();
+        this.signOutAndResetPassword();
         loading.dismiss();
         console.log(error)
         if (error == 'FirebaseError: Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
@@ -176,7 +152,7 @@ export class AuthService {
       })
   }
 
-  SignOutRestPassword() {
+  signOutAndResetPassword() {
     return this.afAuth.signOut().then(() => {
       localStorage.setItem('admin', JSON.stringify(false));
       localStorage.setItem('user', null);
@@ -185,7 +161,6 @@ export class AuthService {
       this.als.displayMessage("Check your internet Connection");
     })
   }
-
 
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
@@ -198,10 +173,6 @@ export class AuthService {
     return this.AuthLogin(new firebase.auth.GoogleAuthProvider());
   }
 
-  consoleLog() {
-    console.log('one');
-  }
-
   // Auth logic to run auth providers
   AuthLogin(provider) {
     return this.afAuth.signInWithPopup(provider)
@@ -212,7 +183,7 @@ export class AuthService {
           this.router.navigate([this.homeAddress]);//new routing 
           this.getIsAdmin();
         })
-        this.SetUserData(result.user);
+        this.setUserData(result.user);
       }).catch((error) => {
         this.als.signInErrorAlert('Failed login with google');
       })
@@ -221,7 +192,7 @@ export class AuthService {
   /* Setting up user data when sign in with username/password, 
   sign up with username/password and sign in with social auth  
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(user) {
+  setUserData(user) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const userData: User = {
       uid: user.uid,

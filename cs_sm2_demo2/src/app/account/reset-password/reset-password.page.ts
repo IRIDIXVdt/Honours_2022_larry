@@ -49,11 +49,11 @@ export class ResetPasswordPage implements OnInit {
         console.log("cancel!");
       } else {
         this.startTimer()
-        this.authService.ForgotPassword(email);
+        this.authService.forgotPassword(email);
       }
     } else {
       this.startTimer()
-      this.authService.ForgotPassword(email);
+      this.authService.forgotPassword(email);
     }
   }
 
