@@ -10,7 +10,7 @@ export class DatabaseService {
   constructor(
     public loadingController: LoadingController,
     private fs: FirebaseService,
-    private al: AlertService,
+    private als: AlertService,
   ) { }
 
   async addData(collection: string, data) {
@@ -22,13 +22,13 @@ export class DatabaseService {
     this.fs.addDataService(collection, data).then((res: any) => {
       console.log(res);
       console.log("Changes saved to cloud!");
-      this.al.displayMessage("Upload Success");
+      this.als.displayMessage("Upload Success");
       loading.dismiss();
       console.log("need saving to false");
       return true;
     }).catch((error) => {
       loading.dismiss();
-      this.al.alertMessage('Fail to save changes. Try again!');
+      this.als.displayMessage('Fail to save changes. Try again!');
       console.log("error", error);
     })
     return false;
@@ -52,7 +52,7 @@ export class DatabaseService {
         }, (err: any) => {
           console.log(err);
           reject();
-          this.al.alertMessage('Fail to fetch data from database. Try again!');
+          this.als.displayMessage('Fail to fetch data from database. Try again!');
         })
     });
   }

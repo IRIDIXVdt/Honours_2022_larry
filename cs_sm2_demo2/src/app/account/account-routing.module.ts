@@ -7,7 +7,19 @@ const routes: Routes = [
   {
     path: '',
     component: AccountPage
-  }
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'reset-password',
+    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
+  },
+  {
+    path: 'email-verify',
+    loadChildren: () => import('./email-verify/email-verify.module').then( m => m.EmailVerifyPageModule)
+  },
 ];
 
 @NgModule({

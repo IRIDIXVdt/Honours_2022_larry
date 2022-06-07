@@ -12,6 +12,22 @@ const routes: Routes = [
         loadChildren: () => import('../account/account.module').then(m => m.AccountPageModule)
       },
       {
+        path: 'account/login',
+        loadChildren: () => import('../account/login/login.module').then(m => m.LoginPageModule)
+      },
+      {
+        path: 'account/register',
+        loadChildren: () => import('../account/register/register.module').then(m => m.RegisterPageModule)
+      },
+      {
+        path: 'account/reset',
+        loadChildren: () => import('../account/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
+      },
+      {
+        path: 'account/verify',
+        loadChildren: () => import('../account/email-verify/email-verify.module').then(m => m.EmailVerifyPageModule)
+      },
+      {
         path: 'add',
         loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
       },

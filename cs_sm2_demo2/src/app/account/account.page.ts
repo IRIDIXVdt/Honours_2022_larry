@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../shared/service/auth.service';
 
 @Component({
   selector: 'app-account',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public aus: AuthService,
+  ) { }
 
   ngOnInit() {
   }
 
+  displayLogininfo(){
+    console.log(this.aus.isLogin());
+    console.log(localStorage);
+  }
 }
