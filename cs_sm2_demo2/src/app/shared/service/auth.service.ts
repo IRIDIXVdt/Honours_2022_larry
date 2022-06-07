@@ -71,18 +71,16 @@ export class AuthService {
           this.router.navigate([this.homeAddress]);
         } else {
           loading.dismiss(); //stop the loading animation
-          this.als.signInErrorAlert("Email is not verified");
+          this.als.signInErrorAlert('Email is not verified');
         }
       }).catch((error) => {
         loading.dismiss();
         this.userData = null;
         console.log("Login error: ", error);
-        if (error == 'FirebaseError: Firebase: The password is invalid or the user does not have a password. (auth/wrong-password).'
-          || error == 'FirebaseError: Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).') {
+        if (error.toString().includes('wrong-password') || error.toString().includes('user-not-found'))
           this.als.signInErrorAlert('The email or password is invalid');
-        } else {
+        else
           this.als.signInErrorAlert('Check your internet connection');
-        }
       })
   }
 
