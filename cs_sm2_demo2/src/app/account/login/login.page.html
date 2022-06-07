@@ -41,7 +41,7 @@
 
       <a routerLink="/tabs/account/reset-password" class="forgot-password-link">Forgot Password?</a>
 
-      <ion-button class="login-button" (click)="authService.SignIn(userEmail.value, userPwd.value)"
+      <ion-button class="login-button" (click)="authService.signIn(userEmail.value, userPwd.value)"
         [disabled]="signInForm.invalid" expand='block'>
         Login
       </ion-button>
