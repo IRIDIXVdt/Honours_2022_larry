@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { LoginGuard } from '../shared/guard/login.guard';
 
 const routes: Routes = [
   {
@@ -29,18 +30,22 @@ const routes: Routes = [
       },
       {
         path: 'add',
+        canActivate: [LoginGuard],
         loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
       },
       {
         path: 'browse',
+        canActivate: [LoginGuard],
         loadChildren: () => import('../browse/browse.module').then(m => m.BrowsePageModule)
       },
       {
         path: 'demo01',
+        canActivate: [LoginGuard],
         loadChildren: () => import('../demo01/demo01.module').then(m => m.Demo01PageModule)
       },
       {
         path: 'demo02',
+        canActivate: [LoginGuard],
         loadChildren: () => import('../demo02/demo02.module').then(m => m.Demo02PageModule)
       },
       {
@@ -60,4 +65,4 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }
