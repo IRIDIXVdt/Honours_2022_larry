@@ -15,7 +15,7 @@ export class AdminAccessGuard implements CanActivate {
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    console.log(this.aus.isLogin(), ' ------  ', this.aus.isAdmin());
+    // console.log(this.aus.isLogin(), ' ------  ', this.aus.isAdmin());
     if (!(this.aus.isLogin() && this.aus.isAdmin())) {
       this.als.expectFeedback("Please sign in as Admin to access this page.").then(w => {
         console.log(w);
