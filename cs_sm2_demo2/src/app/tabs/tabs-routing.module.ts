@@ -34,12 +34,12 @@ const routes: Routes = [
       },
       {
         path: 'add',
-        canActivate: [LoginGuard],
+        canActivate: [AdminAccessGuard],
         loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
       },
       {
         path: 'browse',
-        canActivate: [LoginGuard],
+        canActivate: [AdminAccessGuard],
         loadChildren: () => import('../browse/browse.module').then(m => m.BrowsePageModule)
       },
       {

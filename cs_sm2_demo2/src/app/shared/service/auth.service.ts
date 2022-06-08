@@ -30,7 +30,10 @@ export class AuthService {
   }
 
   isAdmin() {//return true if is admin
-    return JSON.parse(localStorage.getItem('admin')) != null;
+    if (JSON.parse(localStorage.getItem('admin')))
+      return true;
+    else
+      return false;
   }
 
   getUserEmail() {
