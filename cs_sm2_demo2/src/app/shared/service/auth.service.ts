@@ -25,17 +25,15 @@ export class AuthService {
   ) { }
 
   isLogin() { //return true if has logged in
-    // console.log("login check ", localStorage.getItem('user') != undefined);
-    // return JSON.parse(localStorage.getItem('user'));
-    // if(JSON.parse(localStorage.getItem('user')) != null){
-    //   console.log(JSON.parse(localStorage.getItem('user')));
-    //   return true;
-    // }
+    // console.log(JSON.parse(localStorage.getItem('user')));
     return JSON.parse(localStorage.getItem('user')) != null;
   }
 
   isAdmin() {//return true if is admin
-    return JSON.parse(localStorage.getItem('admin')) != null;
+    if (JSON.parse(localStorage.getItem('admin')))
+      return true;
+    else
+      return false;
   }
 
   getUserEmail() {
@@ -214,15 +212,17 @@ export class AuthService {
 
   getIsAdmin() {//intended to be used after login, this determines if it is admin
     if (this.isLogin()) {
-      const adminAccess = this.afs.collection("adminUsers", ref => ref.where('email', '==', JSON.parse(localStorage.getItem('user')).email)).snapshotChanges();
+      const adminAccess = this.afs.collection("adminUsers", ref =>
+        ref.where('email', '==', JSON.parse(localStorage.getItem('user')).email)
+      ).snapshotChanges();
       const subscription = adminAccess.subscribe(res => {
         if (res.length > 0) {
-          console.log(" Match found.");
+          console.log("User found admin");
           localStorage.setItem('admin', JSON.stringify(true));
           subscription.unsubscribe();
           return true;
         } else {
-          console.log("Does not exist.");
+          console.log("User not admin");
           localStorage.setItem('admin', JSON.stringify(false));
           subscription.unsubscribe();
           return false;
