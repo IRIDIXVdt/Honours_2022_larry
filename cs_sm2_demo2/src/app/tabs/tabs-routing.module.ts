@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 import { LoginGuard } from '../shared/guard/login.guard';
+import { LoginNoAccessGuard } from '../shared/guard/login-no-access.guard';
+import { AdminAccessGuard } from '../shared/guard/admin-access.guard';
 
 const routes: Routes = [
   {
@@ -13,12 +15,14 @@ const routes: Routes = [
         loadChildren: () => import('../account/account.module').then(m => m.AccountPageModule)
       },
       {
-        path: 'account/login',
-        loadChildren: () => import('../account/login/login.module').then(m => m.LoginPageModule)
+        path: 'account/register',
+        canActivate: [LoginNoAccessGuard],
+        loadChildren: () => import('../account/register/register.module').then(m => m.RegisterPageModule)
       },
       {
-        path: 'account/register',
-        loadChildren: () => import('../account/register/register.module').then(m => m.RegisterPageModule)
+        path: 'account/login',
+        canActivate: [LoginNoAccessGuard],
+        loadChildren: () => import('../account/login/login.module').then(m => m.LoginPageModule)
       },
       {
         path: 'account/reset',

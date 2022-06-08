@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/service/auth.service';
 import { NgForm, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AlertService } from 'src/app/shared/service/alert.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -43,7 +43,19 @@ export class RegisterPage implements OnInit {
 
 
   signUpForm: FormGroup;
-  constructor(public authService: AuthService) {
+  constructor(
+    public aus: AuthService,
+    public als: AlertService,
+    public router: Router,
+  ) {
+
+    // console.log(JSON.parse(localStorage.getItem('user')), 'from register page');
+    if (JSON.parse(localStorage.getItem('user')) != null)
+      this.als.expectFeedback("Already logged in. Redirecting to user profile page.").then(w => {
+        console.log(w);
+        this.router.navigate(['tabs/account']);
+      });
+
     this.signUpForm = new FormGroup({
       formEmail: new FormControl('', [
         Validators.required,
