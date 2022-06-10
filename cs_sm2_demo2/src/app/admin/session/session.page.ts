@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/shared/service/alert.service';
+import { DatabaseService } from 'src/app/shared/service/database.service';
 
 @Component({
   selector: 'app-session',
@@ -40,6 +41,7 @@ export class SessionPage implements OnInit {
 
   constructor(
     private als: AlertService,
+    private das: DatabaseService,
   ) { }
 
   ngOnInit() {
@@ -59,9 +61,14 @@ export class SessionPage implements OnInit {
         if (!this.dataValid(data)) {//don't add
           this.als.displayMessage('Invalid data field: Missing attribute(s) or session already exists. Please try again.');
         } else {//then add data
-
-          console.log('current data is ', data);
-          //reset data field
+          this.das.addData("sessionCollection", data).then(uploadSuccess => {
+            if (uploadSuccess) {
+              console.log('current data is ', data);
+              //reset data field
+            } else {
+              console.log('upload unsuccessful');
+            }
+          });
         }
       } else {
         console.log('dismiss');
