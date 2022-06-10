@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from 'src/app/shared/service/alert.service';
 
 @Component({
   selector: 'app-session',
@@ -37,22 +38,34 @@ export class SessionPage implements OnInit {
   aNumber = ['001', '002', '003', '004', '005'];
   aTime = ['2022WT1', '2022WT2', '2022ST1', '2022ST1'];
 
-  constructor() { }
+  constructor(
+    private als: AlertService,
+  ) { }
 
   ngOnInit() {
   }
 
-  addSession(){
-    //check if they really want
-    const data = {
-      sValue:this.acItem,
-      sTime:this.atItem,
-      sNumber:this.anItem,
-    }
-    //verify data valid
-    //then add data
-    console.log('current data is ',data);
-    //reset data field
+  addSession() {
+    //confirmation
+    this.als.presentChoice('Do you want to add this session to the list?').then(loadingItem => {
+      if (loadingItem) {
+        const data = {
+          sValue: this.acItem,
+          sTime: this.atItem,
+          sNumber: this.anItem,
+        }
+        //verify data valid
+
+        //then add data
+        console.log('current data is ', data);
+        //reset data field
+        loadingItem.dismiss();
+      } else {
+        console.log('dissmiss');
+      }
+
+    })
+
   }
 
 }
