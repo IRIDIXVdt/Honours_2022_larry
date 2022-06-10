@@ -43,8 +43,8 @@ export class SessionPage implements OnInit {
   constructor(
     private als: AlertService,
     private das: DatabaseService,
-  ) { 
-    das.getSessionData().then(v=>{
+  ) {
+    das.getSessionData().then(v => {
       this.sList = v;
     });
   }
@@ -66,14 +66,14 @@ export class SessionPage implements OnInit {
         if (!this.dataValid(data)) {//don't add
           this.als.displayMessage('Invalid data field: Missing attribute(s) or session already exists. Please try again.');
         } else {//then add data
-          this.das.addData("sessionCollection", data).then(uploadSuccess => {
-            if (uploadSuccess) {
-              console.log('current data is ', data);
-
-              //reset data field
-            } else {
-              console.log('upload unsuccessful');
-            }
+          //remote adding
+          this.das.addData("sessionCollection", data).then(v => {
+            //remote action success
+            console.log('current data is ', data);
+            //then local data action
+            this.sList.push(data);
+            console.log(this.sList);
+            //reset data field
           });
         }
       } else {

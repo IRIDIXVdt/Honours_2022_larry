@@ -24,14 +24,13 @@ export class DatabaseService {
       console.log("Changes saved to cloud!");
       this.als.displayMessage("Upload Success");
       loading.dismiss();
-      console.log("need saving to false");
-      return true;
+      // return true;
     }).catch((error) => {
       loading.dismiss();
       this.als.displayMessage('Fail to save changes. Try again!');
       console.log("error", error);
     })
-    return false;
+    // return false;
   }
 
   getQuestionData() {
