@@ -48,16 +48,6 @@ const routes: Routes = [
         loadChildren: () => import('../admin/session/session.module').then(m => m.SessionPageModule)
       },
       {
-        path: 'add',
-        canActivate: [AdminAccessGuard],
-        loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
-      },
-      {
-        path: 'browse',
-        canActivate: [AdminAccessGuard],
-        loadChildren: () => import('../browse/browse.module').then(m => m.BrowsePageModule)
-      },
-      {
         path: 'demo01',
         canActivate: [LoginGuard],
         loadChildren: () => import('../demo01/demo01.module').then(m => m.Demo01PageModule)
