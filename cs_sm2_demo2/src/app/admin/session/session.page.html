@@ -20,15 +20,15 @@
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label>Time</ion-label>
-        <ion-select [(ngModel)]="atItem" okText="Okay" cancelText="Dismiss">
-          <ion-select-option *ngFor="let item of aTime" value="{{item}}">{{item}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
         <ion-label>Number</ion-label>
         <ion-select [(ngModel)]="anItem" okText="Okay" cancelText="Dismiss">
           <ion-select-option *ngFor="let item of aNumber" value="{{item}}">{{item}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Time</ion-label>
+        <ion-select [(ngModel)]="atItem" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of aTime" value="{{item}}">{{item}}</ion-select-option>
         </ion-select>
       </ion-item>
 

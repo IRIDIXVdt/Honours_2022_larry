@@ -49,23 +49,39 @@ export class SessionPage implements OnInit {
     //confirmation
     this.als.presentChoice('Do you want to add this session to the list?').then(loadingItem => {
       if (loadingItem) {
-        const data = {
-          sValue: this.acItem,
+        const data = {//prepare data
+          sCode: this.acItem,
           sTime: this.atItem,
           sNumber: this.anItem,
         }
-        //verify data valid
-
-        //then add data
-        console.log('current data is ', data);
-        //reset data field
         loadingItem.dismiss();
-      } else {
-        console.log('dissmiss');
-      }
+        //verify data valid
+        if (!this.dataValid(data)) {//don't add
+          this.als.displayMessage('Invalid data field: Missing attribute(s) or session already exists. Please try again.');
+        } else {//then add data
 
+          console.log('current data is ', data);
+          //reset data field
+        }
+      } else {
+        console.log('dismiss');
+      }
     })
 
+  }
+
+  dataValid(data) {
+    if (data.sCode.length == 0 || data.sTime.length == 0 || data.sNumber.length == 0)
+      //make sure all field are provided
+      return false;
+    else if (
+      //and make sure there is no matching
+      this.sList.filter(
+        e => e.sCode == data.sCode && e.sTime == data.sTime && e.sNumber == data.sNumber
+      ).length > 0)
+      return false;
+    else
+      return true;
   }
 
 }
