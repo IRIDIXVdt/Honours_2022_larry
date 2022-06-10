@@ -12,7 +12,8 @@ export class SessionPage implements OnInit {
 
   cList = ['All', 'COSC111', 'COSC404', 'COSC304',]
 
-  sList = [
+  sList: any;
+  sListTemp = [
     {
       sCode: 'COSC304',
       sTime: '2022WT1',
@@ -64,6 +65,7 @@ export class SessionPage implements OnInit {
           this.das.addData("sessionCollection", data).then(uploadSuccess => {
             if (uploadSuccess) {
               console.log('current data is ', data);
+
               //reset data field
             } else {
               console.log('upload unsuccessful');
