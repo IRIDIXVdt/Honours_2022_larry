@@ -6,52 +6,53 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./session.page.scss'],
 })
 export class SessionPage implements OnInit {
-  cCode: string = 'A';
-  // cList:
-  cList = [
-    {
-      cValue: 'A',
-      cName: 'All'
-    },
-    {
-      cValue: 'COSC111',
-      cName: 'COSC 111'
-    },
-    {
-      cValue: 'COSC404',
-      cName: 'COSC 404'
-    },
-    {
-      cValue: 'COSC304',
-      cName: 'COSC 304'
-    }
-  ]
+  cCode: string = 'All'; acItem = ''; anItem = ''; atItem = '';
+
+  cList = ['All', 'COSC111', 'COSC404', 'COSC304',]
 
   sList = [
     {
-      sValue: 'COSC304',
+      sCode: 'COSC304',
       sTime: '2022WT1',
       sNumber: '001'
     },
     {
-      sValue: 'COSC304',
+      sCode: 'COSC304',
       sTime: '2022WT1',
       sNumber: '002'
     },
     {
-      sValue: 'COSC304',
+      sCode: 'COSC304',
       sTime: '2021ST1',
       sNumber: '001'
     },
     {
-      sValue: 'COSC304',
+      sCode: 'COSC304',
       sTime: '2021ST2',
       sNumber: '001'
     },
   ]
+
+  aCode = ['COSC111', 'COSC304', 'COSC404'];
+  aNumber = ['001', '002', '003', '004', '005'];
+  aTime = ['2022WT1', '2022WT2', '2022ST1', '2022ST1'];
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  addSession(){
+    //check if they really want
+    const data = {
+      sValue:this.acItem,
+      sTime:this.atItem,
+      sNumber:this.anItem,
+    }
+    //verify data valid
+    //then add data
+    console.log('current data is ',data);
+    //reset data field
   }
 
 }

@@ -15,24 +15,24 @@
       </ion-list-header>
       <ion-item>
         <ion-label>Code</ion-label>
-        <ion-select [(ngModel)]="aCode" okText="Okay" cancelText="Dismiss">
-          <ion-select-option value="brown">Brown</ion-select-option>
+        <ion-select [(ngModel)]="acItem" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of aCode" value="{{item}}">{{item}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>Time</ion-label>
-        <ion-select [(ngModel)]="aTime" okText="Okay" cancelText="Dismiss">
-          <ion-select-option value="brown">Brown</ion-select-option>
+        <ion-select [(ngModel)]="atItem" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of aTime" value="{{item}}">{{item}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label>Number</ion-label>
-        <ion-select [(ngModel)]="aNumber" okText="Okay" cancelText="Dismiss">
-          <ion-select-option value="brown">Brown</ion-select-option>
+        <ion-select [(ngModel)]="anItem" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of aNumber" value="{{item}}">{{item}}</ion-select-option>
         </ion-select>
       </ion-item>
 
-      <ion-item button>
+      <ion-item button (click)="addSession()">
         <ion-label color="primary" slot="end" class="ion-padding-end">Add</ion-label>
       </ion-item>
 
@@ -52,7 +52,7 @@
       <ion-item>
         <ion-label>Code</ion-label>
         <ion-select [(ngModel)]="cCode" placeholder="Course Code">
-          <ion-select-option *ngFor="let item of cList" value="{{item.cValue}}">{{item.cName}}</ion-select-option>
+          <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-list>
@@ -61,7 +61,7 @@
   <div class="ionMaxContent">
     <ion-list>
       <ion-item *ngFor="let item of sList">
-        <ion-label>{{item.sValue + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
+        <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
         <ion-button>Remove</ion-button>
       </ion-item>
     </ion-list>
