@@ -42,28 +42,34 @@
 </ion-header>
 
 <ion-content>
-  <ion-toolbar>
-    <ion-list>
-      <ion-list-header>
-        <ion-label>
-          Filter by Course
-        </ion-label>
-      </ion-list-header>
-      <ion-item>
-        <ion-label>Code</ion-label>
-        <ion-select [(ngModel)]="cCode" placeholder="Course Code">
-          <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-list>
-  </ion-toolbar>
-
-  <div class="ionMaxContent">
-    <ion-list>
-      <ion-item *ngFor="let item of sList">
-        <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
-        <ion-button>Remove</ion-button>
-      </ion-item>
-    </ion-list>
-  </div>
+  <ng-container *ngIf="sList">
+    <ion-toolbar>
+      <ion-list>
+        <ion-list-header>
+          <ion-label>
+            Filter by Course
+          </ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Code</ion-label>
+          <ion-select [(ngModel)]="cCode" placeholder="Course Code">
+            <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-toolbar>
+  
+    <div class="ionMaxContent">
+      <ion-list>
+        <ion-item *ngFor="let item of sList">
+          <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
+          <!-- <ion-button>Remove</ion-button> -->
+        </ion-item>
+      </ion-list>
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="!sList">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </ng-container>
 </ion-content>

@@ -43,14 +43,18 @@ export class SessionPage implements OnInit {
   constructor(
     private als: AlertService,
     private das: DatabaseService,
-  ) { }
+  ) { 
+    das.getSessionData().then(v=>{
+      this.sList = v;
+    });
+  }
 
   ngOnInit() {
   }
 
   addSession() {
     //confirmation
-    this.als.presentChoice('Do you want to add this session to the list?').then(loadingItem => {
+    this.als.presentChoice('Do you want to add this session to the list? This action cannot be undone.').then(loadingItem => {
       if (loadingItem) {
         const data = {//prepare data
           sCode: this.acItem,
