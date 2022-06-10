@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DatabaseService } from 'src/app/shared/service/database.service';
 
 @Component({
   selector: 'app-browse',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrowsePage implements OnInit {
 
-  constructor() { }
+  questionList;
 
-  ngOnInit() {
+  constructor(
+    private dt: DatabaseService,
+  ) {
+    this.dt.getQuestionData().then((v) => { this.questionList = v; });
   }
+
+  ngOnInit() { }
+
+  buttonClick(){
+    console.log("button onclick");
+  }
+
 
 }
