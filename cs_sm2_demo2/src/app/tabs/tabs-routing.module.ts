@@ -34,14 +34,17 @@ const routes: Routes = [
       },
       {
         path: 'account/admin/question',//for browsing and releasing new question
+        canActivate: [AdminAccessGuard],
         loadChildren: () => import('../admin/browse/browse.module').then(m => m.BrowsePageModule)
       },
       {
         path: 'account/admin/question',//for defining new question
+        canActivate: [AdminAccessGuard],
         loadChildren: () => import('../admin/question/question.module').then(m => m.QuestionPageModule)
       },
       {
         path: 'account/admin/question',//for defining new session
+        canActivate: [AdminAccessGuard],
         loadChildren: () => import('../admin/session/session.module').then(m => m.SessionPageModule)
       },
       {
