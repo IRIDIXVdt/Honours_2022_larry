@@ -67,6 +67,19 @@
               </div>
               <div class="card-body">
                 <div *ngIf="this.aus.isLogin()">
+                  <ng-container *ngIf="this.aus.isAdmin()">
+                    <!-- admin session -->
+                    <div>
+                      <ion-button>Manage Session</ion-button>
+                    </div>
+                    <div>
+                      <ion-button>Release Question</ion-button>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!this.aus.isAdmin()">
+                    <!-- user session -->
+                    <ion-button>Manage Session</ion-button>
+                  </ng-container>
                 </div>
                 <!-- <form>
                   <h6 class="heading-small text-muted mb-4">User information</h6>
