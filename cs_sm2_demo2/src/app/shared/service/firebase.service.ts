@@ -19,6 +19,10 @@ export class FirebaseService {
     return this.db.collection(collection).snapshotChanges();
   }
 
+  getDocument(collection, docId) {
+    return this.db.doc(collection + '/' + docId).get();
+  }
+
   getCollectionWithFilter(collection, filter) {
     return this.db.collection(collection, filter).snapshotChanges();
   }

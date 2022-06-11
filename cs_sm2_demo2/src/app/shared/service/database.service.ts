@@ -85,4 +85,16 @@ export class DatabaseService {
     });
   }
 
+  getUserData(userId) {
+    return new Promise((resolve, reject) => {
+      //retrieve data use get()
+      this.fs.getDocument('users', userId).subscribe(
+        res => {
+          const result = {
+            email: res.data()['image'],
+          }
+        });
+    });
+  }
+
 }
