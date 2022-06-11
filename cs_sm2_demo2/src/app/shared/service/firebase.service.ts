@@ -11,12 +11,8 @@ export class FirebaseService {
     return this.db.collection(collection).add(data);
   }
 
-  getUserDataByIdService(collection, userId) {
-    return this.db.collection(collection).doc(userId).snapshotChanges();
-  }
-
   getCollection(collection) {
-    return this.db.collection(collection).snapshotChanges();
+    return this.db.collection(collection).get();
   }
 
   getDocument(collection, docId) {
@@ -24,13 +20,13 @@ export class FirebaseService {
   }
 
   getCollectionWithFilter(collection, filter) {
-    return this.db.collection(collection, filter).snapshotChanges();
+    return this.db.collection(collection, filter).get();
   }
 
   getSessionWithFilter(collection, code, order) {
     return this.db.collection(collection, ref =>
       ref.where('sCode', '==', code).orderBy(order))
-      .snapshotChanges();
+      .get();
   }
 
 }

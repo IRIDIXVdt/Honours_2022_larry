@@ -6,59 +6,57 @@
     <ion-title>Manage Session</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar>
-    <ion-list>
-      <ion-list-header>
-        <ion-label>
-          Add Session
-        </ion-label>
-      </ion-list-header>
-      <ion-item>
-        <ion-label>Code</ion-label>
-        <ion-select [(ngModel)]="acItem" okText="Okay" cancelText="Dismiss">
-          <ion-select-option *ngFor="let item of aCode" value="{{item}}">{{item}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label>Number</ion-label>
-        <ion-select [(ngModel)]="anItem" okText="Okay" cancelText="Dismiss">
-          <ion-select-option *ngFor="let item of aNumber" value="{{item}}">{{item}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label>Time</ion-label>
-        <ion-select [(ngModel)]="atItem" okText="Okay" cancelText="Dismiss">
-          <ion-select-option *ngFor="let item of aTime" value="{{item}}">{{item}}</ion-select-option>
-        </ion-select>
-      </ion-item>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>
+        Add Session
+      </ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label>Code</ion-label>
+      <ion-select [(ngModel)]="acItem" okText="Okay" cancelText="Dismiss">
+        <ion-select-option *ngFor="let item of aCode" value="{{item}}">{{item}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Number</ion-label>
+      <ion-select [(ngModel)]="anItem" okText="Okay" cancelText="Dismiss">
+        <ion-select-option *ngFor="let item of aNumber" value="{{item}}">{{item}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Time</ion-label>
+      <ion-select [(ngModel)]="atItem" okText="Okay" cancelText="Dismiss">
+        <ion-select-option *ngFor="let item of aTime" value="{{item}}">{{item}}</ion-select-option>
+      </ion-select>
+    </ion-item>
 
-      <ion-item button (click)="addSession()">
-        <ion-label color="primary" slot="end" class="ion-padding-end">Add</ion-label>
-      </ion-item>
-
-    </ion-list>
-  </ion-toolbar>
+    <ion-item button (click)="addSession()">
+      <ion-label color="primary" slot="end" class="ion-padding-end">Add</ion-label>
+    </ion-item>
+  </ion-list>
 
 </ion-header>
 
 <ion-content>
+
+  <ion-toolbar>
+    <ion-list>
+      <ion-list-header>
+        <ion-label>
+          Filter Available Sessions by Course Code
+        </ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-label>Code</ion-label>
+        <ion-select [(ngModel)]="cCode" placeholder="Course Code" (ionChange)="fetchSession()">
+          <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ion-toolbar>
+
   <ng-container *ngIf="sList">
-    <ion-toolbar>
-      <ion-list>
-        <ion-list-header>
-          <ion-label>
-            Filter by Course
-          </ion-label>
-        </ion-list-header>
-        <ion-item>
-          <ion-label>Code</ion-label>
-          <ion-select [(ngModel)]="cCode" placeholder="Course Code" (ionChange)="fetchSession()">
-            <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-list>
-    </ion-toolbar>
-  
     <div class="ionMaxContent">
       <ion-list>
         <ion-item *ngFor="let item of sList">
@@ -68,7 +66,7 @@
       </ion-list>
     </div>
   </ng-container>
-  
+
   <ng-container *ngIf="!sList">
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
   </ng-container>
