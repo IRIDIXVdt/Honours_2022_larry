@@ -11,10 +11,6 @@ export class FirebaseService {
     return this.db.collection(collection).add(data);
   }
 
-  getUserDataByIdService(collection, userId) {
-    return this.db.collection(collection).doc(userId).get();
-  }
-
   getCollection(collection) {
     return this.db.collection(collection).get();
   }
