@@ -81,8 +81,20 @@
                   </ng-container>
                   <ng-container *ngIf="!this.aus.isAdmin()">
                     <!-- user session -->
-                    
-                    <ion-button>Join a session</ion-button>
+                    <ng-container *ngIf="sList">
+                      <!-- if the sList is ready -->
+                      <ion-label>No Session Selected</ion-label>
+                      <ion-select [(ngModel)]="sessionId" interface="action-sheet" placeholder="Click here">
+                        <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-select-option>
+                      </ion-select>
+                      <ion-toolbar>
+                        <ion-button slot="end" (click)="joinSession()">Join Session</ion-button>
+                      </ion-toolbar>
+                    </ng-container>
+                    <ng-container *ngIf="!sList">
+                      <!-- if the sList is not ready -->
+                      <ion-progress-bar  type="indeterminate"></ion-progress-bar>
+                    </ng-container>
                   </ng-container>
                 </div>
               </div>
