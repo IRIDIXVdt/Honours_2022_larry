@@ -24,14 +24,13 @@ export class DatabaseService {
       console.log("Changes saved to cloud!");
       this.als.displayMessage("Upload Success");
       loading.dismiss();
-      console.log("need saving to false");
-      return true;
+      // return true;
     }).catch((error) => {
       loading.dismiss();
       this.als.displayMessage('Fail to save changes. Try again!');
       console.log("error", error);
     })
-    return false;
+    // return false;
   }
 
   getQuestionData() {
@@ -52,9 +51,50 @@ export class DatabaseService {
         }, (err: any) => {
           console.log(err);
           reject();
-          this.als.displayMessage('Fail to fetch data from database. Try again!');
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
         })
     });
   }
-  
+
+  // newGetQuestionData() {
+  //   console.log('invoke');
+  //   this.fs.newGetDataService("QuestionCollection").forEach(e => {
+  //     console.log(e);
+  //   })
+  // }
+
+  getSessionData(code) {
+    return new Promise((resolve, reject) => {//invoke method on filter type
+      (code == 'All' ? this.fs.getCollection("sessionCollection")
+        : this.fs.getSessionWithFilter('sessionCollection', code, 'sTime'))
+        .subscribe((res) => {//retrieve data
+          const receiveValue = res.map(e => {
+            return {//store value from result array
+              id: e.payload.doc.id,//document id
+              sCode: e.payload.doc.data()['sCode'],
+              sTime: e.payload.doc.data()['sTime'],
+              sNumber: e.payload.doc.data()['sNumber'],
+            }
+          });
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
+  getUserData(userId) {
+    return new Promise((resolve, reject) => {
+      //retrieve data use get()
+      this.fs.getDocument('users', userId).subscribe(
+        res => {
+          const result = {
+            email: res.data()['image'],
+          }
+        });
+    });
+  }
+
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../shared/service/database.service';
+import { DatabaseService } from 'src/app/shared/service/database.service';
 
 @Component({
   selector: 'app-browse',
@@ -21,5 +21,6 @@ export class BrowsePage implements OnInit {
   buttonClick(){
     console.log("button onclick");
   }
+
 
 }

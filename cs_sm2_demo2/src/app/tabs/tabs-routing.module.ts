@@ -33,14 +33,19 @@ const routes: Routes = [
         loadChildren: () => import('../account/email-verify/email-verify.module').then(m => m.EmailVerifyPageModule)
       },
       {
-        path: 'add',
+        path: 'account/admin/browse',//for browsing and releasing new question
         canActivate: [AdminAccessGuard],
-        loadChildren: () => import('../add-question/add-question.module').then(m => m.AddQuestionPageModule)
+        loadChildren: () => import('../admin/browse/browse.module').then(m => m.BrowsePageModule)
       },
       {
-        path: 'browse',
+        path: 'account/admin/question',//for defining new question
         canActivate: [AdminAccessGuard],
-        loadChildren: () => import('../browse/browse.module').then(m => m.BrowsePageModule)
+        loadChildren: () => import('../admin/question/question.module').then(m => m.QuestionPageModule)
+      },
+      {
+        path: 'account/admin/session',//for defining new session
+        canActivate: [AdminAccessGuard],
+        loadChildren: () => import('../admin/session/session.module').then(m => m.SessionPageModule)
       },
       {
         path: 'demo01',

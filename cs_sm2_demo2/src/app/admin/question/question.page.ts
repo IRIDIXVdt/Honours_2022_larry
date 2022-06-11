@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { DatabaseService } from '../shared/service/database.service';
-// import { QTypePage } from './q-type/q-type.page';
+import { DatabaseService } from '../../shared/service/database.service';
 
 @Component({
-  selector: 'app-add-question',
-  templateUrl: './add-question.page.html',
-  styleUrls: ['./add-question.page.scss'],
+  selector: 'app-question',
+  templateUrl: './question.page.html',
+  styleUrls: ['./question.page.scss'],
 })
-export class AddQuestionPage implements OnInit {
+export class QuestionPage implements OnInit {
+
   public Editor = ClassicEditor;//ckeditor component
   public modelQuestion;//tracking question field
   public modelAnswer;//trakcing answer field
@@ -22,7 +22,8 @@ export class AddQuestionPage implements OnInit {
 
   constructor(
     private dt: DatabaseService,
-  ) { }
+  ) {
+   }
 
   updateEditorField() {
     //update the question and answer datafield based on the current qType
@@ -56,7 +57,6 @@ export class AddQuestionPage implements OnInit {
     }
 
   }
-
 
 
 }

@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddQuestionPageRoutingModule } from './add-question-routing.module';
+import { QuestionPageRoutingModule } from './question-routing.module';
 
-import { AddQuestionPage } from './add-question.page';
-// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { QuestionPage } from './question.page';
+
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
@@ -16,8 +16,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     CommonModule,
     FormsModule,
     IonicModule,
-    AddQuestionPageRoutingModule
+    QuestionPageRoutingModule
   ],
-  declarations: [AddQuestionPage]
+  declarations: [QuestionPage]
 })
-export class AddQuestionPageModule {}
+export class QuestionPageModule {}
