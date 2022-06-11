@@ -22,7 +22,9 @@ export class AuthService {
     public als: AlertService,
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
-  ) { }
+  ) { 
+    console.log(localStorage);
+  }
 
   isLogin() { //return true if has logged in
     // console.log(JSON.parse(localStorage.getItem('user')));
