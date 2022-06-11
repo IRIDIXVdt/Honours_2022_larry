@@ -56,25 +56,33 @@ export class DatabaseService {
     });
   }
 
-  getSessionData() {
-    return new Promise((resolve, reject) => {
-      this.fs.getCollection("sessionCollection")
-        .subscribe((res) => {
+  // newGetQuestionData() {
+  //   console.log('invoke');
+  //   this.fs.newGetDataService("QuestionCollection").forEach(e => {
+  //     console.log(e);
+  //   })
+  // }
+
+  getSessionData(code) {
+    return new Promise((resolve, reject) => {//invoke method on filter type
+      (code == 'All' ? this.fs.getCollection("sessionCollection")
+        : this.fs.getSessionWithFilter('sessionCollection', code, 'sTime'))
+        .subscribe((res) => {//retrieve data
           const receiveValue = res.map(e => {
-            return {
-              id: e.payload.doc.id,
+            return {//store value from result array
+              id: e.payload.doc.id,//document id
               sCode: e.payload.doc.data()['sCode'],
               sTime: e.payload.doc.data()['sTime'],
               sNumber: e.payload.doc.data()['sNumber'],
             }
           });
-          resolve(receiveValue);
-        }, (err: any) => {
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
           console.log(err);
-          reject();
+          reject();//reject and display error message
           this.als.displayMessage('Fail to fetch data from database. Please try again.');
         })
     });
   }
-  
+
 }

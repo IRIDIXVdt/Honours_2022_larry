@@ -52,7 +52,7 @@
         </ion-list-header>
         <ion-item>
           <ion-label>Code</ion-label>
-          <ion-select [(ngModel)]="cCode" placeholder="Course Code">
+          <ion-select [(ngModel)]="cCode" placeholder="Course Code" (ionChange)="fetchSession()">
             <ion-select-option *ngFor="let item of cList" value="{{item}}">{{item}}</ion-select-option>
           </ion-select>
         </ion-item>

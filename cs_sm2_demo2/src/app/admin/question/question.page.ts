@@ -22,7 +22,8 @@ export class QuestionPage implements OnInit {
 
   constructor(
     private dt: DatabaseService,
-  ) { }
+  ) {
+   }
 
   updateEditorField() {
     //update the question and answer datafield based on the current qType

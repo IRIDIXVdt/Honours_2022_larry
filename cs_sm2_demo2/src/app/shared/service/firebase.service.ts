@@ -11,15 +11,22 @@ export class FirebaseService {
     return this.db.collection(collection).add(data);
   }
 
-  getDataService() {
-    return this.db.collection("TestCollection1").snapshotChanges();
-  }
-
-  getUserDataByIdService(collection,userId) {
+  getUserDataByIdService(collection, userId) {
     return this.db.collection(collection).doc(userId).snapshotChanges();
   }
 
-  getCollection(collection){
+  getCollection(collection) {
     return this.db.collection(collection).snapshotChanges();
   }
+
+  getCollectionWithFilter(collection, filter) {
+    return this.db.collection(collection, filter).snapshotChanges();
+  }
+
+  getSessionWithFilter(collection, code, order) {
+    return this.db.collection(collection, ref =>
+      ref.where('sCode', '==', code).orderBy(order))
+      .snapshotChanges();
+  }
+
 }

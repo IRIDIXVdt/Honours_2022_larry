@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AlertService } from 'src/app/shared/service/alert.service';
 import { DatabaseService } from 'src/app/shared/service/database.service';
 
@@ -8,9 +9,9 @@ import { DatabaseService } from 'src/app/shared/service/database.service';
   styleUrls: ['./session.page.scss'],
 })
 export class SessionPage implements OnInit {
-  cCode: string = 'All'; acItem = ''; anItem = ''; atItem = '';
+  cCode: string = 'COSC304'; acItem = ''; anItem = ''; atItem = '';
 
-  cList = ['All', 'COSC111', 'COSC404', 'COSC304',]
+  cList = ['All', 'COSC111', 'COSC304', 'COSC404',];
 
   sList: any;
   sListTemp = [
@@ -38,18 +39,25 @@ export class SessionPage implements OnInit {
 
   aCode = ['COSC111', 'COSC304', 'COSC404'];
   aNumber = ['001', '002', '003', '004', '005'];
-  aTime = ['2022WT1', '2022WT2', '2022ST1', '2022ST1'];
+  aTime = ['2022WT1', '2022WT2', '2022ST1', '2022ST1', '2023WT1', '2023WT2'];
 
   constructor(
     private als: AlertService,
     private das: DatabaseService,
+    private afs: AngularFirestore,
   ) {
-    das.getSessionData().then(v => {
-      this.sList = v;
-    });
+    this.fetchSession();
   }
 
   ngOnInit() {
+  }
+
+  fetchSession() {
+    this.sList = null;
+    this.das.getSessionData(this.cCode).then(v => {
+      this.sList = v;
+      console.log(this.sList);
+    });
   }
 
   addSession() {
@@ -71,7 +79,8 @@ export class SessionPage implements OnInit {
             //remote action success
             console.log('current data is ', data);
             //then local data action
-            this.sList.push(data);
+            // this.sList.push(data);
+            this.fetchSession();
             console.log(this.sList);
             //reset data field
           });
