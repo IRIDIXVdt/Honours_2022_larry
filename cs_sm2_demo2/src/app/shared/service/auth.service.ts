@@ -182,15 +182,18 @@ export class AuthService {
   }
 
   isLogin() { //return true if has logged in
-    return this.los.userStatus();
+    return JSON.parse(localStorage.getItem('user')) != null;
   }
 
   isAdmin() {//return true if is admin
-    return this.los.adminStatus();
+    if (JSON.parse(localStorage.getItem('admin')))
+      return true;
+    else
+      return false;
   }
 
   getUserEmail() {
     if (this.isLogin())
-      return this.los.emailStatus();
+      return JSON.parse(localStorage.getItem('user')).email;
   }
 }
