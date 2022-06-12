@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,10 @@ export class FirebaseService {
   getCollectionFilter(collection, type, targetValue) {
     return this.db.collection(collection, ref =>
       ref.where(type, '==', targetValue)).get();
+  }
+
+  getUser(userId) {
+    return this.db.doc(`users/${userId}`) as AngularFirestoreDocument<any>;
   }
 
 }
