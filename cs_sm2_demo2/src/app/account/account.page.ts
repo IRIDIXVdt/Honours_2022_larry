@@ -35,9 +35,7 @@ export class AccountPage implements OnInit {
 
   joinSession() {
     this.als.presentChoice("Are you sure you want to join this session?").then(loadingItem => {
-      if (loadingItem) {
-        //throw this loadingItem into database
-        // this.das.
+      if (loadingItem) {//throw loadingItem, dismiss it when action is finished
         loadingItem.dismiss();
         this.das.addUserSession(this.sessionId);
       } else {

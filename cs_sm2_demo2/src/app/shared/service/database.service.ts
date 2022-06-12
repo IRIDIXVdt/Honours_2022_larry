@@ -4,7 +4,8 @@ import { LoadingController } from '@ionic/angular';
 import { AlertService } from './alert.service';
 import { FirebaseService } from './firebase.service';
 import { User } from "../data/userSchema";
-import { getAdditionalUserInfo } from '@angular/fire/auth';
+import { getAdditionalUserInfo, user } from '@angular/fire/auth';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -84,15 +85,42 @@ export class DatabaseService {
 
   addUserSession(sessionId) {
     if (sessionId != '') {//verify input not empty
+      //also make sure we don't have repeating ones
       console.log('join session', sessionId);
-      //get current user data
-      const currentUserData = JSON.parse(localStorage.getItem('user'));
-      console.log(currentUserData);
-      console.log(currentUserData.sessionList);
-      //add sessionId to attribute of sessionList of user data
+      //get current usersession List
+      var v = this.getLocalUserSessionList();
+      if ((v as string[]).filter(e => e == sessionId).length > 0) {
+        this.als.displayMessage('Session already selected. Please try again.');
+      } else {
+        (v as string[]).push(sessionId);
+        //add sessionId to attribute of sessionList of user data
+        this.setLocalUserSessionList(v);
+        console.log(localStorage);
+        this.saveUserSessionChangesToCloud();
+      }
     } else {//input empty
-      this.als.displayMessage('Session invalid. Please try again.');
+      this.als.displayMessage('Session not selected. Please try again.');
     }
+  }
+
+  saveUserSessionChangesToCloud() {
+
+    const userSessionData = {
+      sessionList: this.getLocalUserSessionList(),
+    }
+    const id = JSON.parse(localStorage.getItem('user')).uid;
+    console.log('add session to user', id, userSessionData);
+    return this.fas.getUser(id).update(userSessionData);
+  }
+
+  getUserCustomizeInfo(info) {
+    return new Promise((resolve, reject) => {
+      this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+        .subscribe(v => {
+          resolve(v.data()[info]);
+        });
+    });
+
   }
 
   getAdminWithEmail(email) {
@@ -114,14 +142,22 @@ export class DatabaseService {
     const userData: User = {
       email: user.email,
       emailVerified: user.emailVerified,
-      sessionList: [],
     }
-    console.log('set user', user,userData);
+    console.log('set user', user, userData);
     return this.fas.getUser(user.uid).set(userData, {
       merge: true
       //we want to update only specific attributes
       //but we don't want the software to crash if such object doesn't exist in the first place
     })
   }
+
+  setLocalUserSessionList(data) {
+    localStorage.setItem('sessionList', JSON.stringify(data));
+  }
+
+  getLocalUserSessionList() {
+    return JSON.parse(localStorage.getItem('sessionList'));
+  }
+
 
 }

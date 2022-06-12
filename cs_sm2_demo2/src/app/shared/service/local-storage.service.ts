@@ -15,6 +15,7 @@ export class LocalStorageService {
   resetLS() {//turn local storage into default
     localStorage.setItem('admin', JSON.stringify(false));
     localStorage.setItem('user', null);
+    localStorage.setItem('sessionList', null);//remove session list
   }
 
   updateLS(item) {
@@ -26,7 +27,26 @@ export class LocalStorageService {
   }
 
   setLocalUserData(userData) {
+    // console.log(userData);
+    // localStorage.setItem('session',JSON.stringify());
     localStorage.setItem('user', JSON.stringify(userData));
+    this.fetchLocalUserSessionList();
+    // console.log(localStorage);
+  }
+
+  fetchLocalUserSessionList() {
+    this.das.getUserCustomizeInfo('sessionList').then(v => {
+      this.setLocalUserSessionList(v);
+      console.log(localStorage);
+    });
+  }
+
+  setLocalUserSessionList(data) {
+    localStorage.setItem('sessionList', JSON.stringify(data));
+  }
+
+  getLocalUserSessionList() {
+    return JSON.parse(localStorage.getItem('sessionList'));
   }
 
 
