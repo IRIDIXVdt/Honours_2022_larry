@@ -52,6 +52,7 @@ export class LocalStorageService {
   }
 
   userStatus() {
+    // console.log(localStorage.getItem('user'));
     return JSON.parse(localStorage.getItem('user')) != null;
   }
 
