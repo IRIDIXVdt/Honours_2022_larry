@@ -8,6 +8,7 @@ import firebase from 'firebase/compat/app';
 import { User } from "../data/userSchema";
 import { AlertService } from './alert.service';
 import { DatabaseService } from './database.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,61 +25,9 @@ export class AuthService {
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public das: DatabaseService,
+    public los: LocalStorageService,
   ) {
     console.log(localStorage);
-  }
-
-  isLogin() { //return true if has logged in
-    // console.log(JSON.parse(localStorage.getItem('user')));
-    return JSON.parse(localStorage.getItem('user')) != null;
-  }
-
-  isAdmin() {//return true if is admin
-    if (JSON.parse(localStorage.getItem('admin')))
-      return true;
-    else
-      return false;
-  }
-
-  getUserEmail() {
-    if (this.isLogin()) {
-      // console.log('can get email');
-      return JSON.parse(localStorage.getItem('user')).email;
-    }
-  }
-
-  resetLS() {//turn local storage into default
-    localStorage.setItem('admin', JSON.stringify(false));
-    localStorage.setItem('user', null);
-  }
-
-  updateLS(item){
-    if(item=="admin"){//update admin
-      this.getIsAdmin().then(v=>{
-        localStorage.setItem('admin', JSON.stringify(v));
-      })
-    }
-  }
-
-  getIsAdmin() {//intended to be used after login, this determines if it is admin
-    return new Promise((resolve, reject) => {
-      if (this.isLogin())
-        this.das.getAdminWithEmail(JSON.parse(localStorage.getItem('user')).email)
-          .then(v => {//receive length of the corresponding querysnapshot doc
-            if (v > 0) {
-              console.log("User found admin", v);
-              resolve(true);
-            } else {
-              console.log("User not admin", v);
-              resolve(false);
-            }
-          });
-      else {
-        localStorage.setItem('admin', JSON.stringify(false));
-        console.log("Have not logged in ");
-        resolve(true);
-      }
-    });
   }
 
   async signOut() {  // Sign out 
@@ -86,7 +35,7 @@ export class AuthService {
       if (resultLoading != null) {
         return this.afAuth.signOut().then(() => {
           this.userData = null;
-          this.resetLS();
+          this.los.resetLS();
           resultLoading.dismiss();
           this.router.navigate([this.homeAddress]);
         }).catch((error) => {
@@ -104,9 +53,8 @@ export class AuthService {
     this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         if (result.user.emailVerified) { // if user's account has been verified
-          this.userData = result.user; // stored user's info in to local variable (refresh page will reset this variable)
-          localStorage.setItem('user', JSON.stringify(this.userData)); // stored user's info in to local database (refresh page will not reset) 
-          this.updateLS('admin');
+          this.los.setLocalUserData(result.user); // stored user's info in to local database (refresh page will not reset) 
+          this.los.updateLS('admin');
           this.setUserData(result.user);  // update user's info to remote database
           loading.dismiss(); //stop the loading animation
           this.router.navigate([this.homeAddress]);
@@ -193,7 +141,7 @@ export class AuthService {
 
   signOutAndResetPassword() {
     return this.afAuth.signOut().then(() => {
-      this.resetLS();
+      this.los.resetLS();
     }).catch((error) => {
       console.log(error);
       this.als.displayMessage("Check your internet Connection");
@@ -210,10 +158,9 @@ export class AuthService {
     return this.afAuth.signInWithPopup(provider)
       .then((result) => {
         this.ngZone.run(() => {
-          this.userData = result.user;
-          localStorage.setItem('user', JSON.stringify(this.userData));
+          this.los.setLocalUserData(result.user);
           this.router.navigate([this.homeAddress]);//new routing 
-          this.updateLS("admin");
+          this.los.updateLS("admin");
         })
         this.setUserData(result.user);
       }).catch((error) => {
@@ -238,7 +185,7 @@ export class AuthService {
     })
   }
 
-  
+
 
   async updateUserName(displayName) {
     const loading = await this.als.startLoading();
@@ -261,15 +208,12 @@ export class AuthService {
     this.afAuth.authState.subscribe(user => {
       if (user) {
         if (user.emailVerified) {
-          this.userData = user;
-          localStorage.setItem('user', JSON.stringify(user));
+          this.los.setLocalUserData(user);
         } else {
-          this.userData = null;
-          localStorage.setItem('user', null);
+          this.los.setLocalUserData(null);
         }
       } else {
-        this.userData = null;
-        localStorage.setItem('user', null);
+        this.los.setLocalUserData(null);
       }
     })
   }
@@ -277,5 +221,18 @@ export class AuthService {
   getTime() {
     const myTimestamp = firebase.firestore.FieldValue.serverTimestamp();
     console.log(myTimestamp);
+  }
+
+  isLogin() { //return true if has logged in
+    return this.los.userStatus();
+  }
+
+  isAdmin() {//return true if is admin
+    return this.los.adminStatus();
+  }
+
+  getUserEmail() {
+    if (this.isLogin())
+      return this.los.emailStatus();
   }
 }
