@@ -61,6 +61,20 @@ export class DatabaseService {
     });
   }
 
+  getSessionDataWithId(sid) {
+    return new Promise((resolve, reject) => {//invoke method on filter type
+      this.fas.getDocument('sessionCollection', sid)
+        .subscribe((res) => {//retrieve data which contains an array of each question
+          resolve({//store value from result array
+            id: res.id,//document id
+            sCode: res.data()['sCode'],
+            sTime: res.data()['sTime'],
+            sNumber: res.data()['sNumber'],
+          })
+        })
+    });
+  }
+
   getSessionData(code) {
     return new Promise((resolve, reject) => {//invoke method on filter type
       (code == 'All' ? this.fas.getCollection("sessionCollection")
