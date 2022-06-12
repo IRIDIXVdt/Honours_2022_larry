@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from '../shared/service/alert.service';
 import { AuthService } from '../shared/service/auth.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { FirebaseService } from '../shared/service/firebase.service';
@@ -15,12 +16,13 @@ export class AccountPage implements OnInit {
     public aus: AuthService,
     public afs: FirebaseService,
     public das: DatabaseService,
+    public als: AlertService,
   ) {
     if (!this.aus.isAdmin()) {//normal user
       //load sList
       this.fetchSession();
     }
-    
+
   }
 
   fetchSession() {
@@ -29,6 +31,19 @@ export class AccountPage implements OnInit {
       this.sList = v;
       console.log(this.sList);
     });
+  }
+
+  joinSession() {
+    this.als.presentChoice("Are you sure you want to join this session?").then(loadingItem => {
+      if (loadingItem) {
+        //throw this loadingItem into database
+        // this.das.
+        loadingItem.dismiss();
+        this.das.addUserSession(this.sessionId);
+      } else {
+        console.log('dismiss');
+      }
+    })
   }
 
   ngOnInit() {

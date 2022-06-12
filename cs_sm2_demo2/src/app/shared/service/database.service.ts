@@ -80,16 +80,39 @@ export class DatabaseService {
     });
   }
 
-  getUserData(userId) {
-    //not working
+  // getUserData(userId) {//not working
+  //   return new Promise((resolve, reject) => {
+  //     //retrieve data use get()
+  //     this.fs.getDocument('users', userId).subscribe(
+  //       res => {
+  //         const result = {
+  //           email: res.data()['image'],
+  //         }
+  //       });
+  //   });
+  // }
+
+  addUserSession(sessionId) {
+    if (sessionId != '') {//verify input not empty
+      console.log('join session', sessionId);
+      //get current user data
+      const currentUserData = JSON.parse(localStorage.getItem('user'));
+      console.log(currentUserData);
+      console.log(currentUserData.sessionList);
+      //add sessionId to attribute of sessionList of user data
+    } else {//input empty
+      this.als.displayMessage('Session invalid. Please try again.');
+    }
+  }
+
+  getAdminWithEmail(email) {
     return new Promise((resolve, reject) => {
-      //retrieve data use get()
-      this.fs.getDocument('users', userId).subscribe(
-        res => {
-          const result = {
-            email: res.data()['image'],
-          }
-        });
+      this.fs.getCollectionFilter("adminUsers", 'email', email)
+        .subscribe(res => resolve(res.docs.length)), (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        }
     });
   }
 

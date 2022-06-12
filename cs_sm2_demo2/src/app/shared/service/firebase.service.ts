@@ -11,6 +11,10 @@ export class FirebaseService {
     return this.db.collection(collection).add(data);
   }
 
+  updateDataById(collection, docId, data) {
+    return this.db.doc(collection + '/' + docId).update(data);
+  }
+
   getCollection(collection) {
     return this.db.collection(collection).get();
   }
@@ -27,6 +31,11 @@ export class FirebaseService {
     return this.db.collection(collection, ref =>
       ref.where('sCode', '==', code).orderBy(order))
       .get();
+  }
+
+  getCollectionFilter(collection, type, targetValue) {
+    return this.db.collection(collection, ref =>
+      ref.where(type, '==', targetValue)).get();
   }
 
 }

@@ -44,7 +44,6 @@ export class SessionPage implements OnInit {
   constructor(
     private als: AlertService,
     private das: DatabaseService,
-    private afs: AngularFirestore,
   ) {
     this.fetchSession();
   }
