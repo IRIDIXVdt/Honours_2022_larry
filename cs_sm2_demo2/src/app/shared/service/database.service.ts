@@ -3,6 +3,8 @@ import { LoadingController } from '@ionic/angular';
 // import { questionList } from '../data/questionList';
 import { AlertService } from './alert.service';
 import { FirebaseService } from './firebase.service';
+import { User } from "../data/userSchema";
+import { getAdditionalUserInfo } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +116,24 @@ export class DatabaseService {
           this.als.displayMessage('Fail to fetch data from database. Please try again.');
         }
     });
+  }
+
+
+  /* Setting up user data when sign in with username/password, 
+  sign up with username/password and sign in with social auth  
+  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
+  setUserData(user) {
+    const userData: User = {
+      email: user.email,
+      emailVerified: user.emailVerified,
+      sessionList: [],
+    }
+    console.log('set user', user,userData);
+    return this.fs.getUser(user.uid).set(userData, {
+      merge: true
+      //we want to update only specific attributes
+      //but we don't want the software to crash if such object doesn't exist in the first place
+    })
   }
 
 }

@@ -50,7 +50,7 @@ export class AuthService {
         if (result.user.emailVerified) { // if user's account has been verified
           this.los.setLocalUserData(result.user); // stored user's info in to local database (refresh page will not reset) 
           this.los.updateLS('admin');
-          this.setUserData(result.user);  // update user's info to remote database
+          this.das.setUserData(result.user);  // update user's info to remote database
           loading.dismiss(); //stop the loading animation
           this.router.navigate([this.homeAddress]);
         } else {
@@ -156,28 +156,26 @@ export class AuthService {
           this.router.navigate([this.homeAddress]);//new routing 
           this.los.updateLS("admin");
         })
-        this.setUserData(result.user);
+        this.das.setUserData(result.user);
       }).catch((error) => {
         this.als.signInErrorAlert('Failed login with google');
       })
   }
 
-  /* Setting up user data when sign in with username/password, 
-  sign up with username/password and sign in with social auth  
-  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  setUserData(user) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    const userData: User = {
-      email: user.email,
-      emailVerified: user.emailVerified,
-      sessionList: [],
-    }
-    return userRef.set(userData, {
-      merge: true
-      //we want to update only specific attributes
-      //but we don't want the software to crash if such object doesn't exist in the first place
-    })
-  }
+
+  // setUserData(user) {
+  //   const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+  //   const userData: User = {
+  //     email: user.email,
+  //     emailVerified: user.emailVerified,
+  //     sessionList: [],
+  //   }
+  //   return userRef.set(userData, {
+  //     merge: true
+  //     //we want to update only specific attributes
+  //     //but we don't want the software to crash if such object doesn't exist in the first place
+  //   })
+  // }
 
   updateUserData() {
     this.afAuth.authState.subscribe(user => {
