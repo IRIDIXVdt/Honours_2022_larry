@@ -8,8 +8,9 @@ export class LocalStorageService {
 
   constructor(
     public das: DatabaseService,
-
-  ) { }
+  ) { 
+    console.log(localStorage);
+  }
 
   resetLS() {//turn local storage into default
     localStorage.setItem('admin', JSON.stringify(false));

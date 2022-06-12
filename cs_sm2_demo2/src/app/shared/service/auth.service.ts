@@ -14,8 +14,6 @@ import { LocalStorageService } from './local-storage.service';
   providedIn: 'root'
 })
 export class AuthService {
-  userData: any; // Save logged in user data
-  admin: boolean;
   verifyAddress: string = 'tabs/account/verify';//routing address for verify email address
   homeAddress: string = 'tabs/account';
   constructor(
@@ -26,15 +24,12 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public das: DatabaseService,
     public los: LocalStorageService,
-  ) {
-    console.log(localStorage);
-  }
+  ) {}
 
   async signOut() {  // Sign out 
     await this.als.presentChoice("Do you want to sign out?").then(async (resultLoading) => {
       if (resultLoading != null) {
         return this.afAuth.signOut().then(() => {
-          this.userData = null;
           this.los.resetLS();
           resultLoading.dismiss();
           this.router.navigate([this.homeAddress]);
@@ -64,7 +59,6 @@ export class AuthService {
         }
       }).catch((error) => {
         loading.dismiss();
-        this.userData = null;
         console.log("Login error: ", error);
         if (error.toString().includes('wrong-password') || error.toString().includes('user-not-found'))
           this.als.signInErrorAlert('The email or password is invalid');
@@ -183,25 +177,6 @@ export class AuthService {
       //we want to update only specific attributes
       //but we don't want the software to crash if such object doesn't exist in the first place
     })
-  }
-
-
-
-  async updateUserName(displayName) {
-    const loading = await this.als.startLoading();
-
-    const profile = {
-      displayName: displayName,
-    };
-    (await this.afAuth.currentUser).updateProfile(profile).then(() => {
-      console.log('updated userName');
-      this.updateUserData();
-      loading.dismiss();
-    }).catch((error) => {
-      console.log(error);
-      loading.dismiss();
-      this.als.displayMessage("Check your internet Connection");
-    });
   }
 
   updateUserData() {
