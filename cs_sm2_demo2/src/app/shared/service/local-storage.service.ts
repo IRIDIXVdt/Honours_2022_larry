@@ -8,7 +8,7 @@ export class LocalStorageService {
 
   constructor(
     public das: DatabaseService,
-  ) { 
+  ) {
     console.log(localStorage);
   }
 
@@ -36,9 +36,13 @@ export class LocalStorageService {
         this.das.getAdminWithEmail(JSON.parse(localStorage.getItem('user')).email)
           .then(v => {//receive length of the corresponding querysnapshot doc
             if (v > 0) {
+
+              localStorage.setItem('admin', JSON.stringify(true));
               console.log("User found admin", v);
               resolve(true);
             } else {
+
+              localStorage.setItem('admin', JSON.stringify(false));
               console.log("User not admin", v);
               resolve(false);
             }
