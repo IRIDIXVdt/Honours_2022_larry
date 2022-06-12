@@ -162,21 +162,6 @@ export class AuthService {
       })
   }
 
-
-  // setUserData(user) {
-  //   const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-  //   const userData: User = {
-  //     email: user.email,
-  //     emailVerified: user.emailVerified,
-  //     sessionList: [],
-  //   }
-  //   return userRef.set(userData, {
-  //     merge: true
-  //     //we want to update only specific attributes
-  //     //but we don't want the software to crash if such object doesn't exist in the first place
-  //   })
-  // }
-
   updateUserData() {
     this.afAuth.authState.subscribe(user => {
       if (user) {

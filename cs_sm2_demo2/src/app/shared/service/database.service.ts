@@ -12,7 +12,7 @@ import { getAdditionalUserInfo } from '@angular/fire/auth';
 export class DatabaseService {
   constructor(
     public loadingController: LoadingController,
-    private fs: FirebaseService,
+    private fas: FirebaseService,
     private als: AlertService,
   ) { }
 
@@ -22,7 +22,7 @@ export class DatabaseService {
     });
     loading.present();
 
-    this.fs.addDataService(collection, data).then((res: any) => {
+    this.fas.addDataService(collection, data).then((res: any) => {
       console.log(res);
       console.log("Changes saved to cloud!");
       this.als.displayMessage("Upload Success");
@@ -38,7 +38,7 @@ export class DatabaseService {
 
   getQuestionData() {
     return new Promise((resolve, reject) => {
-      this.fs.getCollection("QuestionCollection")
+      this.fas.getCollection("QuestionCollection")
         .subscribe((res) => {
           console.log('display res', res);
           const receiveValue = res.docs.map(e => {
@@ -62,8 +62,8 @@ export class DatabaseService {
 
   getSessionData(code) {
     return new Promise((resolve, reject) => {//invoke method on filter type
-      (code == 'All' ? this.fs.getCollection("sessionCollection")
-        : this.fs.getSessionWithFilter('sessionCollection', code, 'sTime'))
+      (code == 'All' ? this.fas.getCollection("sessionCollection")
+        : this.fas.getSessionWithFilter('sessionCollection', code, 'sTime'))
         .subscribe((res) => {//retrieve data which contains an array of each question
           const receiveValue = res.docs.map(e => {//value 
             return {//store value from result array
@@ -82,18 +82,6 @@ export class DatabaseService {
     });
   }
 
-  // getUserData(userId) {//not working
-  //   return new Promise((resolve, reject) => {
-  //     //retrieve data use get()
-  //     this.fs.getDocument('users', userId).subscribe(
-  //       res => {
-  //         const result = {
-  //           email: res.data()['image'],
-  //         }
-  //       });
-  //   });
-  // }
-
   addUserSession(sessionId) {
     if (sessionId != '') {//verify input not empty
       console.log('join session', sessionId);
@@ -109,7 +97,7 @@ export class DatabaseService {
 
   getAdminWithEmail(email) {
     return new Promise((resolve, reject) => {
-      this.fs.getCollectionFilter("adminUsers", 'email', email)
+      this.fas.getCollectionFilter("adminUsers", 'email', email)
         .subscribe(res => resolve(res.docs.length)), (err: any) => {//catch error
           console.log(err);
           reject();//reject and display error message
@@ -129,7 +117,7 @@ export class DatabaseService {
       sessionList: [],
     }
     console.log('set user', user,userData);
-    return this.fs.getUser(user.uid).set(userData, {
+    return this.fas.getUser(user.uid).set(userData, {
       merge: true
       //we want to update only specific attributes
       //but we don't want the software to crash if such object doesn't exist in the first place
