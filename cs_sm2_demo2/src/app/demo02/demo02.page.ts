@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { questionList } from '../shared/data/newQuestionData';
+import { UserRecordData } from '../shared/data/userRecordSchema';
+
 @Component({
   selector: 'app-demo02',
   templateUrl: './demo02.page.html',
@@ -14,6 +16,9 @@ export class Demo02Page implements OnInit {
   sessionEnd: boolean;
   userCode: string = '';
   userMulti: string = '';
+
+
+  
   constructor() {
     console.log(this.qList);
     this.index = 0;
@@ -51,5 +56,17 @@ export class Demo02Page implements OnInit {
     this.userCode = '';
     this.userMulti = '';
 
+  }
+
+  storeUserRecordData() {
+    const data: UserRecordData = {
+      userId: '',
+      completeTime: '',
+      questionid: '',
+      q: 0,
+      EF: 0,
+      n: 0
+    }
+    console.log(data);
   }
 }

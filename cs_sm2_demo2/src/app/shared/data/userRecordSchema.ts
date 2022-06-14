@@ -1,4 +1,4 @@
-export interface User {
+export interface UserRecordData {
     userId: string;//this is the document id of user
     completeTime: string;//this is the date of the record completion
     questionid: string;//this is the id of the answered question
