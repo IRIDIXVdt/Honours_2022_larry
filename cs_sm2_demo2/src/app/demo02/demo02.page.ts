@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
+import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
   selector: 'app-demo02',
@@ -19,8 +20,12 @@ export class Demo02Page implements OnInit {
 
 
   
-  constructor() {
-    console.log(this.qList);
+  constructor(
+    public urs: UserRecordService,
+
+  ) {
+    // console.log(urs.storeLocalInfo(3000,'sdfsdfs',2,23,1));
+    // console.log(this.qList);
     this.index = 0;
     this.displayAnswer = false;
     this.updateEnableDisplayAnswer();

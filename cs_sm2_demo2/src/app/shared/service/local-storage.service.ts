@@ -90,6 +90,25 @@ export class LocalStorageService {
   emailStatus() {
     return JSON.parse(localStorage.getItem('user')).email;
   }
+
+  idStatus() {
+    return JSON.parse(localStorage.getItem('user')).uid;
+  }
+
+  storeUserQuestionData(data) {
+    //get the current array
+    var array = this.fetchUserQuestionData();
+    if (array == null || array == undefined) {
+      array = [];//if the array is empty, then initialize it
+    }
+    array.push(data);//store it in a local variable array
+    //store the new array in local storage
+    localStorage.setItem('answerQuestion', JSON.stringify(array));
+  }
+
+  fetchUserQuestionData() {
+    return JSON.parse(localStorage.getItem('answerQuestion'));
+  }
 }
 
 
