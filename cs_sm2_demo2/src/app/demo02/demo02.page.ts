@@ -40,7 +40,10 @@ export class Demo02Page implements OnInit {
   ngOnInit() {
   }
   updateEnableDisplayAnswer() {
-    if (this.qList[this.index].questionType === 'basic') {
+
+    console.log(this.qList[this.index].qType);
+    if (this.qList[this.index].qType === 'ba') {
+      console.log('this is a basic type question')
       this.disableDisplayAnswer = false;
     } else {
       this.disableDisplayAnswer = true;
