@@ -13,30 +13,36 @@
   </ng-container>
 
   <ng-container *ngIf="!sessionEnd">
-    <div class="ionMaxContent">
-      <div class="centerText">
-        <p>{{qList[index].question}}</p>
 
+    <div class="ionMaxContent" *ngIf="qList">
+      <div>
+        <!-- <p>{{qList[index].question}}</p> -->
+        <div [innerHTML]="qList[index].question"></div>
         <ion-item-divider></ion-item-divider>
 
-        <div class="answer" *ngIf="qList[index].questionType === 'code'">
-          <ion-input #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode" placeholder="Your code here">
+        <div class="answer" *ngIf="qList[index].qType === 'co'">
+          <ion-input class="centerText" #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode"
+            placeholder="Your code here">
           </ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].questionType === 'multi'">
-          <ion-input #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti" placeholder="Your selection here"
-            maxlength="1"></ion-input>
+        <div class="answer" *ngIf="qList[index].qType === 'mu'">
+          <ion-input class="centerText" #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti"
+            placeholder="Your selection here" maxlength="1"></ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].questionType === 'basic'">
+        <div class="answer" *ngIf="qList[index].qType === 'ba'">
           <p></p>
         </div>
         <div *ngIf="displayAnswer">
-          {{qList[index].answer}}
+          <!-- {{qList[index].answer}} -->
+          <div [innerHTML]="qList[index].answer"></div>
         </div>
+
       </div>
     </div>
 
-
+    <div *ngIf="!qList">
+      <ion-progress-bar type="indeterminate"></ion-progress-bar>
+    </div>
 
 
     <div class="bottomButtons">

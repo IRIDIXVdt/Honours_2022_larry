@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
+import { DatabaseService } from '../shared/service/database.service';
 import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
@@ -9,7 +10,8 @@ import { UserRecordService } from '../shared/service/user-record.service';
   styleUrls: ['./demo02.page.scss'],
 })
 export class Demo02Page implements OnInit {
-  qList = questionList;
+  // qList = questionList;
+  qList: any[];
   index: number;
   displayAnswer: boolean;
   disableDisplayAnswer: boolean;
@@ -19,16 +21,20 @@ export class Demo02Page implements OnInit {
   userMulti: string = '';
 
 
-  
+
   constructor(
     public urs: UserRecordService,
+    public dab: DatabaseService,
 
   ) {
-    // console.log(urs.storeLocalInfo(3000,'sdfsdfs',2,23,1));
-    // console.log(this.qList);
-    this.index = 0;
-    this.displayAnswer = false;
-    this.updateEnableDisplayAnswer();
+    //loadQuestionList
+    dab.getQuestionData().then(v => {
+      this.qList = (v as any[]);
+      //then initialize index
+      this.index = 0;
+      this.displayAnswer = false;
+      this.updateEnableDisplayAnswer();
+    });
   }
 
   ngOnInit() {

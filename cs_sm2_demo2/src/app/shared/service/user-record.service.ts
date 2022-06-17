@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserRecordData } from '../data/userRecordSchema';
+import { DatabaseService } from './database.service';
 import { FirebaseService } from './firebase.service';
 import { LocalStorageService } from './local-storage.service';
 
@@ -11,6 +12,7 @@ export class UserRecordService {
   constructor(
     public los: LocalStorageService,
     public fas: FirebaseService,
+    public dab: DatabaseService,
   ) { }
 
   data: UserRecordData = {
@@ -36,11 +38,21 @@ export class UserRecordService {
     this.los.storeUserQuestionData(data);
   }
 
-  async uploadLocalInfo(){
+  async uploadLocalInfo() {
     const dataArray = this.los.fetchUserQuestionData() as UserRecordData[];
     //store each item into dataCollection
-    for(let i = 0; i<dataArray.length; i++){
-      await this.fas.addDataService('dataCollection',dataArray[i]);
+    for (let i = 0; i < dataArray.length; i++) {
+      await this.fas.addDataService('dataCollection', dataArray[i]);
     }
+  }
+
+  fetchQuestionFromDataBase() {
+    //for now, retrieve every question from database
+    var questionList = [];
+    this.dab.getQuestionData().then(v => {
+      questionList = (v as any[]);
+      
+    });
+
   }
 }
