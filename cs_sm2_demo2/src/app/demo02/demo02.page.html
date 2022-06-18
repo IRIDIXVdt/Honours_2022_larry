@@ -17,24 +17,24 @@
     <div class="ionMaxContent" *ngIf="qList">
       <div>
         <!-- <p>{{qList[index].question}}</p> -->
-        <div [innerHTML]="qList[index].question"></div>
+        <div [innerHTML]="qList[0].question"></div>
         <ion-item-divider></ion-item-divider>
 
-        <div class="answer" *ngIf="qList[index].qType === 'co'">
+        <div class="answer" *ngIf="qList[0].qType === 'co'">
           <ion-input class="centerText" #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode"
             placeholder="Your code here">
           </ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].qType === 'mu'">
+        <div class="answer" *ngIf="qList[0].qType === 'mu'">
           <ion-input class="centerText" #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti"
             placeholder="Your selection here" maxlength="1"></ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].qType === 'ba'">
+        <div class="answer" *ngIf="qList[0].qType === 'ba'">
           <p></p>
         </div>
         <div *ngIf="displayAnswer">
           <!-- {{qList[index].answer}} -->
-          <div [innerHTML]="qList[index].answer"></div>
+          <div [innerHTML]="qList[0].answer"></div>
         </div>
 
       </div>

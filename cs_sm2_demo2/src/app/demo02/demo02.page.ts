@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { threadId } from 'worker_threads';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
 import { DatabaseService } from '../shared/service/database.service';
@@ -12,7 +13,7 @@ import { UserRecordService } from '../shared/service/user-record.service';
 export class Demo02Page implements OnInit {
   // qList = questionList;
   qList: any[];
-  index: number;
+  // index: number;//new logic: only display the first item
   displayAnswer: boolean;
   disableDisplayAnswer: boolean;
   newDisableDisplayAnswer: boolean = false;
@@ -35,7 +36,7 @@ export class Demo02Page implements OnInit {
         this.qList[i].answered = false;
       }
       //then initialize index
-      this.index = 0;
+      // this.index = 0;
       this.displayAnswer = false;
       this.updateEnableDisplayAnswer();
     });
@@ -45,9 +46,9 @@ export class Demo02Page implements OnInit {
   }
 
   updateEnableDisplayAnswer() {
-    console.log(this.qList[this.index].qType);
-    if (this.qList[this.index].qType === 'ba') {
-      console.log('this is a basic type question')
+    // console.log(this.qList[0].qType);
+    if (this.qList[0].qType === 'ba') {
+      // console.log('this is a basic type question')
       this.disableDisplayAnswer = false;
     } else {
       this.disableDisplayAnswer = true;
@@ -65,14 +66,17 @@ export class Demo02Page implements OnInit {
     this.displayAnswer = true;
   }
 
-  saveAndStore
+  saveAndStore() {
+    this.qList.shift();//remove first element
+    //then store it in local storage in a specific way
+  }
 
   answer(answer: number) {
-    if (this.index + 2 > this.qList.length) {
+    if (this.qList.length == 1) {
       this.sessionEnd = true;
       //end this session
       //then upload everything in this session to database
-    } else {//handle the responsive
+    } else {//handle the responsive: repeat some of the question
       /*
       if user is first time answering this question
         if quality is easy, store info and end this right away
@@ -82,22 +86,42 @@ export class Demo02Page implements OnInit {
         if quality is good or easy, check if there are repeat time left
           if no repeat time left, store info end this
       */
-      if(!this.qList[this.index].answered){
-        if(answer==3){//quality easy
+      var currentItem = this.qList.shift();//get the very first item
+      if (!this.qList[0].answered) {
+        if (answer == 3) {//quality easy
+          //remove item from the list and
+          //to do: store the item
 
-        }else{
-          this.qList[this.index];
+        } else {
+          currentItem.level = answer;//this is the level
+          currentItem.repeatTime = 3;//repeat it for three times
+          this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);//insert this item to the middle
         }
-      }else{
-
+      } else {
+        if (answer == 0 || answer == 1) {
+          //don't change the repeat time
+          this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
+        } else {
+          if (currentItem.repeatTime == 1) {
+            //to do: store the item
+          } else {
+            currentItem.repeatTime = currentItem.repeatTime - 1;
+            this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
+          }
+        }
       }
 
-     
-      this.index++;
+
+      // this.index++;//update current number
+
       this.displayAnswer = false;
-      console.log('the user answered', answer);
+      // console.log('the user answered', answer);
       this.updateEnableDisplayAnswer();
 
+      this.qList.forEach(e => {
+        console.log(e.id, e.repeatTime, e.level);
+      });
+      console.log('----------');
     }
     this.userCode = '';
     this.userMulti = '';
