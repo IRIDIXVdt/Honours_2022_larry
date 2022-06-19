@@ -21,33 +21,29 @@ export class Demo02Page implements OnInit {
   userCode: string = '';
   userMulti: string = '';
 
-
-
   constructor(
     public urs: UserRecordService,
     public dab: DatabaseService,
-
   ) {
-    //loadQuestionList
-    dab.getQuestionData().then(v => {
+    dab.getQuestionData().then(v => {//loadQuestionList
       //then initialize all the question as unanswered
       this.qList = (v as any[]);
       for (let i = 0; i < this.qList.length; i++) {
         this.qList[i].answered = false;
       }
-      //then initialize index
-      // this.index = 0;
-      this.displayAnswer = false;
       this.updateEnableDisplayAnswer();
     });
   }
+  ngOnInit() { }
 
-  ngOnInit() {
+  check() {
+    this.displayAnswer = true;
   }
 
   updateEnableDisplayAnswer() {
+    this.displayAnswer = false;
     // console.log(this.qList[0].qType);
-    if (this.qList.length > 0)
+    if (this.qList.length > 0)//otherwise session ends
       if (this.qList[0].qType === 'ba') {
         // console.log('this is a basic type question')
         this.disableDisplayAnswer = false;
@@ -56,34 +52,19 @@ export class Demo02Page implements OnInit {
       }
   }
 
+  /*
+  handle the responsive with user answer: repeat some of the question and store the others
 
-
-  enableDisplay() {
-    // console.log('trigger');
-    this.disableDisplayAnswer = false;
-  }
-
-  check() {
-    this.displayAnswer = true;
-  }
-
-  saveAndStore() {
-    this.qList.shift();//remove first element
-    //then store it in local storage in a specific way
-  }
-
+  if user is first time answering this question
+    if quality is easy, store info and end this right away
+    if quality is not easy, store info and repeat this three time
+  or if the user is attempting this question already
+    if quality is poor or repeat, repeat it once
+    if quality is good or easy, check if there are repeat time left
+      if no repeat time left, store info end this
+  */
   answer(answer: number) {
-    //handle the responsive: repeat some of the question
-    /*
-    if user is first time answering this question
-      if quality is easy, store info and end this right away
-      if quality is not easy, store info and repeat this three time
-    or if the user is attempting this question already
-      if quality is poor or repeat, repeat it once
-      if quality is good or easy, check if there are repeat time left
-        if no repeat time left, store info end this
-    */
-    var currentItem = this.qList.shift();//get the very first item
+    var currentItem = this.qList.shift();//pop the very first item of the list
     if (!currentItem.answered) {
       currentItem.answered = true;//update currenItem answer
       if (answer == 3) {//quality easy
@@ -92,13 +73,13 @@ export class Demo02Page implements OnInit {
       } else {
         currentItem.level = answer;//this is the level
         currentItem.repeatTime = 3;//repeat it for three times
-        this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);//insert this item to the middle
+        this.insertItem(currentItem);
       }
     } else {
       if (answer == 0 || answer == 1) {
         //don't change the repeat time
         console.log('respond poor quality, repeat question')
-        this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
+        this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
           //to do: store the item
@@ -107,31 +88,40 @@ export class Demo02Page implements OnInit {
           console.log('respond good quality, minus repeat time by 1')
           const repeatTime = currentItem.repeatTime;
           currentItem.repeatTime = repeatTime - 1;
-          this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
+          this.insertItem(currentItem);
         }
       }
     }
 
-    if (this.qList.length == 0) {
+    if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
-      //end this session
-      //then upload everything in this session to database
+      //todo: upload everything in this session to database
     }
-
-    // this.index++;//update current number
-
-    this.displayAnswer = false;
-    // console.log('the user answered', answer);
     this.updateEnableDisplayAnswer();
-
-    this.qList.forEach(e => {
+    this.qList.forEach(e => {//display all the items in the qList
       console.log(e.id, 'repeat', e.repeatTime, 'level', e.level);
     });
     console.log('----------');
-
+    //reset input space
     this.userCode = '';
     this.userMulti = '';
+  }
 
+  /*
+  insert the current item into the list
+
+  based on the length of the list
+  if length greater than 20, insert item into 1/4
+  if length greater than 10, insert item into 1/2
+  otherwise, insert item into end
+  */
+  insertItem(item) {
+    if (this.qList.length > 20)
+      this.qList.splice(Math.round(this.qList.length / 4), 0, item);
+    else if (this.qList.length > 10)
+      this.qList.splice(Math.round(this.qList.length / 2), 0, item);
+    else
+      this.qList.splice(this.qList.length, 0, item);
   }
 
   storeUserRecordData() {
