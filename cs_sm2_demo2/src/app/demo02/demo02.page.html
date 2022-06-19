@@ -14,7 +14,7 @@
 
   <ng-container *ngIf="!sessionEnd">
 
-    <div class="ionMaxContent" *ngIf="qList">
+    <div class="ionMaxContent" *ngIf="qList && qList.length>0">
       <div>
         <!-- <p>{{qList[index].question}}</p> -->
         <div [innerHTML]="qList[0].question"></div>
