@@ -46,7 +46,7 @@ export class Demo02Page implements OnInit {
   }
 
   updateEnableDisplayAnswer() {
-    // console.log(this.qList[0].qType);
+    console.log(this.qList[0].qType);
     if (this.qList[0].qType === 'ba') {
       // console.log('this is a basic type question')
       this.disableDisplayAnswer = false;
@@ -87,25 +87,29 @@ export class Demo02Page implements OnInit {
           if no repeat time left, store info end this
       */
       var currentItem = this.qList.shift();//get the very first item
-      if (!this.qList[0].answered) {
+      if (!currentItem.answered) {
+        currentItem.answered = true;//update currenItem answer
         if (answer == 3) {//quality easy
           //remove item from the list and
           //to do: store the item
-
         } else {
           currentItem.level = answer;//this is the level
           currentItem.repeatTime = 3;//repeat it for three times
           this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);//insert this item to the middle
         }
       } else {
+        
         if (answer == 0 || answer == 1) {
           //don't change the repeat time
+          console.log('respond poor quality, repeat question')
           this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
         } else {
           if (currentItem.repeatTime == 1) {
             //to do: store the item
           } else {
-            currentItem.repeatTime = currentItem.repeatTime - 1;
+            console.log('respond good quality, minus repeat time by 1')
+            const repeatTime = currentItem.repeatTime;
+            currentItem.repeatTime = repeatTime - 1;
             this.qList.splice(Math.round(this.qList.length / 2), 0, currentItem);
           }
         }
@@ -119,7 +123,7 @@ export class Demo02Page implements OnInit {
       this.updateEnableDisplayAnswer();
 
       this.qList.forEach(e => {
-        console.log(e.id, e.repeatTime, e.level);
+        console.log(e.id, 'repeat', e.repeatTime, 'level', e.level);
       });
       console.log('----------');
     }

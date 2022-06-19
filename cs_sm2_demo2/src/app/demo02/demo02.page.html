@@ -48,14 +48,17 @@
     <div class="bottomButtons">
       <!-- the list of buttons indicating how were the user remembers the term -->
 
-      <ion-button size="large" class="ion-padding-end" (click)="check()"
+      <!-- <ion-button size="large" class="ion-padding-end" (click)="check()"
         *ngIf="!displayAnswer && !disableDisplayAnswer">
         Display Answer
       </ion-button>
       <ion-button size="large" class="ion-padding-end" disabled="true" *ngIf="!displayAnswer && disableDisplayAnswer">
         Display Answer
+      </ion-button> -->
+      <ion-button size="large" class="ion-padding-end" (click)="check()"
+        *ngIf="!displayAnswer">
+        Display Answer
       </ion-button>
-
 
       <ng-container *ngIf="displayAnswer">
         <ion-button size="large" class="ion-padding-end" (click)="answer(0)">
