@@ -12,11 +12,10 @@ import { UserRecordService } from '../shared/service/user-record.service';
 })
 export class Demo02Page implements OnInit {
   // qList = questionList;
-  qList: any[];
+  qList: any[];//contains the list of all questions a user would answer today
   // index: number;//new logic: only display the first item
   displayAnswer: boolean;
-  disableDisplayAnswer: boolean;
-  newDisableDisplayAnswer: boolean = false;
+  // disableDisplayAnswer: boolean;
   sessionEnd: boolean;
   userCode: string = '';
   userMulti: string = '';
@@ -43,13 +42,13 @@ export class Demo02Page implements OnInit {
   updateEnableDisplayAnswer() {
     this.displayAnswer = false;
     // console.log(this.qList[0].qType);
-    if (this.qList.length > 0)//otherwise session ends
-      if (this.qList[0].qType === 'ba') {
-        // console.log('this is a basic type question')
-        this.disableDisplayAnswer = false;
-      } else {
-        this.disableDisplayAnswer = true;
-      }
+    // if (this.qList.length > 0)//otherwise session ends
+    //   if (this.qList[0].qType === 'ba') {
+    //     // console.log('this is a basic type question')
+    //     this.disableDisplayAnswer = false;
+    //   } else {
+    //     this.disableDisplayAnswer = true;
+    //   }
   }
 
   /*
@@ -78,21 +77,21 @@ export class Demo02Page implements OnInit {
     } else {
       if (answer == 0 || answer == 1) {
         //don't change the repeat time
-        console.log('respond poor quality, repeat question')
+        // console.log('respond poor quality, repeat question')
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
           //to do: store the item
-          //addition requirement: if the length gets to 0 end this session
+          console.log('store current item', currentItem);
         } else {
-          console.log('respond good quality, minus repeat time by 1')
+          // console.log('respond good quality, minus repeat time by 1')
           const repeatTime = currentItem.repeatTime;
           currentItem.repeatTime = repeatTime - 1;
           this.insertItem(currentItem);
         }
       }
     }
-
+    //addition requirement: if the length gets to 0 end this session
     if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
       //todo: upload everything in this session to database

@@ -21,13 +21,12 @@
         <ion-item-divider></ion-item-divider>
 
         <div class="answer" *ngIf="qList[0].qType === 'co'">
-          <ion-input class="centerText" #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode"
-            placeholder="Your code here">
+          <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your code here">
           </ion-input>
         </div>
         <div class="answer" *ngIf="qList[0].qType === 'mu'">
-          <ion-input class="centerText" #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti"
-            placeholder="Your selection here" maxlength="1"></ion-input>
+          <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
+            maxlength="1"></ion-input>
         </div>
         <div class="answer" *ngIf="qList[0].qType === 'ba'">
           <p></p>
@@ -55,8 +54,7 @@
       <ion-button size="large" class="ion-padding-end" disabled="true" *ngIf="!displayAnswer && disableDisplayAnswer">
         Display Answer
       </ion-button> -->
-      <ion-button size="large" class="ion-padding-end" (click)="check()"
-        *ngIf="!displayAnswer">
+      <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="!displayAnswer">
         Display Answer
       </ion-button>
 
