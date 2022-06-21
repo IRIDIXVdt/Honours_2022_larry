@@ -1,6 +1,6 @@
 export interface UserRecordData {
     userId: string;//this is the document id of user
-    completeTime: string;//this is the date of the record completion
+    completeTime: number;//this is the date of the record completion
     questionid: string;//this is the id of the answered question
     q: number; //this is the quality response a score from 0 to 6
     EF: number;//easy factore

@@ -69,6 +69,8 @@ export class Demo02Page implements OnInit {
       if (answer == 3) {//quality easy
         //remove item from the list and
         //to do: store the item
+        this.urs.storeLocalInfo(currentItem.id, 3, 2.5, 1);
+
       } else {
         currentItem.level = answer;//this is the level
         currentItem.repeatTime = 3;//repeat it for three times
@@ -82,7 +84,8 @@ export class Demo02Page implements OnInit {
       } else {
         if (currentItem.repeatTime == 1) {
           //to do: store the item
-          console.log('store current item', currentItem);
+          // console.log('store current item', currentItem);
+          this.urs.storeLocalInfo(currentItem.id, currentItem.level, 2.5, 1);
         } else {
           // console.log('respond good quality, minus repeat time by 1')
           const repeatTime = currentItem.repeatTime;
@@ -123,15 +126,7 @@ export class Demo02Page implements OnInit {
       this.qList.splice(this.qList.length, 0, item);
   }
 
-  storeUserRecordData() {
-    const data: UserRecordData = {
-      userId: '',
-      completeTime: '',
-      questionid: '',
-      q: 0,
-      EF: 0,
-      n: 0
-    }
-    console.log(data);
-  }
+  // storeUserRecordData() {
+
+  // }
 }

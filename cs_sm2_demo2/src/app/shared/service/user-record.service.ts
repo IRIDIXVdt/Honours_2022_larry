@@ -8,7 +8,7 @@ import { LocalStorageService } from './local-storage.service';
   providedIn: 'root'
 })
 export class UserRecordService {
-
+  //date calculation required
   constructor(
     public los: LocalStorageService,
     public fas: FirebaseService,
@@ -17,25 +17,55 @@ export class UserRecordService {
 
   data: UserRecordData = {
     userId: '',
-    completeTime: '',
+    completeTime: 0,
     questionid: '',
     q: 0,
     EF: 0,
     n: 0
   }
 
-  storeLocalInfo(completeTime, questionid, q, EF, n) {
+  storeLocalInfo(questionid, q, EF, n) {
+    //we need to store two things:
+    //user record, for the purpose of data collection for research
+    //user term list, introduce this term to user data list with q EF n and next date
     const UID = this.los.idStatus();//fetch user id
+    const current = new Date();
     console.log(UID);
-    const data: UserRecordData = {
+    const collectData: UserRecordData = {
       userId: this.los.idStatus(),
-      completeTime: completeTime,
       questionid: questionid,
+      completeTime: current.getUTCDate(),
       q: q,
       EF: EF,
       n: n,
     }
-    this.los.storeUserQuestionData(data);
+    //calculate the next date of text here
+    const interval = Math.round(this.timeIntervalCalculation(n, EF));
+    var next = current.getUTCDate() + interval;
+
+    const test = new Date();
+    test.setUTCDate(next);
+    const userInfo = {
+      questionid: questionid,
+      nextTime: next,
+      q: q,
+      EF: EF,
+      n: n,
+    }
+    console.log('store data', collectData);
+    console.log('get user info', userInfo);
+    console.log(test);
+    // this.los.storeUserQuestionData(data);
+  }
+
+  timeIntervalCalculation(n, EF) {
+    if (n == 1) {
+      return 1;
+    } else if (n == 2) {
+      return 6;
+    } else {
+      return this.timeIntervalCalculation(n - 1, EF) * EF;
+    }
   }
 
   async uploadLocalInfo() {
@@ -51,7 +81,7 @@ export class UserRecordService {
     var questionList = [];
     this.dab.getQuestionData().then(v => {
       questionList = (v as any[]);
-      
+
     });
 
   }
