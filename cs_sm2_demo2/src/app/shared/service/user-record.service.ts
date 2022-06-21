@@ -29,22 +29,20 @@ export class UserRecordService {
     //user record, for the purpose of data collection for research
     //user term list, introduce this term to user data list with q EF n and next date
     const UID = this.los.idStatus();//fetch user id
-    const current = new Date();
-    console.log(UID);
+    console.log(UID);//display user id
+    const current = new Date();//initialize Date object with current time
+    current.setHours(0,0,0,0);//set time to 0am to current timezone
     const collectData: UserRecordData = {
       userId: this.los.idStatus(),
       questionid: questionid,
-      completeTime: current.getUTCDate(),
+      completeTime: current.getTime(),
       q: q,
       EF: EF,
       n: n,
     }
-    //calculate the next date of text here
+    //calculate the interval of time with respect to next date
     const interval = Math.round(this.timeIntervalCalculation(n, EF));
-    var next = current.getUTCDate() + interval;
-
-    const test = new Date();
-    test.setUTCDate(next);
+    var next = current.getTime() + interval * 86400000;//next date in millisecond
     const userInfo = {
       questionid: questionid,
       nextTime: next,
@@ -54,6 +52,8 @@ export class UserRecordService {
     }
     console.log('store data', collectData);
     console.log('get user info', userInfo);
+    const test = new Date();
+    test.setTime(next);
     console.log(test);
     // this.los.storeUserQuestionData(data);
   }
