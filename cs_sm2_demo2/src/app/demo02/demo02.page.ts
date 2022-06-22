@@ -3,6 +3,7 @@ import { threadId } from 'worker_threads';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
 import { DatabaseService } from '../shared/service/database.service';
+import { LocalStorageService } from '../shared/service/local-storage.service';
 import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class Demo02Page implements OnInit {
   constructor(
     public urs: UserRecordService,
     public dab: DatabaseService,
+    public los: LocalStorageService,
   ) {
     dab.getQuestionData().then(v => {//loadQuestionList
       //then initialize all the question as unanswered

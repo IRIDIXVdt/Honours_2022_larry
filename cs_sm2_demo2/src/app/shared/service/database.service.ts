@@ -41,7 +41,7 @@ export class DatabaseService {
     return new Promise((resolve, reject) => {
       this.fas.getCollection("QuestionCollection")
         .subscribe((res) => {
-          console.log('display res', res);
+          // console.log('display res', res);
           const receiveValue = res.docs.map(e => {
             return {
               id: e.id,

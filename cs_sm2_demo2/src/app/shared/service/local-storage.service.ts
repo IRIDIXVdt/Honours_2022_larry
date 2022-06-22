@@ -95,7 +95,7 @@ export class LocalStorageService {
     return JSON.parse(localStorage.getItem('user')).uid;
   }
 
-  storeUserQuestionData(data) {
+  collectUserAnswer(data) {
     //get the current array
     var array = this.fetchUserQuestionData();
     if (array == null || array == undefined) {
@@ -104,10 +104,34 @@ export class LocalStorageService {
     array.push(data);//store it in a local variable array
     //store the new array in local storage
     localStorage.setItem('answerQuestion', JSON.stringify(array));
+    console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 
   fetchUserQuestionData() {
     return JSON.parse(localStorage.getItem('answerQuestion'));
+  }
+
+  storeUserProgress(data){
+    //get the current array
+    var array = this.fetchUserProgressData();
+    if (array == null || array == undefined) {
+      array = [];//if the array is empty, then initialize it
+    }
+    array.push(data);//store it in a local variable array
+    //store the new array in local storage
+    localStorage.setItem('answerProgress', JSON.stringify(array));
+    console.log(JSON.parse(localStorage.getItem('answerProgress')));
+  }
+
+  fetchUserProgressData() {
+    return JSON.parse(localStorage.getItem('answerProgress'));
+  }
+
+  resetAnswerAndProgress(){
+    localStorage.setItem('answerQuestion', null);
+    localStorage.setItem('answerProgress', null);
+    console.log(JSON.parse(localStorage.getItem('answerProgress')));
+    console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 }
 

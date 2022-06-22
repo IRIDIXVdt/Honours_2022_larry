@@ -50,12 +50,13 @@ export class UserRecordService {
       EF: EF,
       n: n,
     }
-    console.log('store data', collectData);
-    console.log('get user info', userInfo);
+    // console.log('store data', collectData);
+    // console.log('get user info', userInfo);
     const test = new Date();
     test.setTime(next);
     console.log(test);
-    // this.los.storeUserQuestionData(data);
+    this.los.collectUserAnswer(collectData);
+    this.los.storeUserProgress(userInfo);
   }
 
   timeIntervalCalculation(n, EF) {
