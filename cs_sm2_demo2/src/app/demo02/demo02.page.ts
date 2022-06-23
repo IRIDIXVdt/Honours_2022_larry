@@ -100,6 +100,8 @@ export class Demo02Page implements OnInit {
     if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
       //todo: upload everything in this session to database
+      // this.urs.uploadLocalInfo();
+      this.los.uploadAnswerAndProgress();
     }
     this.updateEnableDisplayAnswer();
     this.qList.forEach(e => {//display all the items in the qList

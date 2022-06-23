@@ -173,5 +173,12 @@ export class DatabaseService {
     return JSON.parse(localStorage.getItem('sessionList'));
   }
 
+  async uploadUserAnswer(userList: any[]) {
+    for (let i = 0; i < userList.length; i++) {
+      const result = await this.fas.addDataService('userAnswerRecord', userList[i]);
+      console.log(result);
+    }
+  }
+
 
 }

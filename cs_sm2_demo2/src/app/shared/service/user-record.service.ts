@@ -70,7 +70,7 @@ export class UserRecordService {
   }
 
   async uploadLocalInfo() {
-    const dataArray = this.los.fetchUserQuestionData() as UserRecordData[];
+    const dataArray = this.los.fetchUserAnswerRecordData() as UserRecordData[];
     //store each item into dataCollection
     for (let i = 0; i < dataArray.length; i++) {
       await this.fas.addDataService('dataCollection', dataArray[i]);

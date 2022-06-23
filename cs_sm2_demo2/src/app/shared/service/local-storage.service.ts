@@ -97,7 +97,7 @@ export class LocalStorageService {
 
   collectUserAnswer(data) {
     //get the current array
-    var array = this.fetchUserQuestionData();
+    var array = this.fetchUserAnswerRecordData();
     if (array == null || array == undefined) {
       array = [];//if the array is empty, then initialize it
     }
@@ -107,11 +107,11 @@ export class LocalStorageService {
     console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 
-  fetchUserQuestionData() {
+  fetchUserAnswerRecordData() {
     return JSON.parse(localStorage.getItem('answerQuestion'));
   }
 
-  storeUserProgress(data){
+  storeUserProgress(data) {
     //get the current array
     var array = this.fetchUserProgressData();
     if (array == null || array == undefined) {
@@ -127,7 +127,14 @@ export class LocalStorageService {
     return JSON.parse(localStorage.getItem('answerProgress'));
   }
 
-  resetAnswerAndProgress(){
+  uploadAnswerAndProgress() {
+    const userAnswerRecordArray = this.fetchUserAnswerRecordData();
+    console.log(userAnswerRecordArray);
+    this.das.uploadUserAnswer(userAnswerRecordArray);
+
+  }
+
+  resetAnswerAndProgress() {
     localStorage.setItem('answerQuestion', null);
     localStorage.setItem('answerProgress', null);
     console.log(JSON.parse(localStorage.getItem('answerProgress')));
