@@ -176,7 +176,16 @@ export class DatabaseService {
   async uploadUserAnswer(userList: any[]) {
     for (let i = 0; i < userList.length; i++) {
       const result = await this.fas.addDataService('userAnswerRecord', userList[i]);
-      console.log(result);
+      // console.log(result);
+    }
+  }
+
+  async uploadNewUserProgress(userList: any[]) {
+    const userId = JSON.parse(localStorage.getItem('user')).uid;
+    //insert all the userlist information into a colleciton in user
+    for (let i = 0; i < userList.length; i++) {
+      const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
+      // console.log(result);
     }
   }
 

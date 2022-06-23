@@ -10,6 +10,7 @@ export class LocalStorageService {
     public das: DatabaseService,
   ) {
     console.log(localStorage);
+    console.log(JSON.parse(localStorage.getItem('user')));
   }
 
   resetLS() {//turn local storage into default
@@ -128,10 +129,13 @@ export class LocalStorageService {
   }
 
   uploadAnswerAndProgress() {
-    const userAnswerRecordArray = this.fetchUserAnswerRecordData();
-    console.log(userAnswerRecordArray);
-    this.das.uploadUserAnswer(userAnswerRecordArray);
+    // const userAnswerRecordArray = this.fetchUserAnswerRecordData();
+    // console.log(userAnswerRecordArray);
+    // this.das.uploadUserAnswer(userAnswerRecordArray);
 
+    const userAnswerProgresArray = this.fetchUserProgressData();
+    console.log(userAnswerProgresArray);
+    this.das.uploadNewUserProgress(userAnswerProgresArray);
   }
 
   resetAnswerAndProgress() {
