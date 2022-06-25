@@ -174,20 +174,33 @@ export class DatabaseService {
   }
 
   async uploadUserAnswer(userList: any[]) {
-    for (let i = 0; i < userList.length; i++) {
-      const result = await this.fas.addDataService('userAnswerRecord', userList[i]);
-      // console.log(result);
+    try {
+      for (let i = 0; i < userList.length; i++) {
+        const result = await this.fas.addDataService('userAnswerRecord', userList[i]);
+        // console.log(result);
+      }
+    } catch (e) {
+      console.error(e);
+      //if the upload failed, return false
+      //so the system do not clean up local data after this action
+      //a possible re-upload may also be implemented here
     }
+
   }
 
   async uploadNewUserProgress(userList: any[]) {
     const userId = JSON.parse(localStorage.getItem('user')).uid;
     //insert all the userlist information into a colleciton in user
-    for (let i = 0; i < userList.length; i++) {
-      const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
-      // console.log(result);
+    try {
+      for (let i = 0; i < userList.length; i++) {
+        const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
+        // console.log(result);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 
+  //to do: update Previous User Progress
 
 }
