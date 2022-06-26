@@ -26,18 +26,29 @@ export class Demo02Page implements OnInit {
     public dab: DatabaseService,
     public los: LocalStorageService,
   ) {
-    dab.getQuestionData().then(v => {//loadQuestionList
-      //then initialize all the question as unanswered
-      this.qList = (v as any[]);
-      for (let i = 0; i < this.qList.length; i++) {
-        this.qList[i].answered = false;
-      }
-      this.updateEnableDisplayAnswer();
-    });
+    this.fetchFromRemoteDatabase();
   }
   ngOnInit() { }
 
-  check() {
+  async fetchFromRemoteDatabase() {
+
+    //then initialize all the question as unanswered
+    const v = await this.dab.getQuestionData();
+    this.qList = v as any[];
+    for (let i = 0; i < this.qList.length; i++) {
+      this.qList[i].answered = false;
+    }
+    console.log(this.qList);
+    const previousList = await this.dab.fetchUserPreviousProgress();
+    if (previousList != null || previousList != undefined) {
+     console.log('true') 
+    }
+    this.updateEnableDisplayAnswer();
+
+
+  }
+
+  check() {//invoked in front end page to reveal the button
     this.displayAnswer = true;
   }
 
@@ -70,9 +81,8 @@ export class Demo02Page implements OnInit {
       currentItem.answered = true;//update currenItem answer
       if (answer == 3) {//quality easy
         //remove item from the list and
-        //to do: store the item
+        //store the item in local storage
         this.urs.storeLocalInfo(currentItem.id, 3, 2.5, 1);
-
       } else {
         currentItem.level = answer;//this is the level
         currentItem.repeatTime = 3;//repeat it for three times
@@ -85,8 +95,7 @@ export class Demo02Page implements OnInit {
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
-          //to do: store the item
-          // console.log('store current item', currentItem);
+          //store the item in local storage
           this.urs.storeLocalInfo(currentItem.id, currentItem.level, 2.5, 1);
         } else {
           // console.log('respond good quality, minus repeat time by 1')

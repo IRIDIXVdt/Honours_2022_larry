@@ -6,6 +6,7 @@ import { FirebaseService } from './firebase.service';
 import { User } from "../data/userSchema";
 import { getAdditionalUserInfo, user } from '@angular/fire/auth';
 import { LocalStorageService } from './local-storage.service';
+import firebase from 'firebase/compat/app';
 
 @Injectable({
   providedIn: 'root'
@@ -195,10 +196,37 @@ export class DatabaseService {
       for (let i = 0; i < userList.length; i++) {
         const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
         // console.log(result);
+
       }
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async fetchUserPreviousProgress() {
+    const userId = JSON.parse(localStorage.getItem('user')).uid;
+
+    return new Promise((resolve, reject) => {
+      this.fas.getCollection('users' + '/' + userId + '/' + 'answerList')
+        .subscribe((res) => {
+          const receiveValue = res.docs.map(e => {
+            return {
+              id: e.id,//document id
+              EF: e.data()['EF'],
+              n: e.data()['n'],
+              nextTime: e.data()['nextTime'],
+              q: e.data()['q'],
+              questionId: e.data()['questionId'],
+            }
+          });
+          console.log("Previous User Progress Display", receiveValue);
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          // this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
   }
 
   //to do: update Previous User Progress
