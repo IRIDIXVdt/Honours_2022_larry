@@ -13,43 +13,50 @@
   </ng-container>
 
   <ng-container *ngIf="!sessionEnd">
-    <div class="ionMaxContent">
-      <div class="centerText">
-        <p>{{qList[index].question}}</p>
 
+    <div class="ionMaxContent" *ngIf="qList && qList.length>0">
+      <div>
+        <!-- <p>{{qList[index].question}}</p> -->
+        <div [innerHTML]="qList[0].question"></div>
         <ion-item-divider></ion-item-divider>
 
-        <div class="answer" *ngIf="qList[index].questionType === 'code'">
-          <ion-input #codeInput (ionChange)="enableDisplay()" [(ngModel)]="userCode" placeholder="Your code here">
+        <div class="answer" *ngIf="qList[0].qType === 'co'">
+          <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your code here">
           </ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].questionType === 'multi'">
-          <ion-input #multiInput (ionChange)="enableDisplay()" [(ngModel)]="userMulti" placeholder="Your selection here"
+        <div class="answer" *ngIf="qList[0].qType === 'mu'">
+          <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
         </div>
-        <div class="answer" *ngIf="qList[index].questionType === 'basic'">
+        <div class="answer" *ngIf="qList[0].qType === 'ba'">
           <p></p>
         </div>
         <div *ngIf="displayAnswer">
-          {{qList[index].answer}}
+          <!-- {{qList[index].answer}} -->
+          <div [innerHTML]="qList[0].answer"></div>
         </div>
+
       </div>
     </div>
 
-
+    <div *ngIf="!qList">
+      <ion-progress-bar type="indeterminate"></ion-progress-bar>
+    </div>
 
 
     <div class="bottomButtons">
       <!-- the list of buttons indicating how were the user remembers the term -->
 
-      <ion-button size="large" class="ion-padding-end" (click)="check()"
+      <!-- <ion-button size="large" class="ion-padding-end" (click)="check()"
         *ngIf="!displayAnswer && !disableDisplayAnswer">
         Display Answer
       </ion-button>
       <ion-button size="large" class="ion-padding-end" disabled="true" *ngIf="!displayAnswer && disableDisplayAnswer">
         Display Answer
+      </ion-button> -->
+      <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="!displayAnswer">
+        Display Answer
       </ion-button>
-
 
       <ng-container *ngIf="displayAnswer">
         <ion-button size="large" class="ion-padding-end" (click)="answer(0)">
@@ -67,7 +74,7 @@
       </ng-container>
     </div>
     <div class="bottomRightButtons">
-      <ion-button size="large" class="ion-padding-end">
+      <ion-button size="large" class="ion-padding-end" (click)="this.los.resetAnswerAndProgress()">
         More
       </ion-button>
     </div>
