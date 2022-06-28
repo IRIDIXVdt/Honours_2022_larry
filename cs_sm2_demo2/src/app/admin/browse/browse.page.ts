@@ -9,18 +9,44 @@ import { DatabaseService } from 'src/app/shared/service/database.service';
 export class BrowsePage implements OnInit {
 
   questionList;
-
+  sList;
+  sessionList;
   constructor(
-    private dt: DatabaseService,
+    private das: DatabaseService,
   ) {
-    this.dt.getQuestionData().then((v) => { this.questionList = v; });
+    this.das.getQuestionData().then((v) => { this.questionList = v; });
+    this.fetchSession();
   }
 
   ngOnInit() { }
 
-  buttonClick(){
+  updateQuestionData() {
+    console.log("update question");
+  }
+
+  buttonClick() {
     console.log("button onclick");
   }
 
+  fetchSession() {
+    this.sList = null;
+    this.das.getSessionData('All').then(v => {
+      this.sList = v;
+      console.log(this.sList);
+      this.generateSessionList();
+    });
+  }
 
+  generateSessionList() {
+    const sessionIdList: string[] = this.das.getLocalUserSessionList();
+    if (sessionIdList.length > 0) {
+      this.sessionList = [];
+      for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
+        if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
+          this.sessionList.push(this.sList[i]);
+        }
+      }
+    }
+    console.log(this.sessionList, this.sList);
+  }
 }
