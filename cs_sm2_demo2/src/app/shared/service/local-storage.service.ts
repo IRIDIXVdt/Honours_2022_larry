@@ -17,6 +17,8 @@ export class LocalStorageService {
     localStorage.setItem('admin', JSON.stringify(false));
     localStorage.setItem('user', null);
     localStorage.setItem('sessionList', null);//remove session list
+    localStorage.setItem('answerProgress',null);
+    localStorage.setItem('answerQuestion',null);
   }
 
   updateLS(item) {
