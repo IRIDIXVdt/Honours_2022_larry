@@ -6,8 +6,8 @@
     <ion-title>Release Question</ion-title>
   </ion-toolbar>
   <ion-toolbar *ngIf="sList">
-    <ion-select (ionChange)="updateQuestionData()" [(ngModel)]="sessionId" interface="action-sheet" placeholder="Click here to select Filter">
-      <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+
+    <ion-select (ionChange)="updateQuestionData()" [(ngModel)]="sessionId" interface="action-sheet" placeholder="Click here to select session">
+      <ion-select-option *ngFor="let item of sList" value="{{item.sCode}}">{{item.sCode + ' '+
         item.sNumber + ' ' + item.sTime}}</ion-select-option>
     </ion-select>
   </ion-toolbar>

@@ -33,6 +33,11 @@ export class FirebaseService {
       .get();
   }
 
+  getDataWithFilter(collection, target, targetValue) {
+    return this.db.collection(collection, ref => ref.where(target, '==', targetValue)).get();
+    // return this.db.collection(collection, ref => ref.where('qCourse', '==', 'cosc304')).get();
+  }
+
   getCollectionFilter(collection, type, targetValue) {
     return this.db.collection(collection, ref =>
       ref.where(type, '==', targetValue)).get();

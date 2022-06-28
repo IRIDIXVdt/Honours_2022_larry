@@ -11,6 +11,7 @@ export class BrowsePage implements OnInit {
   questionList;
   sList;
   sessionList;
+  sessionId;
   constructor(
     private das: DatabaseService,
   ) {
@@ -20,12 +21,10 @@ export class BrowsePage implements OnInit {
 
   ngOnInit() { }
 
-  updateQuestionData() {
-    console.log("update question");
-  }
-
-  buttonClick() {
-    console.log("button onclick");
+  async updateQuestionData() {
+    console.log("update question", this.sessionId);
+    const list = await this.das.filterQuestionData(this.sessionId.toLowerCase());
+    console.log(list);
   }
 
   fetchSession() {
@@ -47,6 +46,5 @@ export class BrowsePage implements OnInit {
         }
       }
     }
-    console.log(this.sessionList, this.sList);
   }
 }

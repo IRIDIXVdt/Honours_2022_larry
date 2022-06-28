@@ -62,6 +62,29 @@ export class DatabaseService {
     });
   }
 
+  filterQuestionData(course) {
+    return new Promise((resolve, reject) => {
+      this.fas.getDataWithFilter('QuestionCollection', 'qCourse', course)
+        .subscribe((res) => {
+          const receiveValue = res.docs.map(e => {
+            return {
+              id: e.id,
+              qType: e.data()['qType'],
+              qCourse: e.data()['qCourse'],
+              question: e.data()['question'],
+              answer: e.data()['answer'],
+              description: e.data()['description'],
+            }
+          });
+          resolve(receiveValue);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   getSessionDataWithId(sid) {
     return new Promise((resolve, reject) => {//invoke method on filter type
       this.fas.getDocument('sessionCollection', sid)
