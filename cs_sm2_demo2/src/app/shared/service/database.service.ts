@@ -123,7 +123,7 @@ export class DatabaseService {
 
   getSessionQuestionWithId(sid) {
     return new Promise((resolve, reject) => {
-      this.fas.getCollection("QuestionCollection" + '/' + sid + '/' + 'release')
+      this.fas.getCollection("sessionCollection" + '/' + sid + '/' + 'release')
         .subscribe((res) => {
           // console.log('display res', res);
           const receiveValue = res.docs.map(e => {
@@ -131,7 +131,6 @@ export class DatabaseService {
               id: e.id,
               qId: e.data()['qId'],
               qTime: e.data()['qTime'],
-              qRelease: e.data['qRelease'],
             }
           });
           resolve(receiveValue);
@@ -141,6 +140,15 @@ export class DatabaseService {
           this.als.displayMessage('Fail to fetch data from database. Please try again.');
         })
     });
+  }
+
+  addSessionQuestionWithId(sid, qId) {
+    const currentTime = (new Date()).getTime();
+    const data = {
+      qId: qId,
+      qTime: currentTime,
+    }
+    this.fas.addDataService("sessionCollection" + '/' + sid + '/' + 'release', data);
   }
 
   addUserSession(sessionId) {

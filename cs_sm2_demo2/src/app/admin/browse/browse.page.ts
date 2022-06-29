@@ -12,6 +12,8 @@ export class BrowsePage implements OnInit {
   sList;
   sessionList;
   sessionId;
+  checkedQuestionList;
+
   constructor(
     private das: DatabaseService,
   ) {
@@ -21,15 +23,32 @@ export class BrowsePage implements OnInit {
 
   ngOnInit() { }
 
-  display(){
+  async display() {
     console.log(this.questionList);
+  }
+
+  async uploadCheckedQuestion() {
+    for (let i = 0; i < this.questionList.length; i++) {
+      const currentItem = this.questionList[i];
+      if (currentItem.isChecked) {//if isChecked feature exist or equals true
+        const element = await this.das.addSessionQuestionWithId(this.sessionId, currentItem.id);
+        console.log(element);
+      }
+    }
+  }
+
+  async fetchSessionData(){
+    this.checkedQuestionList = await this.das.getSessionQuestionWithId(this.sessionId);
+    console.log(this.checkedQuestionList);
   }
 
   async updateQuestionData() {
     console.log("update question", this.sessionId);
-    const list = await this.das.filterQuestionData(this.sessionId.toLowerCase());
+    const list = await this.das.filterQuestionData(this.sList.filter(
+      e => e.id == this.sessionId)[0].sCode.toLowerCase());
     console.log(list);
     this.questionList = list;
+    this.fetchSessionData()
   }
 
   fetchSession() {

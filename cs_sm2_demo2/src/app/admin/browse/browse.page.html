@@ -8,7 +8,7 @@
   <ion-toolbar>
     <ion-select *ngIf="sList" (ionChange)="updateQuestionData()" [(ngModel)]="sessionId" interface="action-sheet"
       placeholder="Click here to select session">
-      <ion-select-option *ngFor="let item of sList" value="{{item.sCode}}">{{item.sCode + ' '+
+      <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+
         item.sNumber + ' ' + item.sTime}}</ion-select-option>
     </ion-select>
     <ion-segment *ngIf="questionList" value="nr">
