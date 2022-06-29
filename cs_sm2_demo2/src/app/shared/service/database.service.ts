@@ -121,6 +121,28 @@ export class DatabaseService {
     });
   }
 
+  getSessionQuestionWithId(sid) {
+    return new Promise((resolve, reject) => {
+      this.fas.getCollection("QuestionCollection" + '/' + sid + '/' + 'release')
+        .subscribe((res) => {
+          // console.log('display res', res);
+          const receiveValue = res.docs.map(e => {
+            return {
+              id: e.id,
+              qId: e.data()['qId'],
+              qTime: e.data()['qTime'],
+              qRelease: e.data['qRelease'],
+            }
+          });
+          resolve(receiveValue);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   addUserSession(sessionId) {
     if (sessionId != '') {//verify input not empty
       //also make sure we don't have repeating ones
