@@ -15,16 +15,21 @@ export class BrowsePage implements OnInit {
   constructor(
     private das: DatabaseService,
   ) {
-    this.das.getQuestionData().then((v) => { this.questionList = v; });
+    // this.das.getQuestionData().then((v) => { this.questionList = v; });
     this.fetchSession();
   }
 
   ngOnInit() { }
 
+  display(){
+    console.log(this.questionList);
+  }
+
   async updateQuestionData() {
     console.log("update question", this.sessionId);
     const list = await this.das.filterQuestionData(this.sessionId.toLowerCase());
     console.log(list);
+    this.questionList = list;
   }
 
   fetchSession() {
