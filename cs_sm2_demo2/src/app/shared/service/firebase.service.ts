@@ -19,6 +19,11 @@ export class FirebaseService {
     return this.db.collection(collection).get();
   }
 
+  getCollectionWithOrder(collection, order) {
+    return this.db.collection(collection, ref =>
+      ref.orderBy(order, "asc")).get();
+  }
+
   getDocument(collection, docId) {
     return this.db.doc(collection + '/' + docId).get();
   }

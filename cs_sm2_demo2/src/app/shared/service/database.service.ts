@@ -123,7 +123,7 @@ export class DatabaseService {
 
   getSessionQuestionWithId(sid) {
     return new Promise((resolve, reject) => {
-      this.fas.getCollection("sessionCollection" + '/' + sid + '/' + 'release')
+      this.fas.getCollectionWithOrder("sessionCollection" + '/' + sid + '/' + 'release', 'qTime')
         .subscribe((res) => {
           // console.log('display res', res);
           const receiveValue = res.docs.map(e => {
