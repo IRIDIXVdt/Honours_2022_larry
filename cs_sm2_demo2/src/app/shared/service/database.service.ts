@@ -142,6 +142,19 @@ export class DatabaseService {
     });
   }
 
+  removeSessionQuestionWithId(sid, qid) {
+    return new Promise((resolve, reject) => {
+      this.fas.removeDataById("sessionCollection" + '/' + sid + '/' + 'release/' + qid)
+        .then((res) => {
+          resolve(res);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   addSessionQuestionWithId(sid, qId) {
     const currentTime = (new Date()).getTime();
     const data = {

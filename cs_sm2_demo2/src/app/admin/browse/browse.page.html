@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Release Question</ion-title>
+    <ion-title>Manage Released Question</ion-title>
   </ion-toolbar>
   <ion-toolbar>
     <ion-select *ngIf="sList" (ionChange)="updateQuestionData()" [(ngModel)]="sessionId" interface="action-sheet"
@@ -13,7 +13,7 @@
     </ion-select>
     <ion-segment *ngIf="questionList" [(ngModel)]="currentSeg" (ionChange)="updateQuestionList()">
       <ion-segment-button value="nr">
-        <ion-label>Not Released</ion-label>
+        <ion-label>Hidden</ion-label>
       </ion-segment-button>
       <ion-segment-button value="ir">
         <ion-label>Released</ion-label>
@@ -24,14 +24,15 @@
 
 <ion-content>
   <!-- need session component to sort questionList -->
-  <ng-container *ngIf="!questionList">
+  <ng-container *ngIf="!sList">
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
   </ng-container>
-  <div class="ionMaxContent" *ngIf="questionList">
+  <div class="ionMaxContent" *ngIf="sList">
     <ion-item *ngFor="let item of questionList">
       <div [innerHTML]="item.description"></div>
       <ion-checkbox slot="start" [(ngModel)]="item.isChecked"></ion-checkbox>
     </ion-item>
+    <ion-button class="ion-padding" *ngIf="questionList" (click)="changeState()">Hide/Release The Selected Question</ion-button>
   </div>
-  <ion-button (click)="display()">Display List</ion-button>
+
 </ion-content>

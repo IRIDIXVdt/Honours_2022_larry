@@ -24,17 +24,36 @@ export class BrowsePage implements OnInit {
     this.fetchSession();
     this.currentSeg = 'nr';
   }
+  *
+    //to do: 
+    //fetch the checked list from database
+    //with the checked list, update the list display in the browse page
+    //specifically, depending on the status on the question (checked or not checked), 
+    //they should be in different segment
 
-  //to do: 
-  //fetch the checked list from database
-  //with the checked list, update the list display in the browse page
-  //specifically, depending on the status on the question (checked or not checked), 
-  //they should be in different segment
+    ngOnInit() { }
 
-  ngOnInit() { }
-
-  async display() {
-    console.log(this.questionList);
+  async changeState() {
+    // console.log(this.questionList);
+    if (this.currentSeg == 'nr')
+      for (let i = 0; i < this.questionList.length; i++) {
+        const currentItem = this.questionList[i];
+        if (currentItem.isChecked) {//if isChecked feature exist or equals true
+          const element = await this.das.addSessionQuestionWithId(this.sessionId, currentItem.id);
+          // console.log(currentItem);
+        }
+      }
+    else
+      for (let i = 0; i < this.questionList.length; i++) {
+        const currentItem = this.questionList[i];
+        if (currentItem.isChecked) {//if isChecked feature exist or equals true
+          const element = await this.das.removeSessionQuestionWithId(this.sessionId, currentItem.docId);
+          // console.log(currentItem);
+        }
+      }
+    
+    //refresh question
+    this.updateQuestionData();
   }
 
   updateQuestionList() {
@@ -48,33 +67,51 @@ export class BrowsePage implements OnInit {
   }
 
   async uploadCheckedQuestion() {
-    for (let i = 0; i < this.questionList.length; i++) {
-      const currentItem = this.questionList[i];
-      if (currentItem.isChecked) {//if isChecked feature exist or equals true
-        const element = await this.das.addSessionQuestionWithId(this.sessionId, currentItem.id);
-        console.log(element);
+    console.log(this.questionList);
+    if (this.currentSeg == 'nr')
+      for (let i = 0; i < this.questionList.length; i++) {
+        const currentItem = this.questionList[i];
+        if (currentItem.isChecked) {//if isChecked feature exist or equals true
+          // const element = await this.das.addSessionQuestionWithId(this.sessionId, currentItem.id);
+          console.log(currentItem);
+        }
       }
-    }
+    else
+      for (let i = 0; i < this.questionList.length; i++) {
+        const currentItem = this.questionList[i];
+        if (currentItem.isChecked) {//if isChecked feature exist or equals true
+          // const element = await this.das.addSessionQuestionWithId(this.sessionId, currentItem.id);
+          console.log(currentItem);
+        }
+      }
   }
 
   async updateQuestionData() {
     const loadingHandler = await this.als.startLoading();
+
+    //get all the question that is already in the checked list
+    this.checkedQuestionList = await this.das.getSessionQuestionWithId(this.sessionId);
+
     //fetch all the quesiton id, given the session code. Result store in list
     this.questionList = await this.das.filterQuestionData(this.sList.filter(
       e => e.id == this.sessionId)[0].sCode.toLowerCase());
-    //get all the question that is already in the checked list
-    this.checkedQuestionList = await this.das.getSessionQuestionWithId(this.sessionId);
+    
     //with the questionList and checkedQuestionList, update the nr and ir list
-    // console.log(this.questionList);
-    // console.log(this.checkedQuestionList);
+
     //first reset the list
     this.irList = []; this.nrList = [];
     while (this.questionList.length > 0) {
-      const currentItem = this.questionList.pop();
-      if (this.checkedQuestionList.filter(e => e.qId == currentItem.id).length > 0)
+      var currentItem = this.questionList.pop();
+      const checkItemHandler = this.checkedQuestionList.filter(e => e.qId == currentItem.id)
+      if (checkItemHandler.length > 0) {
+        //insert the docId: the id of the question in the session
+        currentItem.docId = checkItemHandler[0].id;
+        //it is released
         this.irList.push(currentItem);
-      else
+      } else {
+        //it is not released
         this.nrList.push(currentItem);
+      }
     }
     // console.log(this.irList, this.nrList);
     this.updateQuestionList();//this update questionList on the html page

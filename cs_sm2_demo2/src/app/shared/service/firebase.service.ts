@@ -15,6 +15,10 @@ export class FirebaseService {
     return this.db.doc(collection + '/' + docId).update(data);
   }
 
+  removeDataById(docId) {
+    return this.db.doc(docId).delete();
+  }
+
   getCollection(collection) {
     return this.db.collection(collection).get();
   }
