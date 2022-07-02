@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from 'src/app/shared/service/alert.service';
 import { DatabaseService } from 'src/app/shared/service/database.service';
 
 @Component({
@@ -7,18 +8,21 @@ import { DatabaseService } from 'src/app/shared/service/database.service';
   styleUrls: ['./browse.page.scss'],
 })
 export class BrowsePage implements OnInit {
-
   questionList;
   sList;
-  // sessionList;
   sessionId;
   checkedQuestionList;
 
+  currentSeg: string;
+  nrList; //not checked question list
+  irList; //checked question list
+
   constructor(
     private das: DatabaseService,
+    private als: AlertService,
   ) {
-    // this.das.getQuestionData().then((v) => { this.questionList = v; });
     this.fetchSession();
+    this.currentSeg = 'nr';
   }
 
   //to do: 
@@ -33,6 +37,16 @@ export class BrowsePage implements OnInit {
     console.log(this.questionList);
   }
 
+  updateQuestionList() {
+    //in the html page, display questions depending on the segment
+    this.questionList = [];//reset the questionList
+    if (this.currentSeg == 'nr') {
+      this.questionList = this.nrList.map(v => v);
+    } else {
+      this.questionList = this.irList.map(v => v);
+    }
+  }
+
   async uploadCheckedQuestion() {
     for (let i = 0; i < this.questionList.length; i++) {
       const currentItem = this.questionList[i];
@@ -43,20 +57,28 @@ export class BrowsePage implements OnInit {
     }
   }
 
-  async fetchSessionData() {
+  async updateQuestionData() {
+    const loadingHandler = await this.als.startLoading();
+    //fetch all the quesiton id, given the session code. Result store in list
+    this.questionList = await this.das.filterQuestionData(this.sList.filter(
+      e => e.id == this.sessionId)[0].sCode.toLowerCase());
     //get all the question that is already in the checked list
     this.checkedQuestionList = await this.das.getSessionQuestionWithId(this.sessionId);
-    console.log(this.checkedQuestionList);
-  }
-
-  async updateQuestionData() {
-    console.log("update question", this.sessionId);
-    //fetch all the quesiton id, given the session code. Result store in list
-    const list = await this.das.filterQuestionData(this.sList.filter(
-      e => e.id == this.sessionId)[0].sCode.toLowerCase());
-    console.log(list);
-    this.questionList = list;
-    this.fetchSessionData()
+    //with the questionList and checkedQuestionList, update the nr and ir list
+    // console.log(this.questionList);
+    // console.log(this.checkedQuestionList);
+    //first reset the list
+    this.irList = []; this.nrList = [];
+    while (this.questionList.length > 0) {
+      const currentItem = this.questionList.pop();
+      if (this.checkedQuestionList.filter(e => e.qId == currentItem.id).length > 0)
+        this.irList.push(currentItem);
+      else
+        this.nrList.push(currentItem);
+    }
+    // console.log(this.irList, this.nrList);
+    this.updateQuestionList();//this update questionList on the html page
+    loadingHandler.dismiss();
   }
 
   fetchSession() {//retrieve all the sessions from database, store it in sList
@@ -68,16 +90,4 @@ export class BrowsePage implements OnInit {
     });
   }
 
-  // generateSessionList() {
-  //   const sessionIdList: string[] = this.das.getLocalUserSessionList();
-  //   if (sessionIdList.length > 0) {
-  //     this.sessionList = [];
-  //     for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
-  //       if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
-  //         this.sessionList.push(this.sList[i]);
-  //       }
-  //     }
-  //   }
-  //   console.log(this.sessionList);
-  // }
 }

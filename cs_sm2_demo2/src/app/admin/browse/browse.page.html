@@ -11,7 +11,7 @@
       <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+
         item.sNumber + ' ' + item.sTime}}</ion-select-option>
     </ion-select>
-    <ion-segment *ngIf="questionList" value="nr">
+    <ion-segment *ngIf="questionList" [(ngModel)]="currentSeg" (ionChange)="updateQuestionList()">
       <ion-segment-button value="nr">
         <ion-label>Not Released</ion-label>
       </ion-segment-button>
