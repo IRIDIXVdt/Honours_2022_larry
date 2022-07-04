@@ -17,8 +17,8 @@ export class LocalStorageService {
     localStorage.setItem('admin', JSON.stringify(false));
     localStorage.setItem('user', null);
     localStorage.setItem('sessionList', null);//remove session list
-    localStorage.setItem('answerProgress',null);
-    localStorage.setItem('answerQuestion',null);
+    localStorage.setItem('answerProgress', null);
+    localStorage.setItem('answerQuestion', null);
   }
 
   updateLS(item) {
@@ -29,7 +29,12 @@ export class LocalStorageService {
     }
   }
 
+  setLocalData(list, data){
+    localStorage.setItem(list, JSON.stringify(data));
+  }
+
   setLocalUserData(userData) {
+    //to do: remove this
     // console.log(userData);
     // localStorage.setItem('session',JSON.stringify());
     localStorage.setItem('user', JSON.stringify(userData));
@@ -38,6 +43,7 @@ export class LocalStorageService {
   }
 
   fetchLocalUserSessionList() {
+    //to do: remove this
     this.das.getUserCustomizeInfo('sessionList').then(v => {
       this.setLocalUserSessionList(v);
       console.log(localStorage);

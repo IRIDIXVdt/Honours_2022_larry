@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>User Profile</ion-title>
+    
+    <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Display Storage
+    </ion-button>
+
     <ion-button *ngIf="!this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
       routerLink="/tabs/account/register">
       Sign Up
@@ -101,7 +106,7 @@
                           <ion-button slot="end" (click)="joinSession()">Join Session</ion-button>
                         </ion-toolbar>
                       </ng-container>
-                      
+
                     </ng-container>
                     <ng-container *ngIf="!sList">
                       <!-- if the sList is not ready -->

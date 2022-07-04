@@ -24,7 +24,7 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public das: DatabaseService,
     public los: LocalStorageService,
-  ) {}
+  ) { }
 
   async signOut() {  // Sign out 
     await this.als.presentChoice("Do you want to sign out?").then(async (resultLoading) => {
@@ -48,11 +48,12 @@ export class AuthService {
     this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         if (result.user.emailVerified) { // if user's account has been verified
-          this.los.setLocalUserData(result.user); // stored user's info in to local database (refresh page will not reset) 
-          this.los.updateLS('admin');
-          this.das.setUserData(result.user);  // update user's info to remote database
+          console.log("User is verified, update all the information in local storage");
+          //to do: rewrite setLocalUserData updateLS so that console log correct information
           loading.dismiss(); //stop the loading animation
-          this.router.navigate([this.homeAddress]);
+          this.userDataUpdate(result.user);
+
+
         } else {
           loading.dismiss(); //stop the loading animation
           this.als.signInErrorAlert('Email is not verified');
@@ -65,6 +66,27 @@ export class AuthService {
         else
           this.als.signInErrorAlert('Check your internet connection');
       })
+  }
+
+  async userDataUpdate(data) {
+    const loading = await this.als.startLoading();
+    try {
+      // stored user's info in to local database (refresh page will not reset) 
+      this.los.setLocalData('user', data); //store user List
+      this.los.setLocalData('sessionList', await this.das.getUserCustomizeInfo('sessionList'));
+      //to do: add user progress to local storage
+      this.los.updateLS('admin');//check if is admin
+      // update user's info to remote database
+      this.das.setUserData(data);
+      console.log(localStorage);
+      this.router.navigate([this.homeAddress]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      loading.dismiss();
+    }
+
+
   }
 
   // Sign up with email/password
@@ -152,6 +174,7 @@ export class AuthService {
     return this.afAuth.signInWithPopup(provider)
       .then((result) => {
         this.ngZone.run(() => {
+          //to do: bug fix authlogin
           this.los.setLocalUserData(result.user);
           this.router.navigate([this.homeAddress]);//new routing 
           this.los.updateLS("admin");

@@ -21,24 +21,32 @@ export class AccountPage implements OnInit {
     public als: AlertService,
     public los: LocalStorageService,
   ) {
-    if (!this.aus.isAdmin()) {//normal user
+    console.log(!this.aus.isAdmin(),this.los.userStatus())
+    if (!this.aus.isAdmin() && this.los.userStatus()) {//normal user
       //load sList
       this.fetchSession();
     }
 
   }
 
+  displayLocalStorage() {
+    console.log(localStorage)
+  }
+
   generateSessionList() {
     //get sessionid List
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
+    console.log(sessionIdList);
     //if list greater than 0
-    if (sessionIdList.length > 0) {
+    if (sessionIdList != null && sessionIdList.length > 0) {
+      console.log('generate')
       //get all the sessions
       //it is available in sList
       //initialize the local sessionlist variable
       this.sessionList = [];
       for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
         if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
+          console.log(this.sessionList)
           this.sessionList.push(this.sList[i]);
         }
       }
@@ -51,7 +59,7 @@ export class AccountPage implements OnInit {
       //   }
       // }
     }
-    console.log(this.sessionList,this.sList);
+    console.log(this.sessionList, this.sList);
     //store information in the sessionList
   }
 
