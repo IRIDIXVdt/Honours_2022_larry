@@ -11,37 +11,42 @@ import { LocalStorageService } from '../shared/service/local-storage.service';
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit {
+  //only used when user want to join a selected session
   sessionId = '';
+  //stores the session list which will be displayed
   sList: any;
-  sessionList;//store normal user session list
+  //stores all the session list that have ever existed
+  sessionList;
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
     public das: DatabaseService,
     public als: AlertService,
     public los: LocalStorageService,
-  ) {
-    console.log(!this.aus.isAdmin(),this.los.userStatus())
+  ) { }
+
+  ionViewDidEnter() {
+    //to do: verify that if user has selected the session, than don't refresh it
     if (!this.aus.isAdmin() && this.los.userStatus()) {//normal user
-      //load sList
       this.fetchSession();
     }
-
   }
 
-  displayLocalStorage() {
-    console.log(localStorage)
+  fetchSession() {
+    this.sList = null;
+    this.das.getSessionData('All').then(v => {
+      this.sList = v;
+      this.generateSessionList();
+    });
   }
 
   generateSessionList() {
     //get sessionid List
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
-    console.log(sessionIdList);
     //if list greater than 0
     if (sessionIdList != null && sessionIdList.length > 0) {
       console.log('generate')
-      //get all the sessions
-      //it is available in sList
+      //get all the sessions, available in sList
       //initialize the local sessionlist variable
       this.sessionList = [];
       for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
@@ -50,26 +55,9 @@ export class AccountPage implements OnInit {
           this.sessionList.push(this.sList[i]);
         }
       }
-
-      // for (let i = 0; i < this.sessionId.length; i++) {
-      //   //iterate through all the list
-      //   console.log('current sesion id', sessionIdList[i]);
-      //   if (this.sList.filter(e => e.id == sessionIdList[i]).length > 0) {
-      //     this.sessionList.push(sessionIdList[i]);
-      //   }
-      // }
     }
-    console.log(this.sessionList, this.sList);
+    console.log('session generate complete', this.sessionList, this.sList);
     //store information in the sessionList
-  }
-
-  fetchSession() {
-    this.sList = null;
-    this.das.getSessionData('All').then(v => {
-      this.sList = v;
-      console.log(this.sList);
-      this.generateSessionList();
-    });
   }
 
   joinSession() {
@@ -83,11 +71,14 @@ export class AccountPage implements OnInit {
     })
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   displayLogininfo() {
     console.log(this.aus.isLogin());
     console.log(localStorage);
+  }
+
+  displayLocalStorage() {
+    console.log(localStorage)
   }
 }
