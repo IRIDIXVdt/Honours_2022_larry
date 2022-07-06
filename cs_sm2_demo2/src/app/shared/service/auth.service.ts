@@ -56,8 +56,6 @@ export class AuthService {
           //to do: rewrite setLocalUserData updateLS so that console log correct information
           loading.dismiss(); //stop the loading animation
           this.userDataUpdate(result.user);
-
-
         } else {
           loading.dismiss(); //stop the loading animation
           this.als.signInErrorAlert('Email is not verified');
@@ -79,11 +77,11 @@ export class AuthService {
       this.los.setLocalData('user', data); //store user List
       this.los.setLocalData('sessionList', await this.das.getUserCustomizeInfo('sessionList'));
       //to do: add user progress to local storage
-      this.los.updateLS('admin');//check if is admin
+      this.los.checkAdminStatus('admin');//check if is admin
       // update user's info to remote database
       this.das.setUserData(data);
       //store user session data
-      this.storeSesssion();
+      await this.storeSesssion();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -198,7 +196,7 @@ export class AuthService {
           //to do: bug fix authlogin
           this.los.setLocalUserData(result.user);
           this.router.navigate([this.homeAddress]);//new routing 
-          this.los.updateLS("admin");
+          this.los.checkAdminStatus("admin");
         })
         this.das.setUserData(result.user);
       }).catch((error) => {

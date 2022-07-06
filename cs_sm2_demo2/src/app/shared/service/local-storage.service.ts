@@ -19,9 +19,11 @@ export class LocalStorageService {
     localStorage.setItem('sessionList', null);//remove session list
     localStorage.setItem('answerProgress', null);
     localStorage.setItem('answerQuestion', null);
+    localStorage.setItem('allList', null);
+    localStorage.setItem('userList', null);
   }
 
-  updateLS(item) {
+  checkAdminStatus(item) {
     if (item == "admin") {//update admin
       this.getIsAdmin().then(v => {
         localStorage.setItem('admin', JSON.stringify(v));
