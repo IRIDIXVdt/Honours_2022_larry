@@ -13,9 +13,9 @@ import { LocalStorageService } from '../shared/service/local-storage.service';
 export class AccountPage implements OnInit {
   //only used when user want to join a selected session
   sessionId = '';
-  //stores the session list which will be displayed
-  sList: any;
   //stores all the session list that have ever existed
+  sList: any;
+  //stores the session list which will be displayed
   sessionList;
   constructor(
     public aus: AuthService,
@@ -26,9 +26,12 @@ export class AccountPage implements OnInit {
   ) { }
 
   ionViewDidEnter() {
-    //to do: verify that if user has selected the session, than don't refresh it
-    if (!this.aus.isAdmin() && this.los.userStatus()) {//normal user
-      this.fetchSession();
+    this.sList = this.los.fetchLocalData('allList');
+    console.log(this.sList);
+    if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
+      // this.fetchSession();
+      this.sessionList = this.los.fetchLocalData('userList');
+      console.log(this.sessionList);
     }
   }
 
@@ -45,13 +48,11 @@ export class AccountPage implements OnInit {
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
     //if list greater than 0
     if (sessionIdList != null && sessionIdList.length > 0) {
-      console.log('generate')
       //get all the sessions, available in sList
       //initialize the local sessionlist variable
       this.sessionList = [];
       for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
         if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
-          console.log(this.sessionList)
           this.sessionList.push(this.sList[i]);
         }
       }

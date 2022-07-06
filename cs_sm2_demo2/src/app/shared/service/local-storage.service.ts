@@ -29,8 +29,12 @@ export class LocalStorageService {
     }
   }
 
-  setLocalData(list, data){
+  setLocalData(list, data) {
     localStorage.setItem(list, JSON.stringify(data));
+  }
+
+  fetchLocalData(data) {
+    return JSON.parse(localStorage.getItem(data));
   }
 
   setLocalUserData(userData) {
@@ -58,6 +62,9 @@ export class LocalStorageService {
     return JSON.parse(localStorage.getItem('sessionList'));
   }
 
+  localUserSessionListStatus() {
+    return (JSON.parse(localStorage.getItem('sessionList')) as any[]).length > 0;
+  }
 
   getIsAdmin() {//intended to be used after login, this determines if it is admin
     return new Promise((resolve, reject) => {
