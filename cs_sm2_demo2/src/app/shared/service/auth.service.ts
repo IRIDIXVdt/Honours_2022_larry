@@ -82,21 +82,8 @@ export class AuthService {
       this.los.updateLS('admin');//check if is admin
       // update user's info to remote database
       this.das.setUserData(data);
-      //to do: store user session data
-      //fetch all the sessions
-      const sList: any = await this.das.getSessionData('All');
-      //store it in local storage
-      this.los.setLocalData('allList', sList);
-      const sessionIdList: string[] = this.das.getLocalUserSessionList();
-      if (sessionIdList != null && sessionIdList.length > 0) {
-        var sessionList = [];
-        for (let i = 0; i < sList.length; i++) {//iterate through all the list
-          if (sessionIdList.filter(e => e == sList[i].id).length > 0) {
-            sessionList.push(sList[i]);
-          }
-        }
-        this.los.setLocalData('userList', sessionList);
-      }
+      //store user session data
+      this.storeSesssion();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -104,8 +91,23 @@ export class AuthService {
     } finally {
       loading.dismiss();
     }
+  }
 
-
+  async storeSesssion(){
+    //fetch all the sessions
+    const sList: any = await this.das.getSessionData('All');
+    //store it in local storage
+    this.los.setLocalData('allList', sList);
+    const sessionIdList: string[] = this.das.getLocalUserSessionList();
+    if (sessionIdList != null && sessionIdList.length > 0) {
+      var sessionList = [];
+      for (let i = 0; i < sList.length; i++) {//iterate through all the list
+        if (sessionIdList.filter(e => e == sList[i].id).length > 0) {
+          sessionList.push(sList[i]);
+        }
+      }
+      this.los.setLocalData('userList', sessionList);
+    }
   }
 
   // Sign up with email/password

@@ -35,41 +35,54 @@ export class AccountPage implements OnInit {
     }
   }
 
-  fetchSession() {
-    this.sList = null;
-    this.das.getSessionData('All').then(v => {
-      this.sList = v;
-      this.generateSessionList();
-    });
-  }
+  // fetchSession() {
+  //   this.sList = null;
+  //   this.das.getSessionData('All').then(v => {
+  //     this.sList = v;
+  //     this.generateSessionList();
+  //   });
+  // }
 
-  generateSessionList() {
-    //get sessionid List
-    const sessionIdList: string[] = this.das.getLocalUserSessionList();
-    //if list greater than 0
-    if (sessionIdList != null && sessionIdList.length > 0) {
-      //get all the sessions, available in sList
-      //initialize the local sessionlist variable
-      this.sessionList = [];
-      for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
-        if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
-          this.sessionList.push(this.sList[i]);
-        }
-      }
-    }
-    console.log('session generate complete', this.sessionList, this.sList);
-    //store information in the sessionList
-  }
+  // generateSessionList() {
+  //   //get sessionid List
+  //   const sessionIdList: string[] = this.das.getLocalUserSessionList();
+  //   //if list greater than 0
+  //   if (sessionIdList != null && sessionIdList.length > 0) {
+  //     //get all the sessions, available in sList
+  //     //initialize the local sessionlist variable
+  //     this.sessionList = [];
+  //     for (let i = 0; i < this.sList.length; i++) {//iterate through all the list
+  //       if (sessionIdList.filter(e => e == this.sList[i].id).length > 0) {
+  //         this.sessionList.push(this.sList[i]);
+  //       }
+  //     }
+  //   }
+  //   console.log('session generate complete', this.sessionList, this.sList);
+  //   //store information in the sessionList
+  // }
+
+
 
   joinSession() {
     this.als.presentChoice("Are you sure you want to join this session?").then(loadingItem => {
       if (loadingItem) {//throw loadingItem, dismiss it when action is finished
         loadingItem.dismiss();
         this.das.addUserSession(this.sessionId);
+
       } else {
         console.log('dismiss');
       }
     })
+  }
+
+  //to do: update local session
+  sessionListUpdate() {
+    //update the collection of id (of user session) in local
+    var originalList: any[] = this.los.fetchLocalData('sessionList');
+    originalList.push(this.sessionId);
+    this.los.setLocalData('sessionList', originalList);
+    //now update all the information
+    this.aus.storeSesssion();
   }
 
   ngOnInit() { }
