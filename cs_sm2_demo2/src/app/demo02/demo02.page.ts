@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { threadId } from 'worker_threads';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
+import { AlertService } from '../shared/service/alert.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
 import { UserRecordService } from '../shared/service/user-record.service';
@@ -12,6 +14,7 @@ import { UserRecordService } from '../shared/service/user-record.service';
   styleUrls: ['./demo02.page.scss'],
 })
 export class Demo02Page implements OnInit {
+  homeAddress: string = 'tabs/account';
   // qList = questionList;
   qList: any[];//contains the list of all questions a user would answer today
   // index: number;//new logic: only display the first item
@@ -21,14 +24,44 @@ export class Demo02Page implements OnInit {
   userCode: string = '';
   userMulti: string = '';
 
+  //contains a list of all the questions
+  sessionList: any[];
+
   constructor(
     public urs: UserRecordService,
     public dab: DatabaseService,
     public los: LocalStorageService,
+    public als: AlertService,
+    public router: Router,
   ) {
-    this.fetchFromRemoteDatabase();
+    // this.fetchFromRemoteDatabase();
   }
   ngOnInit() { }
+
+  //to do: when user has not select any session, 
+  //then direct them back to home page to select question
+  async ionViewDidEnter(){
+    this.sessionList = this.los.fetchLocalData('userList');
+    if (this.sessionList == null || this.sessionList.length < 1) {
+      console.log('no session yet');
+      const result = await this.als.expectFeedback("Please join a session before you start the task");
+      
+      this.router.navigate([this.homeAddress]);
+    }
+  }
+
+  
+
+  //to do: when user first time opens program, the software decides task list
+  //read from local storge, fetch previous progress
+  //previous progress should be handled in sign in phase
+  //read from current session list, add all new questions to list
+
+  //to do: when user reads question
+  //if local storage contains it, then read it
+  //if not, read from remote database, and store it in local storage
+
+
 
   async fetchFromRemoteDatabase() {
 
@@ -41,7 +74,7 @@ export class Demo02Page implements OnInit {
     console.log(this.qList);
     const previousList = await this.dab.fetchUserPreviousProgress();
     if (previousList != null || previousList != undefined) {
-     console.log('true') 
+      console.log('true')
     }
     this.updateEnableDisplayAnswer();
 
