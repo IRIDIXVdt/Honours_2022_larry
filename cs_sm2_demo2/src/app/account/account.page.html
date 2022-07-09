@@ -88,7 +88,7 @@
                     <!-- user session -->
                     <ng-container *ngIf="sList">
                       <!-- if the sList is ready -->
-                      <ng-container *ngIf="this.sessionList">
+                      <ng-container *ngIf="this.allowJoinSession">
                         <ion-label>You are registered in the following session(s):</ion-label>
                         <div></div>
                         <div *ngFor="let item of this.sessionList">
@@ -96,7 +96,7 @@
                         </div>
 
                       </ng-container>
-                      <ng-container *ngIf="!this.sessionList">
+                      <ng-container *ngIf="!this.allowJoinSession">
                         <ion-label>No Session Selected</ion-label>
                         <ion-select [(ngModel)]="sessionId" interface="action-sheet" placeholder="Click here to select">
                           <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+

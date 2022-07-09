@@ -17,6 +17,8 @@ export class AccountPage implements OnInit {
   sList: any;
   //stores the session list which will be displayed
   sessionList;
+  //decide whether user is allowed to join other sessions
+  allowJoinSession: boolean;
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
@@ -26,10 +28,12 @@ export class AccountPage implements OnInit {
   ) { }
 
   ionViewDidEnter() {
+    this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
     console.log(this.sList);
     if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
-      // this.fetchSession();
+      //for now, if user already has a sesssion, then prevent them from joining others
+      this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sessionList);
     }

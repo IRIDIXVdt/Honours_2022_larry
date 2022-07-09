@@ -53,7 +53,7 @@ export class AuthService {
       .then((result) => {
         if (result.user.emailVerified) { // if user's account has been verified
           console.log("User is verified, update all the information in local storage");
-          //to do: rewrite setLocalUserData updateLS so that console log correct information
+          //setLocalUserData updateLS console log correct information
           loading.dismiss(); //stop the loading animation
           this.userDataUpdate(result.user);
         } else {
@@ -96,6 +96,7 @@ export class AuthService {
     const sList: any = await this.das.getSessionData('All');
     //store it in local storage
     this.los.setLocalData('allList', sList);
+    console.log(sList);
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
     if (sessionIdList != null && sessionIdList.length > 0) {
       var sessionList = [];
@@ -194,9 +195,10 @@ export class AuthService {
       .then((result) => {
         this.ngZone.run(() => {
           //to do: bug fix authlogin
-          this.los.setLocalUserData(result.user);
-          this.router.navigate([this.homeAddress]);//new routing 
-          this.los.checkAdminStatus("admin");
+          // this.los.setLocalUserData(result.user);
+          // this.router.navigate([this.homeAddress]);//new routing 
+          // this.los.checkAdminStatus("admin");
+          this.userDataUpdate(result.user);
         })
         this.das.setUserData(result.user);
       }).catch((error) => {
