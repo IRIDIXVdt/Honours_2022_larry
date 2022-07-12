@@ -82,6 +82,8 @@ export class AuthService {
       this.das.setUserData(data);
       //store user session data
       await this.storeSesssion();
+      //fetch user previous progress
+      await this.fetchProgress();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -91,12 +93,21 @@ export class AuthService {
     }
   }
 
-  async storeSesssion(){
+  async fetchProgress() {
+    //then initialize all the question as unanswered
+    const previousList = await this.das.fetchUserPreviousProgress();
+    if (previousList != null || previousList != undefined) {
+      console.log('user previous progress stored', previousList);
+    }
+    // this.updateEnableDisplayAnswer();
+  }
+
+  async storeSesssion() {
     //fetch all the sessions
     const sList: any = await this.das.getSessionData('All');
     //store it in local storage
     this.los.setLocalData('allList', sList);
-    console.log(sList);
+    console.log('allList data', sList);
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
     if (sessionIdList != null && sessionIdList.length > 0) {
       var sessionList = [];
@@ -107,6 +118,7 @@ export class AuthService {
       }
       this.los.setLocalData('userList', sessionList);
     }
+    console.log('store session', this.los.fetchLocalData('userList'));
   }
 
   // Sign up with email/password

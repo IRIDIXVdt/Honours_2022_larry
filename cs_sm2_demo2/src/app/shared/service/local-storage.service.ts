@@ -21,6 +21,7 @@ export class LocalStorageService {
     localStorage.setItem('answerQuestion', null);
     localStorage.setItem('allList', null);
     localStorage.setItem('userList', null);
+    localStorage.setItem('previousProgress',null);
   }
 
   checkAdminStatus(item) {

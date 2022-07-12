@@ -23,6 +23,7 @@ export class Demo02Page implements OnInit {
   sessionEnd: boolean;
   userCode: string = '';
   userMulti: string = '';
+  loaded: boolean = false;
 
   //contains a list of all the questions
   sessionList: any[];
@@ -38,33 +39,35 @@ export class Demo02Page implements OnInit {
   }
   ngOnInit() { }
 
-  //to do: when user has not select any session, 
+  //when user has not select any session, 
   //then direct them back to home page to select question
-  async ionViewDidEnter(){
+  async ionViewDidEnter() {
     this.sessionList = this.los.fetchLocalData('userList');
     if (this.sessionList == null || this.sessionList.length < 1) {
+      //no session, redirect page
       console.log('no session yet');
       const result = await this.als.expectFeedback("Please join a session before you start the task");
-      
       this.router.navigate([this.homeAddress]);
+    } else {
+      if (this.loaded) {
+        console.log('loaded, continue previous progress')
+      } else {
+        console.log('load progress')
+        //to do: when user first time opens program, the software decides task list
+        //read from local storge, fetch previous progress
+        // const currentList = this.los.fetchLocalData()
+        //previous progress should be handled in sign in phase
+        //read from current session list, add all new questions to list*
+      }
     }
   }
 
-  
-
-  //to do: when user first time opens program, the software decides task list
-  //read from local storge, fetch previous progress
-  //previous progress should be handled in sign in phase
-  //read from current session list, add all new questions to list
-
   //to do: when user reads question
+  //for now: always read from remote database
   //if local storage contains it, then read it
   //if not, read from remote database, and store it in local storage
 
-
-
   async fetchFromRemoteDatabase() {
-
     //then initialize all the question as unanswered
     const v = await this.dab.getQuestionData();
     this.qList = v as any[];

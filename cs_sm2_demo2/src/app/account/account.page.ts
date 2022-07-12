@@ -18,7 +18,7 @@ export class AccountPage implements OnInit {
   //stores the session list which will be displayed
   sessionList;
   //decide whether user is allowed to join other sessions
-  allowJoinSession: boolean;
+  // allowJoinSession: boolean;
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
@@ -28,12 +28,12 @@ export class AccountPage implements OnInit {
   ) { }
 
   ionViewDidEnter() {
-    this.allowJoinSession = true;
+    // this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
     console.log(this.sList);
     if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
       //for now, if user already has a sesssion, then prevent them from joining others
-      this.allowJoinSession = false;
+      // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sessionList);
     }
@@ -72,7 +72,8 @@ export class AccountPage implements OnInit {
       if (loadingItem) {//throw loadingItem, dismiss it when action is finished
         loadingItem.dismiss();
         this.das.addUserSession(this.sessionId);
-
+        //find data
+        this.ionViewDidEnter();
       } else {
         console.log('dismiss');
       }
@@ -97,6 +98,7 @@ export class AccountPage implements OnInit {
   }
 
   displayLocalStorage() {
-    console.log(localStorage)
+    console.log(localStorage);
+    console.log(localStorage.getItem('userList'));
   }
 }

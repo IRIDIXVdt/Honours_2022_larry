@@ -176,8 +176,22 @@ export class DatabaseService {
         (v as string[]).push(sessionId);
         //add sessionId to attribute of sessionList of user data
         this.setLocalUserSessionList(v);
-        console.log(localStorage);
+        // console.log(localStorage);
         this.saveUserSessionChangesToCloud();
+        // window.location.reload();
+        
+        //now calculate local list
+        const allList = JSON.parse(localStorage.getItem('allList'));
+        const idList = JSON.parse(localStorage.getItem('sessionList'));
+        if (idList != null && idList.length > 0) {
+          var sessionList = [];
+          for (let i = 0; i < allList.length; i++) {//iterate through all the list
+            if (idList.filter(e => e == allList[i].id).length > 0) {
+              sessionList.push(allList[i]);
+            }
+          }
+          localStorage.setItem('userList', JSON.stringify(sessionList));
+        }
       }
     } else {//input empty
       this.als.displayMessage('Session not selected. Please try again.');
@@ -198,6 +212,7 @@ export class DatabaseService {
     return new Promise((resolve, reject) => {
       this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
         .subscribe(v => {
+          console.log('user session Id list with Id', JSON.parse(localStorage.getItem('user')).uid, v.data()[info]);
           resolve(v.data()[info]);
         });
     });
