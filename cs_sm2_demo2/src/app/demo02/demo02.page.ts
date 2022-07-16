@@ -6,6 +6,7 @@ import { UserRecordData } from '../shared/data/userRecordSchema';
 import { AlertService } from '../shared/service/alert.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
+import { TimeService } from '../shared/service/time.service';
 import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
@@ -24,7 +25,6 @@ export class Demo02Page implements OnInit {
   userCode: string = '';
   userMulti: string = '';
   loaded: boolean = false;
-  endTime: number;
 
   //contains a list of all the questions
   sessionList: any[];
@@ -35,27 +35,13 @@ export class Demo02Page implements OnInit {
     public los: LocalStorageService,
     public als: AlertService,
     public router: Router,
+    public tms: TimeService,
   ) {
     // this.fetchFromRemoteDatabase();
+    tms.initializeEndTime();
   }
 
-  ngOnInit() {
-    this.initializeEndTime();
-  }
-
-  //if the software is open for over 24 hours, then close it
-  public notOverTime() {
-    const date = new Date();
-    return date.getTime() > this.endTime;
-  }
-
-  public initializeEndTime() {
-    var date = new Date();
-    // console.log(date.getTime());
-    date.setDate(date.getDate() + 1);
-    // console.log(date.getTime());
-    this.endTime = date.getTime();
-  }
+  ngOnInit() { }
 
   //when user has not select any session, 
   //then direct them back to home page to select question
@@ -119,14 +105,6 @@ export class Demo02Page implements OnInit {
 
   updateEnableDisplayAnswer() {
     this.displayAnswer = false;
-    // console.log(this.qList[0].qType);
-    // if (this.qList.length > 0)//otherwise session ends
-    //   if (this.qList[0].qType === 'ba') {
-    //     // console.log('this is a basic type question')
-    //     this.disableDisplayAnswer = false;
-    //   } else {
-    //     this.disableDisplayAnswer = true;
-    //   }
   }
 
   /*
@@ -204,7 +182,4 @@ export class Demo02Page implements OnInit {
       this.qList.splice(this.qList.length, 0, item);
   }
 
-  // storeUserRecordData() {
-
-  // }
 }

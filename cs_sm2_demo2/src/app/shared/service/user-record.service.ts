@@ -3,6 +3,7 @@ import { UserRecordData } from '../data/userRecordSchema';
 import { DatabaseService } from './database.service';
 import { FirebaseService } from './firebase.service';
 import { LocalStorageService } from './local-storage.service';
+import { TimeService } from './time.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class UserRecordService {
     public los: LocalStorageService,
     public fas: FirebaseService,
     public dab: DatabaseService,
+    public tms: TimeService,
   ) { }
 
   data: UserRecordData = {
@@ -30,43 +32,25 @@ export class UserRecordService {
     //user term list, introduce this term to user data list with q EF n and next date
     const UID = this.los.idStatus();//fetch user id
     console.log(UID);//display user id
-    const current = new Date();//initialize Date object with current time
-    current.setHours(0,0,0,0);//set time to 0am to current timezone
     const collectData: UserRecordData = {
       userId: this.los.idStatus(),
       questionid: questionid,
-      completeTime: current.getTime(),
+      completeTime: this.tms.getCurrentDay(),
       q: q,
       EF: EF,
       n: n,
     }
     //calculate the interval of time with respect to next date
-    const interval = Math.round(this.timeIntervalCalculation(n, EF));
-    var next = current.getTime() + interval * 86400000;//next date in millisecond
+
     const userInfo = {
       questionid: questionid,
-      nextTime: next,
+      nextTime: this.tms.getNextDay(n, EF),
       q: q,
       EF: EF,
       n: n,
     }
-    // console.log('store data', collectData);
-    // console.log('get user info', userInfo);
-    const test = new Date();
-    test.setTime(next);
-    console.log(test);
     this.los.collectUserAnswer(collectData);
     this.los.storeUserProgress(userInfo);
-  }
-
-  timeIntervalCalculation(n, EF) {
-    if (n == 1) {
-      return 1;
-    } else if (n == 2) {
-      return 6;
-    } else {
-      return this.timeIntervalCalculation(n - 1, EF) * EF;
-    }
   }
 
   async uploadLocalInfo() {
