@@ -98,6 +98,7 @@ export class AuthService {
     const previousList = await this.das.fetchUserPreviousProgress();
     if (previousList != null || previousList != undefined) {
       console.log('user previous progress stored', previousList);
+      this.los.setLocalData('previousProgress', previousList);
     }
     // this.updateEnableDisplayAnswer();
   }

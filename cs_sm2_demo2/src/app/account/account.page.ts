@@ -99,6 +99,6 @@ export class AccountPage implements OnInit {
 
   displayLocalStorage() {
     console.log(localStorage);
-    console.log(localStorage.getItem('userList'));
+    console.log(localStorage.getItem('previousProgress'));
   }
 }

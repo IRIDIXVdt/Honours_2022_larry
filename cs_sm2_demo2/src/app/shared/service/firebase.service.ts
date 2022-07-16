@@ -52,6 +52,13 @@ export class FirebaseService {
       ref.where(type, '==', targetValue)).get();
   }
 
+  getProgressCollection(userId:string){
+    const time = new Date().getTime();
+    console.log('currentTime',time)
+    return this.db.collection('users' + '/' + userId + '/' + 'answerList', ref =>
+      ref.where('nextTime', '<', time)).get();
+  }
+
   getUser(userId) {
     return this.db.doc(`users/${userId}`) as AngularFirestoreDocument<any>;
   }

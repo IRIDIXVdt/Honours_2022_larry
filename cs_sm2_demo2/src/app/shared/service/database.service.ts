@@ -288,7 +288,9 @@ export class DatabaseService {
     const userId = JSON.parse(localStorage.getItem('user')).uid;
 
     return new Promise((resolve, reject) => {
-      this.fas.getCollection('users' + '/' + userId + '/' + 'answerList')
+      // this.fas.getCollection('users' + '/' + userId + '/' + 'answerList')
+      // this.fas.getCollectionFilter('users' + '/' + userId + '/' + 'answerList', 'complete', 'false')
+      this.fas.getProgressCollection(userId)
         .subscribe((res) => {
           const receiveValue = res.docs.map(e => {
             return {
@@ -300,7 +302,7 @@ export class DatabaseService {
               questionId: e.data()['questionId'],
             }
           });
-          console.log("Previous User Progress Display", receiveValue);
+          // console.log("Previous User Progress Display", receiveValue);
           resolve(receiveValue);//return value in promise
         }, (err: any) => {//catch error
           console.log(err);

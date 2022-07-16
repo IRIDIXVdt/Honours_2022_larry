@@ -24,6 +24,7 @@ export class Demo02Page implements OnInit {
   userCode: string = '';
   userMulti: string = '';
   loaded: boolean = false;
+  endTime: number;
 
   //contains a list of all the questions
   sessionList: any[];
@@ -37,7 +38,24 @@ export class Demo02Page implements OnInit {
   ) {
     // this.fetchFromRemoteDatabase();
   }
-  ngOnInit() { }
+
+  ngOnInit() {
+    this.initializeEndTime();
+  }
+
+  //if the software is open for over 24 hours, then close it
+  public notOverTime() {
+    const date = new Date();
+    return date.getTime() > this.endTime;
+  }
+
+  public initializeEndTime() {
+    var date = new Date();
+    // console.log(date.getTime());
+    date.setDate(date.getDate() + 1);
+    // console.log(date.getTime());
+    this.endTime = date.getTime();
+  }
 
   //when user has not select any session, 
   //then direct them back to home page to select question
@@ -52,13 +70,24 @@ export class Demo02Page implements OnInit {
       if (this.loaded) {
         console.log('loaded, continue previous progress')
       } else {
-        console.log('load progress')
+        await this.decideQuestionList();
         //to do: when user first time opens program, the software decides task list
         //read from local storge, fetch previous progress
         // const currentList = this.los.fetchLocalData()
         //previous progress should be handled in sign in phase
         //read from current session list, add all new questions to list*
       }
+    }
+  }
+
+  async decideQuestionList() {
+    console.log('decideQuestionList')
+    for (let i = 0; i < this.sessionList.length; i++) {
+      const listQuestionId = await this.dab.getSessionQuestionWithId(this.sessionList[i].id);
+      console.log(this.sessionList[i].id, listQuestionId);
+      //if listQuestionId contains question not shown in the previous progress,
+      //then add it to questionList
+
     }
   }
 
