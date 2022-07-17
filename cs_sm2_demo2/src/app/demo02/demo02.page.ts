@@ -38,7 +38,7 @@ export class Demo02Page implements OnInit {
     public tms: TimeService,
   ) {
     // this.fetchFromRemoteDatabase();
-    tms.initializeEndTime();
+    tms.initializeTimeEnd();
   }
 
   ngOnInit() { }

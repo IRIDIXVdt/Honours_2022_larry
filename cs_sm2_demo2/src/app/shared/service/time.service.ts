@@ -4,31 +4,44 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TimeService {
-  endTime: number;//decides when the process is overTime
+  timeEnd: number;//decides when the process is overTime
+  timeStart: number;//decides the day which the system will log the progress
 
   constructor() { }
 
-  //if the software is open for over 24 hours, then close it
-  //alternative implementation, if the software is open for ten minutes
-  //save the progress.
-  public overTime() {
-    const date = new Date();
-    return date.getTime() > this.endTime;
+  public initializeAll() {
+    this.initializeTimeStart();
+    this.initializeTimeEnd();
   }
 
-  public initializeEndTime() {
+  public initializeTimeStart() {
+    //initialize end time and start time
+    //unless the system is overtime, do not reload this
+    const current = new Date();//initialize Date object with current time
+    current.setHours(0, 0, 0, 0);//set time to 0am to current timezone
+    this.timeStart = current.getTime();
+  }
+
+  public initializeTimeEnd() {
     //the system refreshes at tomorrow 2am
     var date = new Date();
     date.setHours(0, 2, 0, 0);
     date.setDate(date.getDate() + 1);
-    this.endTime = date.getTime();
-    console.log(this.endTime);
+    this.timeEnd = date.getTime();
+    console.log(this.timeEnd);
   }
 
+  //if the software is overTime, reload information and restart
+  //alternative implementation, if the software is open for ten minutes
+  //save the progress.
+  public overTime() {
+    const date = new Date();//get current time
+    return date.getTime() > this.timeEnd;
+  }
+
+
   public getCurrentDay() {
-    const current = new Date();//initialize Date object with current time
-    current.setHours(0, 0, 0, 0);//set time to 0am to current timezone
-    return current.getTime();
+    return this.timeStart;
   }
 
   public getNextDay(n, EF) {
