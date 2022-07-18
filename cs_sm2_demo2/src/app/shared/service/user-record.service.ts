@@ -34,21 +34,22 @@ export class UserRecordService {
     // console.log(UID);//display user id
 
     const currentN = item.n + 1;
+    const currentEF = item.EF;
     const collectData: UserRecordData = {
       userId: this.los.idStatus(),
       questionid: item.qId,
       completeTime: this.tms.getCurrentDay(),
       q: item.q,
-      EF: item.EF,
+      EF: currentEF,
       n: currentN,
     }
     //calculate the interval of time with respect to next date
 
     const userInfo = {
       questionid: item.qId,
-      nextTime: this.tms.getNextDay(currentN, item.EF),
+      nextTime: this.tms.getNextDay(currentN, currentEF),
       q: item.q,
-      EF: item.EF,
+      EF: currentEF,
       n: currentN,
     }
     this.los.collectUserAnswer(collectData);

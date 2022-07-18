@@ -154,7 +154,12 @@ export class Demo02Page implements OnInit {
     */
     if (currentItem.repeatTime == -1) {//first time answering a new item
       currentItem.q = answer;//first store the quality of response
-      if (this.qualityGood(answer)) {//quality easy
+
+      //if this item belongs a previous progress, also update its EF
+      if (currentItem.n != 0) {
+        currentItem.EF = this.efCalculator(currentItem.EF, currentItem.q);
+      }
+      if (this.qualityCheck(answer) == 'g') {//quality easy
         //remove and store directly
         this.urs.storeLocalInfo(currentItem);
       } else {
@@ -162,7 +167,7 @@ export class Demo02Page implements OnInit {
         this.insertItem(currentItem);
       }
     } else {//second or more time answering
-      if (!this.qualityGood(answer)) {
+      if (this.qualityCheck(answer) != 'g') {
         // repeat without changing
         this.insertItem(currentItem);
       } else {
@@ -196,13 +201,25 @@ export class Demo02Page implements OnInit {
     this.userMulti = '';
   }
 
-  qualityGood(answer: number) {
+  qualityCheck(answer: number) {
     //to do: update the check quality, so that it showes up in scale of 6
-    if (answer == 0 || answer == 1) {
-      return true;
+    //good medium poor
+    if (answer == 3) {
+      return 'g';
+    } else if (answer == 2) {
+      return 'm';
     } else {
-      return false;
+      return 'p';
     }
+  }
+
+  efCalculator(EF, q) {
+    //calculate the new value of the EF with previous EF and quality of response
+    var EFp = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    if (EFp < 1.3)
+      return 1.3;
+    else
+      return EFp;
   }
 
   /*
