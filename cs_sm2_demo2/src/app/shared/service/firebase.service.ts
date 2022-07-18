@@ -52,11 +52,13 @@ export class FirebaseService {
       ref.where(type, '==', targetValue)).get();
   }
 
-  getProgressCollection(userId:string){
-    const time = new Date().getTime();
-    console.log('currentTime',time)
-    return this.db.collection('users' + '/' + userId + '/' + 'answerList', ref =>
-      ref.where('nextTime', '<', time)).get();
+  getProgressCollection(userId: string) {
+    // const time = new Date().getTime();
+    // console.log('currentTime', time)
+    // return this.db.collection('users' + '/' + userId + '/' + 'answerList', ref =>
+    //   ref.where('nextTime', '<', time)).get();
+
+    return this.db.collection('users' + '/' + userId + '/' + 'answerList').get();
   }
 
   getUser(userId) {

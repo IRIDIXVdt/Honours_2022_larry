@@ -88,13 +88,20 @@ export class Demo02Page implements OnInit {
       }
     }
     const previous = this.los.fetchLocalData('previousProgress');
+    //if it is time to review, then insert necessary information
+    //if it is not, then remove this term from the list
     for (let i = 0; i < previous.length; i++) {
       const source = previous[i];
-      var target = dummyList.filter(e => e.qId == source.qId)[0];
-      if (target != null && target != undefined) {
-        target.EF = source.EF;
-        target.n = source.n;
-        // target.repeatTime = 1;//if user got it correct, then only repeat it once
+      console.log(source);
+      if (this.tms.getCurrentDay() > source.nextTime) {//if system decides you to review today
+        var target = dummyList.filter(e => e.qId == source.qId)[0];
+        if (target != null && target != undefined) {
+          target.EF = source.EF;
+          target.n = source.n;
+          target.docId = source.id;
+        }
+      } else {//if not, remove the corresponding item in the dummyList
+        dummyList = dummyList.filter(e => e.qId != source.qId);
       }
     }
     console.log(dummyList);
@@ -139,19 +146,19 @@ export class Demo02Page implements OnInit {
   }
 
 
-
+  /*
+  handle the responsive with user answer: repeat some of the question and store the others
+      if user is first time answering this question
+        if quality is easy, store info and end this right away
+        if quality is not easy, store info and repeat this three time
+      or if the user is attempting this question already
+        if quality is poor or repeat, repeat it once
+        if quality is good or easy, check if there are repeat time left
+          if no repeat time left, store info end this
+  */
   answer(answer: number) {
     var currentItem = this.qList.shift();//pop the very first item of the list
-    /*
-    handle the responsive with user answer: repeat some of the question and store the others
-    if user is first time answering this question
-      if quality is easy, store info and end this right away
-      if quality is not easy, store info and repeat this three time
-    or if the user is attempting this question already
-      if quality is poor or repeat, repeat it once
-      if quality is good or easy, check if there are repeat time left
-        if no repeat time left, store info end this
-    */
+
     if (currentItem.repeatTime == -1) {//first time answering a new item
       currentItem.q = answer;//first store the quality of response
 
@@ -159,6 +166,7 @@ export class Demo02Page implements OnInit {
       if (currentItem.n != 0) {
         currentItem.EF = this.efCalculator(currentItem.EF, currentItem.q);
       }
+
       if (this.qualityCheck(answer) == 'g') {//quality easy
         //remove and store directly
         this.urs.storeLocalInfo(currentItem);
@@ -167,8 +175,10 @@ export class Demo02Page implements OnInit {
         this.insertItem(currentItem);
       }
     } else {//second or more time answering
-      if (this.qualityCheck(answer) != 'g') {
-        // repeat without changing
+      if (this.qualityCheck(answer) == 'p') {
+        currentItem.repeatTime = 3;
+        this.insertItem(currentItem);
+      } else if (this.qualityCheck(answer) == 'm') {
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
