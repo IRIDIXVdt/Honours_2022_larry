@@ -94,7 +94,7 @@ export class Demo02Page implements OnInit {
       if (target != null && target != undefined) {
         target.EF = source.EF;
         target.n = source.n;
-        target.repeatTime = 1;//if user got it correct, then only repeat it once
+        // target.repeatTime = 1;//if user got it correct, then only repeat it once
       }
     }
     console.log(dummyList);
@@ -140,7 +140,6 @@ export class Demo02Page implements OnInit {
 
   /*
   handle the responsive with user answer: repeat some of the question and store the others
-
   if user is first time answering this question
     if quality is easy, store info and end this right away
     if quality is not easy, store info and repeat this three time
@@ -149,38 +148,47 @@ export class Demo02Page implements OnInit {
     if quality is good or easy, check if there are repeat time left
       if no repeat time left, store info end this
   */
+
   answer(answer: number) {
     var currentItem = this.qList.shift();//pop the very first item of the list
-    if (currentItem.repeatTime == -1) {
-      //so we are looking at new item
-      currentItem.repeatTime = 3;//initialize repeat time to 3, but if user got it correct, store it directly
-      if (this.qualityGood(answer)) {//quality easy
-        //remove item from the list and
-        //store the item in local storage
-        this.urs.storeLocalInfo(currentItem.qId, 3, 2.5, 1);
-      } else {
-        currentItem.q = answer;//this is the level
-        currentItem.repeatTime = 3;//repeat it for three times
-        this.insertItem(currentItem);
-      }
-    } else {
-      if (!this.qualityGood(answer)) {
-        //set to three
-        currentItem.repeatTime = 3;
-        // console.log('respond poor quality, repeat question')
-        this.insertItem(currentItem);
-      } else {
-        if (currentItem.repeatTime == 1) {
-          //store the item in local storage
-          this.urs.storeLocalInfo(currentItem.id, currentItem.level, 2.5, 1);
+
+    if (currentItem.n == 0) {//new Question
+      if (currentItem.repeatTime == -1) {//first time answering
+        //so we are looking at a 100 percent new item
+        currentItem.q = answer;//first store the quality of response
+        if (this.qualityGood(answer)) {//quality easy
+          //remove and store directly
+          this.urs.storeLocalInfo(currentItem);
         } else {
-          // console.log('respond good quality, minus repeat time by 1')
-          const repeatTime = currentItem.repeatTime;
-          currentItem.repeatTime = repeatTime - 1;
+          currentItem.repeatTime = 3;//repeat it for three times
           this.insertItem(currentItem);
         }
+      } else {//second or more time answering
+        if (!this.qualityGood(answer)) {
+          // currentItem.repeatTime = 3;
+          // currentItem.q = answer;
+          // console.log('respond poor quality, repeat question')
+          this.insertItem(currentItem);
+        } else {
+          if (currentItem.repeatTime == 1) {
+            //store the item in local storage
+            this.urs.storeLocalInfo(currentItem);
+          } else {
+            // console.log('respond good quality, minus repeat time by 1')
+            const repeatTime = currentItem.repeatTime;
+            currentItem.repeatTime = repeatTime - 1;
+            this.insertItem(currentItem);
+          }
+        }
+      }
+    } else {//old Question
+      if (currentItem.repeatTime == -1) {//first time answering
+
+      } else {//second time answering
+
       }
     }
+
     //addition requirement: if the length gets to 0 end this session
     if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
@@ -188,9 +196,10 @@ export class Demo02Page implements OnInit {
       // this.urs.uploadLocalInfo();
       this.los.uploadAnswerAndProgress();
     }
+
     this.updateEnableDisplayAnswer();
     this.qList.forEach(e => {//display all the items in the qList
-      console.log(e.id, 'repeat', e.repeatTime, 'level', e.level);
+      console.log(e);
     });
     console.log('----------');
     //reset input space
@@ -199,6 +208,7 @@ export class Demo02Page implements OnInit {
   }
 
   qualityGood(answer: number) {
+    //to do: update the check quality, so that it showes up in scale of 6
     if (answer == 0 || answer == 1) {
       return true;
     } else {

@@ -26,28 +26,28 @@ export class UserRecordService {
     n: 0
   }
 
-  storeLocalInfo(questionid, q, EF, n) {
+  storeLocalInfo(item) {
     //we need to store two things:
     //user record, for the purpose of data collection for research
     //user term list, introduce this term to user data list with q EF n and next date
     const UID = this.los.idStatus();//fetch user id
-    console.log(UID);//display user id
+    // console.log(UID);//display user id
     const collectData: UserRecordData = {
       userId: this.los.idStatus(),
-      questionid: questionid,
+      questionid: item.qId,
       completeTime: this.tms.getCurrentDay(),
-      q: q,
-      EF: EF,
-      n: n,
+      q: item.q,
+      EF: item.EF,
+      n: item.n + 1,
     }
     //calculate the interval of time with respect to next date
 
     const userInfo = {
-      questionid: questionid,
-      nextTime: this.tms.getNextDay(n, EF),
-      q: q,
-      EF: EF,
-      n: n,
+      questionid: item.qId,
+      nextTime: this.tms.getNextDay(item.n, item.EF),
+      q: item.q,
+      EF: item.EF,
+      n: item.n + 1,
     }
     this.los.collectUserAnswer(collectData);
     this.los.storeUserProgress(userInfo);
