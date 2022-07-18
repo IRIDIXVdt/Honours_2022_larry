@@ -151,9 +151,12 @@ export class LocalStorageService {
     // console.log(userAnswerRecordArray);
     // this.das.uploadUserAnswer(userAnswerRecordArray);
 
+    /*
     const userAnswerProgresArray = this.fetchUserProgressData();
     console.log(userAnswerProgresArray);
     this.das.uploadNewUserProgress(userAnswerProgresArray);
+    */
+    console.log('uploadAnswerAndProgress, update the comment')
   }
 
   resetAnswerAndProgress() {

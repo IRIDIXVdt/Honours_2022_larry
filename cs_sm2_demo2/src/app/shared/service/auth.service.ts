@@ -82,8 +82,8 @@ export class AuthService {
       this.das.setUserData(data);
       //store user session data
       await this.storeSesssion();
-      //fetch user previous progress
-      await this.fetchProgress();
+      // //fetch user previous progress
+      // await this.fetchProgress();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -91,16 +91,6 @@ export class AuthService {
     } finally {
       loading.dismiss();
     }
-  }
-
-  async fetchProgress() {
-    //then initialize all the question as unanswered
-    const previousList = await this.das.fetchUserPreviousProgress();
-    if (previousList != null || previousList != undefined) {
-      console.log('user previous progress stored', previousList);
-      this.los.setLocalData('previousProgress', previousList);
-    }
-    // this.updateEnableDisplayAnswer();
   }
 
   async storeSesssion() {

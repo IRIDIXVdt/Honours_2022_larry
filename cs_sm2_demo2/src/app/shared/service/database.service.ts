@@ -286,10 +286,7 @@ export class DatabaseService {
 
   async fetchUserPreviousProgress() {
     const userId = JSON.parse(localStorage.getItem('user')).uid;
-
     return new Promise((resolve, reject) => {
-      // this.fas.getCollection('users' + '/' + userId + '/' + 'answerList')
-      // this.fas.getCollectionFilter('users' + '/' + userId + '/' + 'answerList', 'complete', 'false')
       this.fas.getProgressCollection(userId)
         .subscribe((res) => {
           const receiveValue = res.docs.map(e => {
@@ -311,7 +308,5 @@ export class DatabaseService {
         })
     });
   }
-
-  //to do: update Previous User Progress
 
 }

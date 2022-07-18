@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IonItem } from '@ionic/angular';
 import { threadId } from 'worker_threads';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
@@ -31,7 +32,7 @@ export class Demo02Page implements OnInit {
 
   constructor(
     public urs: UserRecordService,
-    public dab: DatabaseService,
+    public das: DatabaseService,
     public los: LocalStorageService,
     public als: AlertService,
     public router: Router,
@@ -56,9 +57,8 @@ export class Demo02Page implements OnInit {
       if (this.loaded) {
         console.log('loaded, continue previous progress')
       } else {
+        await this.fetchProgress();
         await this.decideQuestionList();
-
-
       }
     }
   }
@@ -67,15 +67,46 @@ export class Demo02Page implements OnInit {
   //read from local storge, fetch previous progress
   //previous progress should be handled in sign in phase
   //read from current session list, add all new questions to list*
+
+  //if a question belongs session question list, but does not belong user previous progress
+  // then initialize the new process in the question
   async decideQuestionList() {
-    console.log('decideQuestionList')
+    var dummyList = [];//this dummy list stores the list which user will look at today
     for (let i = 0; i < this.sessionList.length; i++) {
-      const listQuestionId = await this.dab.getSessionQuestionWithId(this.sessionList[i].id);
+      //iterate through all sessions
+      //(so user may join more than one session)
+      const listQuestionId = await this.das.getSessionQuestionWithId(this.sessionList[i].id) as any[];
       console.log(this.sessionList[i].id, listQuestionId);
-      //if listQuestionId contains question not shown in the previous progress,
-      //then add it to questionList
-      const previous = this.los.fetchLocalData('previousProgress');
-      console.log(previous);
+      for (let j = 0; j < listQuestionId.length; j++) {
+        const insertItem = {
+          qId: listQuestionId[j].qId,
+          EF: 2.5,
+          n: 0,//here repetition = 0 means this question is first time showing up
+          repeatTime: -1,
+        }
+        dummyList.push(insertItem);
+      }
+    }
+    const previous = this.los.fetchLocalData('previousProgress');
+    for (let i = 0; i < previous.length; i++) {
+      const source = previous[i];
+      var target = dummyList.filter(e => e.qId == source.qId)[0];
+      if (target != null && target != undefined) {
+        target.EF = source.EF;
+        target.n = source.n;
+        target.repeatTime = 1;//if user got it correct, then only repeat it once
+      }
+    }
+    console.log(dummyList);
+  }
+
+  async fetchProgress() {
+    //collect data from database, store it in local storage
+    //then initialize all the question as unanswered
+    const previousList = await this.das.fetchUserPreviousProgress();
+    if (previousList != null || previousList != undefined) {
+      console.log('user previous progress stored');
+      this.los.setLocalData('previousProgress', previousList);
     }
   }
 
@@ -84,21 +115,19 @@ export class Demo02Page implements OnInit {
   //if local storage contains it, then read it
   //if not, read from remote database, and store it in local storage
 
-  async fetchFromRemoteDatabase() {
+  async fetchFromRemoteDatabaseObsolete() {
     //then initialize all the question as unanswered
-    const v = await this.dab.getQuestionData();
+    const v = await this.das.getQuestionData();
     this.qList = v as any[];
     for (let i = 0; i < this.qList.length; i++) {
       this.qList[i].answered = false;
     }
     console.log(this.qList);
-    const previousList = await this.dab.fetchUserPreviousProgress();
+    const previousList = await this.das.fetchUserPreviousProgress();
     if (previousList != null || previousList != undefined) {
       console.log('true')
     }
     this.updateEnableDisplayAnswer();
-
-
   }
 
   check() {//invoked in front end page to reveal the button
@@ -122,20 +151,22 @@ export class Demo02Page implements OnInit {
   */
   answer(answer: number) {
     var currentItem = this.qList.shift();//pop the very first item of the list
-    if (!currentItem.answered) {
-      currentItem.answered = true;//update currenItem answer
-      if (answer == 3) {//quality easy
+    if (currentItem.repeatTime == -1) {
+      //so we are looking at new item
+      currentItem.repeatTime = 3;//initialize repeat time to 3, but if user got it correct, store it directly
+      if (this.qualityGood(answer)) {//quality easy
         //remove item from the list and
         //store the item in local storage
-        this.urs.storeLocalInfo(currentItem.id, 3, 2.5, 1);
+        this.urs.storeLocalInfo(currentItem.qId, 3, 2.5, 1);
       } else {
-        currentItem.level = answer;//this is the level
+        currentItem.q = answer;//this is the level
         currentItem.repeatTime = 3;//repeat it for three times
         this.insertItem(currentItem);
       }
     } else {
-      if (answer == 0 || answer == 1) {
-        //don't change the repeat time
+      if (!this.qualityGood(answer)) {
+        //set to three
+        currentItem.repeatTime = 3;
         // console.log('respond poor quality, repeat question')
         this.insertItem(currentItem);
       } else {
@@ -165,6 +196,14 @@ export class Demo02Page implements OnInit {
     //reset input space
     this.userCode = '';
     this.userMulti = '';
+  }
+
+  qualityGood(answer: number) {
+    if (answer == 0 || answer == 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*
