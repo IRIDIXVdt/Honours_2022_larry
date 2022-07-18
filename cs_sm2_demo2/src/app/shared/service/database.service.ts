@@ -299,7 +299,7 @@ export class DatabaseService {
               n: e.data()['n'],
               nextTime: e.data()['nextTime'],
               q: e.data()['q'],
-              questionId: e.data()['questionId'],
+              qId: e.data()['questionid'],
             }
           });
           // console.log("Previous User Progress Display", receiveValue);

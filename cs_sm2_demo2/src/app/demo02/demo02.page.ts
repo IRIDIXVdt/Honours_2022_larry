@@ -38,7 +38,7 @@ export class Demo02Page implements OnInit {
     public tms: TimeService,
   ) {
     // this.fetchFromRemoteDatabase();
-    tms.initializeTimeEnd();
+    tms.initializeAll();
   }
 
   ngOnInit() { }
@@ -57,15 +57,16 @@ export class Demo02Page implements OnInit {
         console.log('loaded, continue previous progress')
       } else {
         await this.decideQuestionList();
-        //to do: when user first time opens program, the software decides task list
-        //read from local storge, fetch previous progress
-        // const currentList = this.los.fetchLocalData()
-        //previous progress should be handled in sign in phase
-        //read from current session list, add all new questions to list*
+
+
       }
     }
   }
 
+  //to do: when user first time opens program, the software decides task list
+  //read from local storge, fetch previous progress
+  //previous progress should be handled in sign in phase
+  //read from current session list, add all new questions to list*
   async decideQuestionList() {
     console.log('decideQuestionList')
     for (let i = 0; i < this.sessionList.length; i++) {
@@ -73,7 +74,8 @@ export class Demo02Page implements OnInit {
       console.log(this.sessionList[i].id, listQuestionId);
       //if listQuestionId contains question not shown in the previous progress,
       //then add it to questionList
-
+      const previous = this.los.fetchLocalData('previousProgress');
+      console.log(previous);
     }
   }
 
