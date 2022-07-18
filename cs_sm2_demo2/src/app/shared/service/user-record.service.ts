@@ -32,22 +32,24 @@ export class UserRecordService {
     //user term list, introduce this term to user data list with q EF n and next date
     const UID = this.los.idStatus();//fetch user id
     // console.log(UID);//display user id
+
+    const currentN = item.n + 1;
     const collectData: UserRecordData = {
       userId: this.los.idStatus(),
       questionid: item.qId,
       completeTime: this.tms.getCurrentDay(),
       q: item.q,
       EF: item.EF,
-      n: item.n + 1,
+      n: currentN,
     }
     //calculate the interval of time with respect to next date
 
     const userInfo = {
       questionid: item.qId,
-      nextTime: this.tms.getNextDay(item.n, item.EF),
+      nextTime: this.tms.getNextDay(currentN, item.EF),
       q: item.q,
       EF: item.EF,
-      n: item.n + 1,
+      n: currentN,
     }
     this.los.collectUserAnswer(collectData);
     this.los.storeUserProgress(userInfo);
