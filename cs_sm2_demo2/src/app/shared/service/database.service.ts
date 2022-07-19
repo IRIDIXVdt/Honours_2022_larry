@@ -38,6 +38,26 @@ export class DatabaseService {
     // return false;
   }
 
+  getQuestionItemData(id: string) {
+    return new Promise((resolve, reject) => {
+      this.fas.getDocument("QuestionCollection", id)
+        .subscribe((res) => {
+          resolve({
+            id: res.id,
+            qType: res.data()['qType'],
+            qCourse: res.data()['qCourse'],
+            question: res.data()['question'],
+            answer: res.data()['answer'],
+            description: res.data()['description'],
+          });
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   getQuestionData() {
     return new Promise((resolve, reject) => {
       this.fas.getCollection("QuestionCollection")
@@ -179,7 +199,7 @@ export class DatabaseService {
         // console.log(localStorage);
         this.saveUserSessionChangesToCloud();
         // window.location.reload();
-        
+
         //now calculate local list
         const allList = JSON.parse(localStorage.getItem('allList'));
         const idList = JSON.parse(localStorage.getItem('sessionList'));
