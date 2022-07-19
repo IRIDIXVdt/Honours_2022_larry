@@ -12,9 +12,11 @@ export class TimeService {
   public initializeAll() {
     this.initializeTimeStart();
     this.initializeTimeEnd();
+    console.log('start',this.timeStart,'end',this.timeEnd);
   }
 
   public initializeTimeStart() {
+    //to do: if it is before 12 pm to 2am in the morning, initialize it to the day before
     //initialize end time and start time
     //unless the system is overtime, do not reload this
     const current = new Date();//initialize Date object with current time
@@ -28,7 +30,6 @@ export class TimeService {
     date.setHours(0, 2, 0, 0);
     date.setDate(date.getDate() + 1);
     this.timeEnd = date.getTime();
-    console.log(this.timeEnd);
   }
 
   //if the software is overTime, reload information and restart

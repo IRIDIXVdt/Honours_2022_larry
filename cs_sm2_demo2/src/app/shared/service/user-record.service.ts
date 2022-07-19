@@ -87,7 +87,7 @@ export class UserRecordService {
     }
     var targetQuestion = dataList.filter(e => e.id == qId)[0];
     if (targetQuestion == null || targetQuestion == undefined) {
-      console.log('fetch from remote', qId);
+      console.log(qId, 'fetch from remote');
       //if we do not have it in local
       //first collect it from database
       targetQuestion = await this.das.getQuestionItemData(qId);
@@ -95,9 +95,9 @@ export class UserRecordService {
       //then store it in local storage
       this.los.setLocalData('questionCollection', dataList);
     } else {
-      console.log('local exist', qId);
+      console.log(qId, 'local exist');
     }
-    console.log(targetQuestion);
+    // console.log(targetQuestion);
     return targetQuestion;
   }
 }

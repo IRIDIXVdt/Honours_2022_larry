@@ -123,7 +123,7 @@ export class LocalStorageService {
     array.push(data);//store it in a local variable array
     //store the new array in local storage
     localStorage.setItem('answerQuestion', JSON.stringify(array));
-    console.log(JSON.parse(localStorage.getItem('answerQuestion')));
+    // console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 
   fetchUserAnswerRecordData() {
@@ -139,7 +139,7 @@ export class LocalStorageService {
     array.push(data);//store it in a local variable array
     //store the new array in local storage
     localStorage.setItem('answerProgress', JSON.stringify(array));
-    console.log(JSON.parse(localStorage.getItem('answerProgress')));
+    // console.log(JSON.parse(localStorage.getItem('answerProgress')));
   }
 
   fetchUserProgressData() {

@@ -266,4 +266,11 @@ export class Demo02Page implements OnInit {
     console.log(this.los.fetchLocalData('questionCollection'));
   }
 
+  displayLocalProgress() {
+    console.log(this.los.fetchLocalData('answerProgress'));
+  }
+
+  displayLocalCompleted() {
+    console.log(this.los.fetchLocalData('answerQuestion'));
+  }
 }

@@ -4,6 +4,12 @@
     <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
       Display Storage
     </ion-button>
+    <ion-button (click)="displayLocalProgress()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Display In Progress
+    </ion-button>
+    <ion-button (click)="displayLocalCompleted()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Display Completed
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -19,6 +25,7 @@
 
     <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
       <div class="ion-padding">
+        <div>{{currentTermItem.id}}</div>
         <div [innerHTML]="currentTermItem.question"></div>
         <ion-item-divider></ion-item-divider>
 
