@@ -38,11 +38,54 @@ export class DatabaseService {
     // return false;
   }
 
+  getQuestionItemData(id: string) {
+    return new Promise((resolve, reject) => {
+      this.fas.getDocument("QuestionCollection", id)
+        .subscribe((res) => {
+          resolve({
+            id: res.id,
+            qType: res.data()['qType'],
+            qCourse: res.data()['qCourse'],
+            question: res.data()['question'],
+            answer: res.data()['answer'],
+            description: res.data()['description'],
+          });
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   getQuestionData() {
     return new Promise((resolve, reject) => {
       this.fas.getCollection("QuestionCollection")
         .subscribe((res) => {
           // console.log('display res', res);
+          const receiveValue = res.docs.map(e => {
+            return {
+              id: e.id,
+              qType: e.data()['qType'],
+              qCourse: e.data()['qCourse'],
+              question: e.data()['question'],
+              answer: e.data()['answer'],
+              description: e.data()['description'],
+            }
+          });
+          resolve(receiveValue);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
+  filterQuestionData(course) {
+    return new Promise((resolve, reject) => {
+      this.fas.getDataWithFilter('QuestionCollection', 'qCourse', course)
+        .subscribe((res) => {
           const receiveValue = res.docs.map(e => {
             return {
               id: e.id,
@@ -98,6 +141,49 @@ export class DatabaseService {
     });
   }
 
+  getSessionQuestionWithId(sid) {
+    return new Promise((resolve, reject) => {
+      this.fas.getCollectionWithOrder("sessionCollection" + '/' + sid + '/' + 'release', 'qTime')
+        .subscribe((res) => {
+          // console.log('display res', res);
+          const receiveValue = res.docs.map(e => {
+            return {
+              id: e.id,
+              qId: e.data()['qId'],
+              qTime: e.data()['qTime'],
+            }
+          });
+          resolve(receiveValue);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
+  removeSessionQuestionWithId(sid, qid) {
+    return new Promise((resolve, reject) => {
+      this.fas.removeDataById("sessionCollection" + '/' + sid + '/' + 'release/' + qid)
+        .then((res) => {
+          resolve(res);
+        }, (err: any) => {
+          console.log(err);
+          reject();
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
+  addSessionQuestionWithId(sid, qId) {
+    const currentTime = (new Date()).getTime();
+    const data = {
+      qId: qId,
+      qTime: currentTime,
+    }
+    this.fas.addDataService("sessionCollection" + '/' + sid + '/' + 'release', data);
+  }
+
   addUserSession(sessionId) {
     if (sessionId != '') {//verify input not empty
       //also make sure we don't have repeating ones
@@ -110,8 +196,22 @@ export class DatabaseService {
         (v as string[]).push(sessionId);
         //add sessionId to attribute of sessionList of user data
         this.setLocalUserSessionList(v);
-        console.log(localStorage);
+        // console.log(localStorage);
         this.saveUserSessionChangesToCloud();
+        // window.location.reload();
+
+        //now calculate local list
+        const allList = JSON.parse(localStorage.getItem('allList'));
+        const idList = JSON.parse(localStorage.getItem('sessionList'));
+        if (idList != null && idList.length > 0) {
+          var sessionList = [];
+          for (let i = 0; i < allList.length; i++) {//iterate through all the list
+            if (idList.filter(e => e == allList[i].id).length > 0) {
+              sessionList.push(allList[i]);
+            }
+          }
+          localStorage.setItem('userList', JSON.stringify(sessionList));
+        }
       }
     } else {//input empty
       this.als.displayMessage('Session not selected. Please try again.');
@@ -132,6 +232,7 @@ export class DatabaseService {
     return new Promise((resolve, reject) => {
       this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
         .subscribe(v => {
+          console.log('user session Id list with Id', JSON.parse(localStorage.getItem('user')).uid, v.data()[info]);
           resolve(v.data()[info]);
         });
     });
@@ -205,9 +306,8 @@ export class DatabaseService {
 
   async fetchUserPreviousProgress() {
     const userId = JSON.parse(localStorage.getItem('user')).uid;
-
     return new Promise((resolve, reject) => {
-      this.fas.getCollection('users' + '/' + userId + '/' + 'answerList')
+      this.fas.getProgressCollection(userId)
         .subscribe((res) => {
           const receiveValue = res.docs.map(e => {
             return {
@@ -216,10 +316,10 @@ export class DatabaseService {
               n: e.data()['n'],
               nextTime: e.data()['nextTime'],
               q: e.data()['q'],
-              questionId: e.data()['questionId'],
+              qId: e.data()['questionid'],
             }
           });
-          console.log("Previous User Progress Display", receiveValue);
+          // console.log("Previous User Progress Display", receiveValue);
           resolve(receiveValue);//return value in promise
         }, (err: any) => {//catch error
           console.log(err);
@@ -228,7 +328,5 @@ export class DatabaseService {
         })
     });
   }
-
-  //to do: update Previous User Progress
 
 }

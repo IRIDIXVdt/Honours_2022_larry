@@ -24,7 +24,11 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public das: DatabaseService,
     public los: LocalStorageService,
-  ) {}
+  ) { }
+
+  //to do: 
+  //read from database, store in local storage
+  //change on website, update both database and storage
 
   async signOut() {  // Sign out 
     await this.als.presentChoice("Do you want to sign out?").then(async (resultLoading) => {
@@ -48,11 +52,10 @@ export class AuthService {
     this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         if (result.user.emailVerified) { // if user's account has been verified
-          this.los.setLocalUserData(result.user); // stored user's info in to local database (refresh page will not reset) 
-          this.los.updateLS('admin');
-          this.das.setUserData(result.user);  // update user's info to remote database
+          console.log("User is verified, update all the information in local storage");
+          //setLocalUserData updateLS console log correct information
           loading.dismiss(); //stop the loading animation
-          this.router.navigate([this.homeAddress]);
+          this.userDataUpdate(result.user);
         } else {
           loading.dismiss(); //stop the loading animation
           this.als.signInErrorAlert('Email is not verified');
@@ -65,6 +68,80 @@ export class AuthService {
         else
           this.als.signInErrorAlert('Check your internet connection');
       })
+  }
+
+  async userDataUpdate(data) {
+    const loading = await this.als.startLoading();
+    try {
+      // stored user's info in to local database (refresh page will not reset) 
+      this.los.setLocalData('user', data); //store user List
+      this.los.setLocalData('sessionList', await this.das.getUserCustomizeInfo('sessionList'));
+      //add user progress to local storage
+      this.checkAdminStatus('admin');//check if is admin
+      // update user's info to remote database
+      this.das.setUserData(data);
+      //store user session data
+      await this.storeSesssion();
+      // //fetch user previous progress
+      // await this.fetchProgress();
+      console.log(localStorage);
+      this.router.navigate([this.homeAddress]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  checkAdminStatus(input) {
+    if (input == "admin") {//update admin
+      this.getIsAdmin().then(v => {
+        this.los.setLocalData('admin', v)
+      })
+    }
+  }
+
+  getIsAdmin() {//intended to be used after login, this determines if it is admin
+    return new Promise((resolve, reject) => {
+      if (this.los.userStatus())
+        this.das.getAdminWithEmail(JSON.parse(localStorage.getItem('user')).email)
+          .then(v => {//receive length of the corresponding querysnapshot doc
+            if (v > 0) {
+              this.los.setLocalData('admin', true);
+              console.log("User found admin", v);
+              resolve(true);
+            } else {
+              this.los.setLocalData('admin', false);
+              console.log("User not admin", v);
+              resolve(false);
+            }
+          });
+      else {
+        this.los.setLocalData('admin', false);
+        console.log("Have not logged in ");
+        resolve(true);
+      }
+    });
+  }
+
+
+  async storeSesssion() {
+    //fetch all the sessions
+    const sList: any = await this.das.getSessionData('All');
+    //store it in local storage
+    this.los.setLocalData('allList', sList);
+    console.log('allList data', sList);
+    const sessionIdList: string[] = this.das.getLocalUserSessionList();
+    if (sessionIdList != null && sessionIdList.length > 0) {
+      var sessionList = [];
+      for (let i = 0; i < sList.length; i++) {//iterate through all the list
+        if (sessionIdList.filter(e => e == sList[i].id).length > 0) {
+          sessionList.push(sList[i]);
+        }
+      }
+      this.los.setLocalData('userList', sessionList);
+    }
+    console.log('store session', this.los.fetchLocalData('userList'));
   }
 
   // Sign up with email/password
@@ -152,9 +229,11 @@ export class AuthService {
     return this.afAuth.signInWithPopup(provider)
       .then((result) => {
         this.ngZone.run(() => {
-          this.los.setLocalUserData(result.user);
-          this.router.navigate([this.homeAddress]);//new routing 
-          this.los.updateLS("admin");
+          //to do: bug fix authlogin
+          // this.los.setLocalUserData(result.user);
+          // this.router.navigate([this.homeAddress]);//new routing 
+          // this.los.checkAdminStatus("admin");
+          this.userDataUpdate(result.user);
         })
         this.das.setUserData(result.user);
       }).catch((error) => {
@@ -162,19 +241,19 @@ export class AuthService {
       })
   }
 
-  updateUserData() {
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        if (user.emailVerified) {
-          this.los.setLocalUserData(user);
-        } else {
-          this.los.setLocalUserData(null);
-        }
-      } else {
-        this.los.setLocalUserData(null);
-      }
-    })
-  }
+  // updateUserData() {
+  //   this.afAuth.authState.subscribe(user => {
+  //     if (user) {
+  //       if (user.emailVerified) {
+  //         this.los.setLocalUserData(user);
+  //       } else {
+  //         this.los.setLocalUserData(null);
+  //       }
+  //     } else {
+  //       this.los.setLocalUserData(null);
+  //     }
+  //   })
+  // }
 
   getTime() {
     const myTimestamp = firebase.firestore.FieldValue.serverTimestamp();

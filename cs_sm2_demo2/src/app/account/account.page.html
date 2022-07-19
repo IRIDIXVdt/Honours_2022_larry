@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>User Profile</ion-title>
+
+    <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Display Storage
+    </ion-button>
+
     <ion-button *ngIf="!this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
       routerLink="/tabs/account/register">
       Sign Up
@@ -84,14 +89,15 @@
                     <ng-container *ngIf="sList">
                       <!-- if the sList is ready -->
                       <ng-container *ngIf="this.sessionList">
+                        <!-- *ngIf="this.allowJoinSession" -->
                         <ion-label>You are registered in the following session(s):</ion-label>
                         <div></div>
                         <div *ngFor="let item of this.sessionList">
                           <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
                         </div>
-
                       </ng-container>
                       <ng-container *ngIf="!this.sessionList">
+                        <!-- *ngIf="!this.allowJoinSession" -->
                         <ion-label>No Session Selected</ion-label>
                         <ion-select [(ngModel)]="sessionId" interface="action-sheet" placeholder="Click here to select">
                           <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+
@@ -101,7 +107,7 @@
                           <ion-button slot="end" (click)="joinSession()">Join Session</ion-button>
                         </ion-toolbar>
                       </ng-container>
-                      
+
                     </ng-container>
                     <ng-container *ngIf="!sList">
                       <!-- if the sList is not ready -->

@@ -3,74 +3,36 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Question List</ion-title>
+    <ion-title>Manage Released Question</ion-title>
   </ion-toolbar>
-
+  <ion-toolbar>
+    <ion-select *ngIf="sList" (ionChange)="updateQuestionData()" [(ngModel)]="sessionId" interface="action-sheet"
+      placeholder="Click here to select session">
+      <ion-select-option *ngFor="let item of sList" value="{{item.id}}">{{item.sCode + ' '+
+        item.sNumber + ' ' + item.sTime}}</ion-select-option>
+    </ion-select>
+    <ion-segment *ngIf="questionList" [(ngModel)]="currentSeg" (ionChange)="updateQuestionList()">
+      <ion-segment-button value="nr">
+        <ion-label>Hidden</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ir">
+        <ion-label>Released</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <!-- need session component to sort questionList -->
-  <ng-container *ngIf="!questionList">
+  <ng-container *ngIf="!sList">
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
   </ng-container>
-  <div class="ionMaxContent" *ngIf="questionList">
-    <!-- <ion-accordion-group>
-
-      <ion-accordion value="numbers">
-        <ion-item slot="header">
-          <ion-label>Numbers</ion-label>
-        </ion-item>
-    
-        <ion-list slot="content">
-          <ion-item>
-            <ion-label>1</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-accordion>
-    </ion-accordion-group> -->
-
-    <!-- <ion-item>
-      <ion-label>Toppings</ion-label>
-      <ion-select multiple="true" cancelText="Nah" okText="Okay!">
-        <ion-select-option value="bacon">Bacon</ion-select-option>
-        <ion-select-option value="olives">Black Olives</ion-select-option>
-        <ion-select-option value="xcheese">Extra Cheese</ion-select-option>
-        <ion-select-option value="peppers">Green Peppers</ion-select-option>
-        <ion-select-option value="mushrooms">Mushrooms</ion-select-option>
-        <ion-select-option value="onions">Onions</ion-select-option>
-        <ion-select-option value="pepperoni">Pepperoni</ion-select-option>
-        <ion-select-option value="pineapple">Pineapple</ion-select-option>
-        <ion-select-option value="sausage">Sausage</ion-select-option>
-        <ion-select-option value="Spinach">Spinach</ion-select-option>
-      </ion-select>
-    </ion-item> -->
-
-
-    <!-- <ion-list>
-      <ion-item button="false" *ngFor="let item of questionList">
-        <ion-list>
-          <ion-col>
-            <ion-row>
-              <ion-item>
-                <ion-checkbox slot="start"></ion-checkbox>
-              </ion-item>
-              <ion-item button (click)="buttonClick()" detail>
-                <div [innerHTML]="item.description"></div>
-              </ion-item>
-            </ion-row>
-
-          </ion-col>
-        </ion-list>
-      </ion-item>
-    </ion-list> -->
-
+  <div class="ionMaxContent" *ngIf="sList">
     <ion-item *ngFor="let item of questionList">
       <div [innerHTML]="item.description"></div>
-      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-checkbox slot="start" [(ngModel)]="item.isChecked"></ion-checkbox>
     </ion-item>
-
-
+    <ion-button class="ion-padding" *ngIf="questionList" (click)="changeState()">Hide/Release The Selected Question</ion-button>
   </div>
-
 
 </ion-content>

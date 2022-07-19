@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonItem } from '@ionic/angular';
 import { threadId } from 'worker_threads';
 import { questionList } from '../shared/data/newQuestionData';
 import { UserRecordData } from '../shared/data/userRecordSchema';
+import { AlertService } from '../shared/service/alert.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
+import { TimeService } from '../shared/service/time.service';
 import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
@@ -12,40 +16,130 @@ import { UserRecordService } from '../shared/service/user-record.service';
   styleUrls: ['./demo02.page.scss'],
 })
 export class Demo02Page implements OnInit {
+  homeAddress: string = 'tabs/account';
   // qList = questionList;
+
+  //stop using qList for front end display: now current Term item handles it
   qList: any[];//contains the list of all questions a user would answer today
+  currentTermItem;
   // index: number;//new logic: only display the first item
   displayAnswer: boolean;
   // disableDisplayAnswer: boolean;
   sessionEnd: boolean;
   userCode: string = '';
   userMulti: string = '';
+  loaded: boolean = false;
+
+  //contains a list of all the questions
+  sessionList: any[];
 
   constructor(
     public urs: UserRecordService,
-    public dab: DatabaseService,
+    public das: DatabaseService,
     public los: LocalStorageService,
+    public als: AlertService,
+    public router: Router,
+    public tms: TimeService,
   ) {
-    this.fetchFromRemoteDatabase();
+    // this.fetchFromRemoteDatabase();
+    tms.initializeAll();
   }
+
   ngOnInit() { }
 
-  async fetchFromRemoteDatabase() {
+  //when user has not select any session, 
+  //then direct them back to home page to select question
+  async ionViewDidEnter() {
+    this.sessionList = this.los.fetchLocalData('userList');
+    if (this.sessionList == null || this.sessionList.length < 1) {
+      //no session, redirect page
+      console.log('no session yet');
+      const result = await this.als.expectFeedback("Please join a session before you start the task");
+      this.router.navigate([this.homeAddress]);
+    } else {
+      if (this.loaded) {
+        console.log('loaded, continue previous progress')
+      } else {
+        await this.fetchProgress();
+        await this.decideQuestionList();
+        this.updateQuestionDisplay();
+      }
+    }
+  }
 
+  //to do: when user first time opens program, the software decides task list
+  //read from local storge, fetch previous progress
+  //previous progress should be handled in sign in phase
+  //read from current session list, add all new questions to list*
+
+  //if a question belongs session question list, but does not belong user previous progress
+  // then initialize the new process in the question
+  async decideQuestionList() {
+    var dummyList = [];//this dummy list stores the list which user will look at today
+    for (let i = 0; i < this.sessionList.length; i++) {
+      //iterate through all sessions
+      //(so user may join more than one session)
+      const listQuestionId = await this.das.getSessionQuestionWithId(this.sessionList[i].id) as any[];
+      console.log(this.sessionList[i].id, listQuestionId);
+      for (let j = 0; j < listQuestionId.length; j++) {
+        const insertItem = {
+          qId: listQuestionId[j].qId,
+          EF: 2.5,
+          n: 0,//here repetition = 0 means this question is first time showing up
+          repeatTime: -1,
+        }
+        dummyList.push(insertItem);
+      }
+    }
+    const previous = this.los.fetchLocalData('previousProgress');
+    //if it is time to review, then insert necessary information
+    //if it is not, then remove this term from the list
+    for (let i = 0; i < previous.length; i++) {
+      const source = previous[i];
+      // console.log(source);
+      if (this.tms.getCurrentDay() > source.nextTime) {//if system decides you to review today
+        var target = dummyList.filter(e => e.qId == source.qId)[0];
+        if (target != null && target != undefined) {
+          target.EF = source.EF;
+          target.n = source.n;
+          target.docId = source.id;
+        }
+      } else {//if not, remove the corresponding item in the dummyList
+        dummyList = dummyList.filter(e => e.qId != source.qId);
+      }
+    }
+    // console.log(dummyList);
+    this.qList = dummyList;
+  }
+
+  async fetchProgress() {
+    //collect data from database, store it in local storage
     //then initialize all the question as unanswered
-    const v = await this.dab.getQuestionData();
+    const previousList = await this.das.fetchUserPreviousProgress();
+    if (previousList != null || previousList != undefined) {
+      // console.log('user previous progress stored');
+      this.los.setLocalData('previousProgress', previousList);
+    }
+  }
+
+  //to do: when user reads question
+  //for now: always read from remote database
+  //if local storage contains it, then read it
+  //if not, read from remote database, and store it in local storage
+
+  async fetchFromRemoteDatabaseObsolete() {
+    //then initialize all the question as unanswered
+    const v = await this.das.getQuestionData();
     this.qList = v as any[];
     for (let i = 0; i < this.qList.length; i++) {
       this.qList[i].answered = false;
     }
     console.log(this.qList);
-    const previousList = await this.dab.fetchUserPreviousProgress();
+    const previousList = await this.das.fetchUserPreviousProgress();
     if (previousList != null || previousList != undefined) {
-     console.log('true') 
+      console.log('true')
     }
     this.updateEnableDisplayAnswer();
-
-
   }
 
   check() {//invoked in front end page to reveal the button
@@ -54,49 +148,52 @@ export class Demo02Page implements OnInit {
 
   updateEnableDisplayAnswer() {
     this.displayAnswer = false;
-    // console.log(this.qList[0].qType);
-    // if (this.qList.length > 0)//otherwise session ends
-    //   if (this.qList[0].qType === 'ba') {
-    //     // console.log('this is a basic type question')
-    //     this.disableDisplayAnswer = false;
-    //   } else {
-    //     this.disableDisplayAnswer = true;
-    //   }
+  }
+
+  async updateQuestionDisplay() {
+    this.currentTermItem = null;
+    this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
   }
 
   /*
   handle the responsive with user answer: repeat some of the question and store the others
-
-  if user is first time answering this question
-    if quality is easy, store info and end this right away
-    if quality is not easy, store info and repeat this three time
-  or if the user is attempting this question already
-    if quality is poor or repeat, repeat it once
-    if quality is good or easy, check if there are repeat time left
-      if no repeat time left, store info end this
+      if user is first time answering this question
+        if quality is easy, store info and end this right away
+        if quality is not easy, store info and repeat this three time
+      or if the user is attempting this question already
+        if quality is poor or repeat, repeat it once
+        if quality is good or easy, check if there are repeat time left
+          if no repeat time left, store info end this
   */
   answer(answer: number) {
     var currentItem = this.qList.shift();//pop the very first item of the list
-    if (!currentItem.answered) {
-      currentItem.answered = true;//update currenItem answer
-      if (answer == 3) {//quality easy
-        //remove item from the list and
-        //store the item in local storage
-        this.urs.storeLocalInfo(currentItem.id, 3, 2.5, 1);
+    // var currentItem = this.currentTermItem;
+
+    if (currentItem.repeatTime == -1) {//first time answering a new item
+      currentItem.q = answer;//first store the quality of response
+
+      //if this item belongs a previous progress, also update its EF
+      if (currentItem.n != 0) {
+        currentItem.EF = this.efCalculator(currentItem.EF, currentItem.q);
+      }
+
+      if (this.qualityCheck(answer) == 'g') {//quality easy
+        //remove and store directly
+        this.urs.storeLocalInfo(currentItem);
       } else {
-        currentItem.level = answer;//this is the level
         currentItem.repeatTime = 3;//repeat it for three times
         this.insertItem(currentItem);
       }
-    } else {
-      if (answer == 0 || answer == 1) {
-        //don't change the repeat time
-        // console.log('respond poor quality, repeat question')
+    } else {//second or more time answering
+      if (this.qualityCheck(answer) == 'p') {
+        currentItem.repeatTime = 3;
+        this.insertItem(currentItem);
+      } else if (this.qualityCheck(answer) == 'm') {
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
           //store the item in local storage
-          this.urs.storeLocalInfo(currentItem.id, currentItem.level, 2.5, 1);
+          this.urs.storeLocalInfo(currentItem);
         } else {
           // console.log('respond good quality, minus repeat time by 1')
           const repeatTime = currentItem.repeatTime;
@@ -105,21 +202,48 @@ export class Demo02Page implements OnInit {
         }
       }
     }
+
     //addition requirement: if the length gets to 0 end this session
     if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
       //todo: upload everything in this session to database
       // this.urs.uploadLocalInfo();
-      this.los.uploadAnswerAndProgress();
+      this.urs.uploadAnswerAndProgress();
+  
+    } else {
+      //update question display
+      this.updateQuestionDisplay();
     }
+
     this.updateEnableDisplayAnswer();
     this.qList.forEach(e => {//display all the items in the qList
-      console.log(e.id, 'repeat', e.repeatTime, 'level', e.level);
+      console.log(e);
     });
     console.log('----------');
     //reset input space
     this.userCode = '';
     this.userMulti = '';
+  }
+
+  qualityCheck(answer: number) {
+    //to do: update the check quality, so that it showes up in scale of 6
+    //good medium poor
+    if (answer == 3) {
+      return 'g';
+    } else if (answer == 2) {
+      return 'm';
+    } else {
+      return 'p';
+    }
+  }
+
+  efCalculator(EF, q) {
+    //calculate the new value of the EF with previous EF and quality of response
+    var EFp = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    if (EFp < 1.3)
+      return 1.3;
+    else
+      return EFp;
   }
 
   /*
@@ -139,7 +263,15 @@ export class Demo02Page implements OnInit {
       this.qList.splice(this.qList.length, 0, item);
   }
 
-  // storeUserRecordData() {
+  displayLocalStorage() {
+    console.log(this.los.fetchLocalData('questionCollection'));
+  }
 
-  // }
+  displayLocalProgress() {
+    console.log(this.los.fetchLocalData('answerProgress'));
+  }
+
+  displayLocalCompleted() {
+    console.log(this.los.fetchLocalData('answerQuestion'));
+  }
 }
