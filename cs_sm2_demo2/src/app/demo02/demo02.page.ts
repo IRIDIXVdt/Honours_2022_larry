@@ -208,7 +208,8 @@ export class Demo02Page implements OnInit {
       this.sessionEnd = true;
       //todo: upload everything in this session to database
       // this.urs.uploadLocalInfo();
-      this.los.uploadAnswerAndProgress();
+      // this.los.uploadAnswerAndProgress();
+  
     } else {
       //update question display
       this.updateQuestionDisplay();

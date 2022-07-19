@@ -76,8 +76,8 @@ export class AuthService {
       // stored user's info in to local database (refresh page will not reset) 
       this.los.setLocalData('user', data); //store user List
       this.los.setLocalData('sessionList', await this.das.getUserCustomizeInfo('sessionList'));
-      //to do: add user progress to local storage
-      this.los.checkAdminStatus('admin');//check if is admin
+      //add user progress to local storage
+      this.checkAdminStatus('admin');//check if is admin
       // update user's info to remote database
       this.das.setUserData(data);
       //store user session data
@@ -92,6 +92,38 @@ export class AuthService {
       loading.dismiss();
     }
   }
+
+  checkAdminStatus(input) {
+    if (input == "admin") {//update admin
+      this.getIsAdmin().then(v => {
+        this.los.setLocalData('admin', v)
+      })
+    }
+  }
+
+  getIsAdmin() {//intended to be used after login, this determines if it is admin
+    return new Promise((resolve, reject) => {
+      if (this.los.userStatus())
+        this.das.getAdminWithEmail(JSON.parse(localStorage.getItem('user')).email)
+          .then(v => {//receive length of the corresponding querysnapshot doc
+            if (v > 0) {
+              this.los.setLocalData('admin', true);
+              console.log("User found admin", v);
+              resolve(true);
+            } else {
+              this.los.setLocalData('admin', false);
+              console.log("User not admin", v);
+              resolve(false);
+            }
+          });
+      else {
+        this.los.setLocalData('admin', false);
+        console.log("Have not logged in ");
+        resolve(true);
+      }
+    });
+  }
+
 
   async storeSesssion() {
     //fetch all the sessions
@@ -209,19 +241,19 @@ export class AuthService {
       })
   }
 
-  updateUserData() {
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        if (user.emailVerified) {
-          this.los.setLocalUserData(user);
-        } else {
-          this.los.setLocalUserData(null);
-        }
-      } else {
-        this.los.setLocalUserData(null);
-      }
-    })
-  }
+  // updateUserData() {
+  //   this.afAuth.authState.subscribe(user => {
+  //     if (user) {
+  //       if (user.emailVerified) {
+  //         this.los.setLocalUserData(user);
+  //       } else {
+  //         this.los.setLocalUserData(null);
+  //       }
+  //     } else {
+  //       this.los.setLocalUserData(null);
+  //     }
+  //   })
+  // }
 
   getTime() {
     const myTimestamp = firebase.firestore.FieldValue.serverTimestamp();

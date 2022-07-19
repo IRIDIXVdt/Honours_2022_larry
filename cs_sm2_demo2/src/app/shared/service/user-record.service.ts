@@ -24,7 +24,7 @@ export class UserRecordService {
     questionid: '',
     q: 0,
     EF: 0,
-    n: 0
+    n: 0,
   }
 
   storeLocalInfo(item) {
@@ -52,27 +52,49 @@ export class UserRecordService {
       q: item.q,
       EF: currentEF,
       n: currentN,
+      docId: item.docId,
     }
-    this.los.collectUserAnswer(collectData);
-    this.los.storeUserProgress(userInfo);
+    this.collectUserAnswer(collectData);
+    this.storeUserProgress(userInfo);
   }
 
-  async uploadLocalInfo() {
-    const dataArray = this.los.fetchUserAnswerRecordData() as UserRecordData[];
-    //store each item into dataCollection
-    for (let i = 0; i < dataArray.length; i++) {
-      await this.fas.addDataService('dataCollection', dataArray[i]);
+  collectUserAnswer(data) {
+    //get the current array
+    var array = this.los.fetchLocalData('answerQuestion');
+    if (array == null || array == undefined) {
+      array = [];//if the array is empty, then initialize it
     }
+    array.push(data);//store it in a local variable array
+    //store the new array in local storage
+    this.los.setLocalData('answerQuestion', array);
   }
 
-  fetchQuestionFromDataBase() {
-    //for now, retrieve every question from database
-    var questionList = [];
-    this.das.getQuestionData().then(v => {
-      questionList = (v as any[]);
+  storeUserProgress(data) {
+    //get the current array
+    var array = this.los.fetchLocalData('answerProgress');
+    if (array == null || array == undefined) {
+      array = [];//if the array is empty, then initialize it
+    }
+    array.push(data);//store it in a local variable array
+    //store the new array in local storage
+    this.los.setLocalData('answerProgress', array);
+  }
 
-    });
+  uploadAnswerAndProgress() {
+    // const userAnswerRecordArray = this.fetchUserAnswerRecordData();
+    // console.log(userAnswerRecordArray);
+    // this.das.uploadUserAnswer(userAnswerRecordArray);
 
+    /*
+    const userAnswerProgresArray = this.fetchUserProgressData();
+    console.log(userAnswerProgresArray);
+    this.das.uploadNewUserProgress(userAnswerProgresArray);
+    */
+
+    //to do: update answer progress, then simply remove local data
+    //to do: depending on whether progress contains docId, update or add data to user document
+
+    console.log('uploadAnswerAndProgress, update the comment')
   }
 
   //to do: fetch question feature
