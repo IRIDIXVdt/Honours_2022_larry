@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>demo02</ion-title>
+    <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Display Storage
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -14,32 +17,30 @@
 
   <ng-container *ngIf="!sessionEnd">
 
-    <div class="ionMaxContent" *ngIf="qList && qList.length>0">
+    <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
       <div class="ion-padding">
-        <!-- <p>{{qList[index].question}}</p> -->
-        <div [innerHTML]="qList[0].question"></div>
+        <div [innerHTML]="currentTermItem.question"></div>
         <ion-item-divider></ion-item-divider>
 
-        <div class="answer" *ngIf="qList[0].qType === 'co'">
+        <div class="answer" *ngIf="currentTermItem.qType === 'co'">
           <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your code here">
           </ion-input>
         </div>
-        <div class="answer" *ngIf="qList[0].qType === 'mu'">
+        <div class="answer" *ngIf="currentTermItem.qType === 'mu'">
           <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
         </div>
-        <div class="answer" *ngIf="qList[0].qType === 'ba'">
+        <div class="answer" *ngIf="currentTermItem.qType === 'ba'">
           <p></p>
         </div>
         <div *ngIf="displayAnswer">
-          <!-- {{qList[index].answer}} -->
-          <div [innerHTML]="qList[0].answer"></div>
+          <div [innerHTML]="currentTermItem.answer"></div>
         </div>
 
       </div>
     </div>
 
-    <div *ngIf="!qList">
+    <div *ngIf="!currentTermItem">
       <ion-progress-bar type="indeterminate"></ion-progress-bar>
     </div>
 

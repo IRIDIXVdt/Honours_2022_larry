@@ -81,8 +81,11 @@ export class UserRecordService {
   //if local storage contains that, then return it
   //if not, fetch from database, and return it, (at the same time storing it)
   async fetchQuestionWithId(qId: string) {
-    var dataList = this.los.fetchLocalData('questionCollection') as any[];
-    var targetQuestion = dataList.filter(e => e.qId = qId)[0];
+    var dataList = await this.los.fetchLocalData('questionCollection') as any[];
+    if (dataList == null || dataList == undefined) {
+      dataList = [];
+    }
+    var targetQuestion = dataList.filter(e => e.id == qId)[0];
     if (targetQuestion == null || targetQuestion == undefined) {
       console.log('fetch from remote', qId);
       //if we do not have it in local
@@ -94,6 +97,7 @@ export class UserRecordService {
     } else {
       console.log('local exist', qId);
     }
+    console.log(targetQuestion);
     return targetQuestion;
   }
 }

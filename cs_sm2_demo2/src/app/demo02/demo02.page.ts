@@ -18,7 +18,10 @@ import { UserRecordService } from '../shared/service/user-record.service';
 export class Demo02Page implements OnInit {
   homeAddress: string = 'tabs/account';
   // qList = questionList;
+
+  //stop using qList for front end display: now current Term item handles it
   qList: any[];//contains the list of all questions a user would answer today
+  currentTermItem;
   // index: number;//new logic: only display the first item
   displayAnswer: boolean;
   // disableDisplayAnswer: boolean;
@@ -59,6 +62,7 @@ export class Demo02Page implements OnInit {
       } else {
         await this.fetchProgress();
         await this.decideQuestionList();
+        this.updateQuestionDisplay();
       }
     }
   }
@@ -92,7 +96,7 @@ export class Demo02Page implements OnInit {
     //if it is not, then remove this term from the list
     for (let i = 0; i < previous.length; i++) {
       const source = previous[i];
-      console.log(source);
+      // console.log(source);
       if (this.tms.getCurrentDay() > source.nextTime) {//if system decides you to review today
         var target = dummyList.filter(e => e.qId == source.qId)[0];
         if (target != null && target != undefined) {
@@ -104,7 +108,8 @@ export class Demo02Page implements OnInit {
         dummyList = dummyList.filter(e => e.qId != source.qId);
       }
     }
-    console.log(dummyList);
+    // console.log(dummyList);
+    this.qList = dummyList;
   }
 
   async fetchProgress() {
@@ -112,7 +117,7 @@ export class Demo02Page implements OnInit {
     //then initialize all the question as unanswered
     const previousList = await this.das.fetchUserPreviousProgress();
     if (previousList != null || previousList != undefined) {
-      console.log('user previous progress stored');
+      // console.log('user previous progress stored');
       this.los.setLocalData('previousProgress', previousList);
     }
   }
@@ -145,6 +150,10 @@ export class Demo02Page implements OnInit {
     this.displayAnswer = false;
   }
 
+  async updateQuestionDisplay() {
+    this.currentTermItem = null;
+    this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
+  }
 
   /*
   handle the responsive with user answer: repeat some of the question and store the others
@@ -158,6 +167,7 @@ export class Demo02Page implements OnInit {
   */
   answer(answer: number) {
     var currentItem = this.qList.shift();//pop the very first item of the list
+    // var currentItem = this.currentTermItem;
 
     if (currentItem.repeatTime == -1) {//first time answering a new item
       currentItem.q = answer;//first store the quality of response
@@ -199,6 +209,9 @@ export class Demo02Page implements OnInit {
       //todo: upload everything in this session to database
       // this.urs.uploadLocalInfo();
       this.los.uploadAnswerAndProgress();
+    } else {
+      //update question display
+      this.updateQuestionDisplay();
     }
 
     this.updateEnableDisplayAnswer();
@@ -247,6 +260,10 @@ export class Demo02Page implements OnInit {
       this.qList.splice(Math.round(this.qList.length / 2), 0, item);
     else
       this.qList.splice(this.qList.length, 0, item);
+  }
+
+  displayLocalStorage() {
+    console.log(this.los.fetchLocalData('questionCollection'));
   }
 
 }

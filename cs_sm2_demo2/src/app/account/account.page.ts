@@ -30,12 +30,12 @@ export class AccountPage implements OnInit {
   ionViewDidEnter() {
     // this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
-    console.log(this.sList);
+    // console.log(this.sList);
     if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
       //for now, if user already has a sesssion, then prevent them from joining others
       // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
-      console.log(this.sessionList);
+      console.log(this.sList, this.sessionList);
     }
   }
 
@@ -94,11 +94,11 @@ export class AccountPage implements OnInit {
 
   displayLogininfo() {
     console.log(this.aus.isLogin());
-    console.log(localStorage);
+    // console.log(localStorage);
   }
 
   displayLocalStorage() {
     console.log(localStorage);
-    console.log(localStorage.getItem('previousProgress'));
+    // console.log(localStorage.getItem('previousProgress'));
   }
 }
