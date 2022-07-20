@@ -96,8 +96,9 @@ export class LocalStorageService {
   resetAnswerAndProgress() {
     localStorage.setItem('answerQuestion', null);
     localStorage.setItem('answerProgress', null);
-    console.log(JSON.parse(localStorage.getItem('answerProgress')));
-    console.log(JSON.parse(localStorage.getItem('answerQuestion')));
+    localStorage.setItem('qList', null);
+    // console.log(JSON.parse(localStorage.getItem('answerProgress')));
+    // console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 
 }

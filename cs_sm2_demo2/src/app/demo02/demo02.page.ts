@@ -63,6 +63,11 @@ export class Demo02Page implements OnInit {
         console.log('loaded, continue previous progress');
         this.qList = this.los.fetchLocalData('qList') as any[];
         this.updateQuestionDisplay();
+        this.updateEnableDisplayAnswer();
+        this.qList.forEach(e => {//display all the items in the qList
+          console.log(e);
+        });
+        console.log('----------');
       } else {
         console.log('loaded, start today\'s session');
         await this.fetchProgress();
@@ -77,7 +82,7 @@ export class Demo02Page implements OnInit {
   }
 
   inProgress() {
-    const progress = this.los.fetchLocalData('answerQuestion');
+    const progress = this.los.fetchLocalData('qList');
     return progress != undefined && progress != null;
   }
 
@@ -124,6 +129,7 @@ export class Demo02Page implements OnInit {
     // console.log(dummyList);
     this.qList = dummyList;
     console.log(this.qList)
+    this.los.setLocalData('qList', this.qList);
   }
 
   async fetchProgress() {
@@ -279,7 +285,8 @@ export class Demo02Page implements OnInit {
   }
 
   displayLocalStorage() {
-    console.log(this.los.fetchLocalData('questionCollection'));
+    console.log(this.los.fetchLocalData('qList'));
+    // console.log(this.qList);
   }
 
   displayLocalProgress() {
