@@ -206,10 +206,8 @@ export class Demo02Page implements OnInit {
     //addition requirement: if the length gets to 0 end this session
     if (this.qList.length == 0) {//end this session
       this.sessionEnd = true;
-      //todo: upload everything in this session to database
-      // this.urs.uploadLocalInfo();
+      //upload everything in this session to database
       this.urs.uploadAnswerAndProgress();
-
     } else {
       //update question display
       this.updateQuestionDisplay();

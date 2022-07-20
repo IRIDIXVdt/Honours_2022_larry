@@ -290,18 +290,17 @@ export class DatabaseService {
 
   }
 
-  async uploadNewUserProgress(userList: any[]) {
-    const userId = JSON.parse(localStorage.getItem('user')).uid;
+  async uploadNewUserProgress(userId, userList: any[]) {
     //insert all the userlist information into a colleciton in user
     try {
       for (let i = 0; i < userList.length; i++) {
-        const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
-        // console.log(result);
-
+        // const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
       }
     } catch (e) {
       console.error(e);
+      return false;
     }
+    return true;
   }
 
   async fetchUserPreviousProgress() {

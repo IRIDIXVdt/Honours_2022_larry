@@ -48,18 +48,36 @@ export class UserRecordService {
     this.los.addDataToLocalArray('answerProgress', userInfo);
   }
 
-  uploadAnswerAndProgress() {
-    /*
-    const userAnswerProgresArray = this.fetchUserProgressData();
-    console.log(userAnswerProgresArray);
-    this.das.uploadNewUserProgress(userAnswerProgresArray);
-    */
 
-    //to do: upload answer progress, then simply remove local data
-    const collectData = this.los.fetchLocalData('answerQuestion');
+  async uploadAnswerAndProgress() {
+    // const collectData = this.uploadCollectData();
+    const userData = this.uploadUserProgress();
+    console.log('upload Answer And Progress');
+    // console.log(collectData);
+    console.log(userData);
+  }
+
+  async uploadCollectData() {
+    const userId = this.los.fetchLocalData('user').uid;
+
+    //upload answer progress, then simply remove local data
+    const collectData = this.los.fetchLocalData('answerQuestion') as any[];
+    //upload answer progress
+    // const uploadSuccess = await this.das.uploadNewUserProgress(userId, collectData);
+    const uploadSuccess = await this.das.uploadUserAnswer(collectData);
+    //if upload success, then remove local
+    if (uploadSuccess)
+      this.los.setLocalData('answerQuestion', null);
+    return collectData;
+  }
+
+  async uploadUserProgress() {
     //to do: depending on whether progress contains docId, update or add data to user document
     const userData = this.los.fetchLocalData('answerProgress');
-    console.log('upload Answer And Progress', collectData, userData);
+
+    const uploadSuccess = await this.das.
+    this.los.setLocalData('answerProgress', null);
+    return userData;
   }
 
   //fetch question feature
