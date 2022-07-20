@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LocalStorageService } from './shared/service/local-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,9 @@ export class AppComponent {
     // { title: 'Add', url: '/tabs/add', icon: 'add-circle' },
     // { title: 'Browse', url: '/tabs/browse', icon: 'albums' },
   ];
-  constructor() {
+  constructor(
+    public los: LocalStorageService,
+  ) {
 
   }
 

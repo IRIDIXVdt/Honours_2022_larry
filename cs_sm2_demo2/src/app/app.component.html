@@ -3,8 +3,9 @@
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi@ionicframework.com</ion-note>
+          <ion-list-header *ngIf="!this.los.userStatus()">Sign in to continue</ion-list-header>
+          <ion-list-header *ngIf="this.los.userStatus()">V.C.A.L.L.T.</ion-list-header>
+          <ion-note *ngIf="this.los.userStatus()">{{this.los.emailStatus()}}</ion-note>
 
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
@@ -14,7 +15,7 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
-             
+
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
