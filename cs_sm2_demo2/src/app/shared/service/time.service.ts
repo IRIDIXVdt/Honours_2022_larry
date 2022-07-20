@@ -4,32 +4,39 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TimeService {
+  current;
   timeEnd: number;//decides when the process is overTime
   timeStart: number;//decides the day which the system will log the progress
 
   constructor() { }
-
+  grace: number = 2;
   public initializeAll() {
     this.initializeTimeStart();
     this.initializeTimeEnd();
-    console.log('start',this.timeStart,'end',this.timeEnd);
+    console.log('start', this.timeStart, 'end', this.timeEnd);
   }
 
   public initializeTimeStart() {
-    //to do: if it is before 12 pm to 2am in the morning, initialize it to the day before
+    //if it is before 12 pm to 2am in the morning, initialize it to the day before
     //initialize end time and start time
     //unless the system is overtime, do not reload this
-    const current = new Date();//initialize Date object with current time
-    current.setHours(0, 0, 0, 0);//set time to 0am to current timezone
-    this.timeStart = current.getTime();
+    this.current = new Date();//initialize Date object with current time
+    var compare = new Date();
+    compare.setHours(0, this.grace, 0, 0);
+    if (compare.getTime() > this.current.getTime()) {
+      //if it is before 2 am
+      this.current.setDate(this.current.getDate() - 1);
+    }
+    this.current.setHours(0, 0, 0, 0);//set time to 0am to current timezone
+    this.timeStart = this.current.getTime();
   }
 
   public initializeTimeEnd() {
     //the system refreshes at tomorrow 2am
-    var date = new Date();
-    date.setHours(0, 2, 0, 0);
-    date.setDate(date.getDate() + 1);
-    this.timeEnd = date.getTime();
+    // var date = new Date();
+    this.current.setHours(0, this.grace, 0, 0);
+    this.current.setDate(this.current.getDate() + 1);
+    this.timeEnd = this.current.getTime();
   }
 
   //if the software is overTime, reload information and restart

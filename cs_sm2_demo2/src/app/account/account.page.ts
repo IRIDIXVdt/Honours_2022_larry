@@ -80,7 +80,7 @@ export class AccountPage implements OnInit {
     })
   }
 
-  //to do: update local session
+  //update local session
   sessionListUpdate() {
     //update the collection of id (of user session) in local
     var originalList: any[] = this.los.fetchLocalData('sessionList');

@@ -81,9 +81,8 @@ export class Demo02Page implements OnInit {
     return progress != undefined && progress != null;
   }
 
-  //to do: when user first time opens program, the software decides task list
+  //when user first time opens program, the software decides task list
   //read from local storge, fetch previous progress
-  //previous progress should be handled in sign in phase
   //read from current session list, add all new questions to list*
 
   //if a question belongs session question list, but does not belong user previous progress
@@ -137,8 +136,7 @@ export class Demo02Page implements OnInit {
     }
   }
 
-  //to do: when user reads question
-  //for now: always read from remote database
+  //when user reads question
   //if local storage contains it, then read it
   //if not, read from remote database, and store it in local storage
 

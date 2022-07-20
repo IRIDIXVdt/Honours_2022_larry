@@ -24,8 +24,6 @@ export class BrowsePage implements OnInit {
     this.fetchSession();
     this.currentSeg = 'nr';
   }
-  *
-    //to do: 
     //fetch the checked list from database
     //with the checked list, update the list display in the browse page
     //specifically, depending on the status on the question (checked or not checked), 

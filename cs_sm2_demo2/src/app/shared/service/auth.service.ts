@@ -26,7 +26,6 @@ export class AuthService {
     public los: LocalStorageService,
   ) { }
 
-  //to do: 
   //read from database, store in local storage
   //change on website, update both database and storage
 
@@ -229,7 +228,6 @@ export class AuthService {
     return this.afAuth.signInWithPopup(provider)
       .then((result) => {
         this.ngZone.run(() => {
-          //to do: bug fix authlogin
           // this.los.setLocalUserData(result.user);
           // this.router.navigate([this.homeAddress]);//new routing 
           // this.los.checkAdminStatus("admin");
