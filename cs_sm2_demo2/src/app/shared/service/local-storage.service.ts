@@ -22,6 +22,7 @@ export class LocalStorageService {
     localStorage.setItem('allList', null);
     localStorage.setItem('userList', null);
     localStorage.setItem('previousProgress', null);
+    localStorage.setItem('qList', null);
   }
 
   setLocalData(list, data) {

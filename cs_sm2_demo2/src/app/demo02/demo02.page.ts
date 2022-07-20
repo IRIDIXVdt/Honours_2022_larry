@@ -57,14 +57,28 @@ export class Demo02Page implements OnInit {
       const result = await this.als.expectFeedback("Please join a session before you start the task");
       this.router.navigate([this.homeAddress]);
     } else {
-      if (this.loaded) {
-        console.log('loaded, continue previous progress')
+      if (this.endProgress()) {
+        console.log('loaded, session ended');
+      } else if (this.inProgress()) {
+        console.log('loaded, continue previous progress');
+        this.qList = this.los.fetchLocalData('qList') as any[];
+        this.updateQuestionDisplay();
       } else {
+        console.log('loaded, start today\'s session');
         await this.fetchProgress();
         await this.decideQuestionList();
         this.updateQuestionDisplay();
       }
     }
+  }
+
+  endProgress() {
+    return this.sessionEnd;
+  }
+
+  inProgress() {
+    const progress = this.los.fetchLocalData('answerQuestion');
+    return progress != undefined && progress != null;
   }
 
   //to do: when user first time opens program, the software decides task list
@@ -158,6 +172,7 @@ export class Demo02Page implements OnInit {
       this.sessionEnd = true;
       //upload everything in this session to database
       this.urs.uploadAnswerAndProgress();
+      this.los.setLocalData('qList', null);
     } else {
       this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
     }
@@ -174,6 +189,8 @@ export class Demo02Page implements OnInit {
           if no repeat time left, store info end this
   */
   answer(answer: number) {
+    //first store qList in local, in case reload
+    this.los.setLocalData('qList', this.qList);
     var currentItem = this.qList.shift();//pop the very first item of the list
     // var currentItem = this.currentTermItem;
 

@@ -50,7 +50,6 @@ export class UserRecordService {
     this.los.addDataToLocalArray('answerProgress', userInfo);
   }
 
-
   async uploadAnswerAndProgress() {
     const loading = await this.als.startLoading();
     console.log('upload Answer And Progress');
@@ -62,7 +61,7 @@ export class UserRecordService {
   async uploadCollectData() {
     //upload answer progress, then simply remove local data
     const collectData = this.los.fetchLocalData('answerQuestion') as any[];
-    if (collectData != undefined || collectData != null) {
+    if (collectData != undefined && collectData != null) {
       //upload answer progress
       const uploadSuccess = await this.das.uploadUserAnswer(collectData);
       //if upload success, then remove local
@@ -76,7 +75,7 @@ export class UserRecordService {
     const userId = this.los.fetchLocalData('user').uid;
     //depending on whether progress contains docId, update or add data to user document
     const userData = this.los.fetchLocalData('answerProgress');
-    if (userData != undefined || userData != null) {
+    if (userData != undefined && userData != null) {
       //upload user progress
       const uploadSuccess = await this.das.uploadNewUserProgress(userId, userData);
       if (uploadSuccess)
