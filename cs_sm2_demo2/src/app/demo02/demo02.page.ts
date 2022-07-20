@@ -153,7 +153,14 @@ export class Demo02Page implements OnInit {
 
   async updateQuestionDisplay() {
     this.currentTermItem = null;
-    this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
+    //if the length gets to 0 end this session
+    if (this.qList.length == 0) {//end this session
+      this.sessionEnd = true;
+      //upload everything in this session to database
+      this.urs.uploadAnswerAndProgress();
+    } else {
+      this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
+    }
   }
 
   /*
@@ -204,15 +211,8 @@ export class Demo02Page implements OnInit {
       }
     }
 
-    //addition requirement: if the length gets to 0 end this session
-    if (this.qList.length == 0) {//end this session
-      this.sessionEnd = true;
-      //upload everything in this session to database
-      this.urs.uploadAnswerAndProgress();
-    } else {
-      //update question display
-      this.updateQuestionDisplay();
-    }
+    //update question display
+    this.updateQuestionDisplay();
 
     this.updateEnableDisplayAnswer();
     this.qList.forEach(e => {//display all the items in the qList
