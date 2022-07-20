@@ -110,6 +110,7 @@ export class Demo02Page implements OnInit {
     }
     // console.log(dummyList);
     this.qList = dummyList;
+    console.log(this.qList)
   }
 
   async fetchProgress() {

@@ -286,15 +286,29 @@ export class DatabaseService {
       //if the upload failed, return false
       //so the system do not clean up local data after this action
       //a possible re-upload may also be implemented here
+      return false;
     }
-
+    return true;
   }
 
   async uploadNewUserProgress(userId, userList: any[]) {
     //insert all the userlist information into a colleciton in user
     try {
       for (let i = 0; i < userList.length; i++) {
-        // const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', userList[i]);
+        var item = userList[i];
+
+        if (item.docId != undefined || item.docId != null) {
+          //if the current item contains a user docId, then update the correpsonding document
+          // item.docId = undefined;
+          const docId = item.docId;
+          delete item.docId;
+          // console.log('doc', docId, item);
+          const result = await this.fas.updateDataById('users' + '/' + userId + '/' + 'answerList', docId, item);
+        } else {
+          //if the current item does not contain a docId, then it is a new document, upload it as it is
+          const result = await this.fas.addDataService('users' + '/' + userId + '/' + 'answerList', item);
+          // console.log(item);
+        }
       }
     } catch (e) {
       console.error(e);

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserRecordData } from '../data/userRecordSchema';
+import { AlertService } from './alert.service';
 import { DatabaseService } from './database.service';
 import { LocalStorageService } from './local-storage.service';
 import { TimeService } from './time.service';
@@ -13,6 +14,7 @@ export class UserRecordService {
     public los: LocalStorageService,
     public das: DatabaseService,
     public tms: TimeService,
+    public als: AlertService,
   ) { }
 
   storeLocalInfo(item) {
@@ -50,34 +52,33 @@ export class UserRecordService {
 
 
   async uploadAnswerAndProgress() {
-    // const collectData = this.uploadCollectData();
-    const userData = this.uploadUserProgress();
+    const loading = await this.als.startLoading();
     console.log('upload Answer And Progress');
-    // console.log(collectData);
-    console.log(userData);
+    const collectData = await this.uploadCollectData();
+    const userData = await this.uploadUserProgress();
+    loading.dismiss();
   }
 
   async uploadCollectData() {
-    const userId = this.los.fetchLocalData('user').uid;
-
     //upload answer progress, then simply remove local data
     const collectData = this.los.fetchLocalData('answerQuestion') as any[];
     //upload answer progress
-    // const uploadSuccess = await this.das.uploadNewUserProgress(userId, collectData);
     const uploadSuccess = await this.das.uploadUserAnswer(collectData);
     //if upload success, then remove local
     if (uploadSuccess)
       this.los.setLocalData('answerQuestion', null);
-    return collectData;
+    console.log(collectData);
   }
 
   async uploadUserProgress() {
-    //to do: depending on whether progress contains docId, update or add data to user document
+    const userId = this.los.fetchLocalData('user').uid;
+    //depending on whether progress contains docId, update or add data to user document
     const userData = this.los.fetchLocalData('answerProgress');
-
-    const uploadSuccess = await this.das.
-    this.los.setLocalData('answerProgress', null);
-    return userData;
+    //upload user progress
+    const uploadSuccess = await this.das.uploadNewUserProgress(userId, userData);
+    if (uploadSuccess)
+      this.los.setLocalData('answerProgress', null);
+    console.log(userData);
   }
 
   //fetch question feature
