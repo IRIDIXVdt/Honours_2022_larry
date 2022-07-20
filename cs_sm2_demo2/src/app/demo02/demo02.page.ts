@@ -209,7 +209,7 @@ export class Demo02Page implements OnInit {
       //todo: upload everything in this session to database
       // this.urs.uploadLocalInfo();
       this.urs.uploadAnswerAndProgress();
-  
+
     } else {
       //update question display
       this.updateQuestionDisplay();
@@ -240,6 +240,7 @@ export class Demo02Page implements OnInit {
   efCalculator(EF, q) {
     //calculate the new value of the EF with previous EF and quality of response
     var EFp = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    EFp = Math.round(EFp * 100) / 100
     if (EFp < 1.3)
       return 1.3;
     else
