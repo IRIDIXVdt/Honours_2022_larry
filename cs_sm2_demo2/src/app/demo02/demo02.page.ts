@@ -110,7 +110,7 @@ export class Demo02Page implements OnInit {
     for (let i = 0; i < previous.length; i++) {
       const source = previous[i];
       // console.log(source);
-      if (this.tms.getCurrentDay() > source.nextTime) {//if system decides you to review today
+      if (this.tms.getCurrentDay() >= source.nextTime) {//if system decides you to review today
         var target = dummyList.filter(e => e.qId == source.qId)[0];
         if (target != null && target != undefined) {
           target.EF = source.EF;
