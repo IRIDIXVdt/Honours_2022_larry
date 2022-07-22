@@ -22,7 +22,8 @@ export class TimeService {
   ) { }
   grace: number = 2;
   public initializeAll() {
-    console.log((new Date()).getTime());
+    // console.log((new Date()).getTime());
+    console.log(new Date());
     this.initializeTimeStart();
     this.initializeTimeEnd();
     console.log('start', this.timeStart, 'end', this.timeEnd);
@@ -43,13 +44,14 @@ export class TimeService {
     var compare = new Date();
     compare.setHours(this.grace, 0, 0, 0);
 
-    console.log(compare.getTime(), this.current.getTime());
+    // console.log(compare.getTime(), this.current.getTime());
     if (compare.getTime() > this.current.getTime()) {
       //if it is before 2 am
       this.current.setDate(this.current.getDate() - 1);
     }
-    this.current.setHours(0, 0, 0, 0);//set time to 0am to current timezone
+    this.current.setHours(this.grace, 0, 0, 0);//set time to 0am to current timezone
     this.timeStart = this.current.getTime();
+    console.log(this.current);
   }
 
   public initializeTimeEnd() {
@@ -58,6 +60,7 @@ export class TimeService {
     this.current.setHours(this.grace, 0, 0, 0);
     this.current.setDate(this.current.getDate() + 1);
     this.timeEnd = this.current.getTime();
+    console.log(this.current);
   }
 
   //if the software is overTime, reload information and restart
@@ -66,7 +69,7 @@ export class TimeService {
   public overTime() {
     const time = this.los.fetchLocalData('time');
     if (time != null && time != undefined) {
-      if (this.timeStart >= time.timeEnd) {
+      if (this.timeStart > time.timeStart) {
         //this means it is over time, we need to reset system
         return true;
       }
