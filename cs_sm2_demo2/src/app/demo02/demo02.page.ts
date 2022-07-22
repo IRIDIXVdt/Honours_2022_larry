@@ -42,7 +42,7 @@ export class Demo02Page implements OnInit {
     public tms: TimeService,
   ) {
     // this.fetchFromRemoteDatabase();
-    tms.initializeAll();
+
   }
 
   ngOnInit() { }
@@ -57,7 +57,17 @@ export class Demo02Page implements OnInit {
       const result = await this.als.expectFeedback("Please join a session before you start the task");
       this.router.navigate([this.homeAddress]);
     } else {
-      if (this.endProgress()) {
+      //first initialize time
+      if (this.tms.initializeAll()) {
+        console.log('overTime, reset');
+        const loading = await this.als.startLoading();
+        this.sessionEnd = false;
+        this.los.resetAnswerAndProgress();
+        await this.fetchProgress();
+        await this.decideQuestionList();
+        this.updateQuestionDisplay();
+        loading.dismiss();
+      } else if (this.endProgress()) {
         console.log('loaded, session ended');
       } else if (this.inProgress()) {
         console.log('loaded, continue previous progress');
