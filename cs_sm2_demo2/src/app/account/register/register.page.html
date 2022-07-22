@@ -60,11 +60,11 @@
         </ng-container>
       </div>
       
-      <ion-button class="login-button" expand='block' (click)="authService.signUp(userEmail.value, userPwd.value)"
+      <ion-button class="login-button" expand='block' (click)="aus.signUp(userEmail.value, userPwd.value)"
         [disabled]="signUpForm.invalid">Sign Up
       </ion-button>
 
-      <ion-button class="google-connect" expand='block' (click)="authService.GoogleAuth()">
+      <ion-button class="google-connect" expand='block' (click)="aus.GoogleAuth()">
         <ion-icon name='logo-google'></ion-icon> Connect with Google
       </ion-button>
 
