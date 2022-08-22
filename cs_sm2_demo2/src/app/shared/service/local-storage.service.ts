@@ -16,7 +16,7 @@ export class LocalStorageService {
   resetLS() {//turn local storage into default
     localStorage.setItem('admin', JSON.stringify(false));
     localStorage.setItem('user', null);
-    localStorage.setItem('sessionList', null);//remove session list
+    localStorage.setItem('sessionList', JSON.stringify([]));//remove session list
     localStorage.setItem('answerProgress', null);
     localStorage.setItem('answerQuestion', null);
     localStorage.setItem('allList', null);
@@ -67,7 +67,12 @@ export class LocalStorageService {
   }
 
   getLocalUserSessionList() {
-    return JSON.parse(localStorage.getItem('sessionList'));
+    const returnV = JSON.parse(localStorage.getItem('sessionList'));
+    if(returnV == undefined || returnV == null){
+      return [];
+    }else{
+      return JSON.parse(localStorage.getItem('sessionList'));
+    }
   }
 
   localUserSessionListStatus() {

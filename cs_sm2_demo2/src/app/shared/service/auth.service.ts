@@ -70,11 +70,13 @@ export class AuthService {
   }
 
   async userDataUpdate(data) {
+    console.log('Login state: user data update', data)
     const loading = await this.als.startLoading();
     try {
       // stored user's info in to local database (refresh page will not reset) 
       this.los.setLocalData('user', data); //store user List
       this.los.setLocalData('sessionList', await this.das.getUserCustomizeInfo('sessionList'));
+      console.log(this.los.getLocalUserSessionList());
       //add user progress to local storage
       this.checkAdminStatus('admin');//check if is admin
       // update user's info to remote database
@@ -132,13 +134,13 @@ export class AuthService {
     console.log('allList data', sList);
     const sessionIdList: string[] = this.das.getLocalUserSessionList();
     if (sessionIdList != null && sessionIdList.length > 0) {
-      var sessionList = [];
+      var currentSessionList = [];
       for (let i = 0; i < sList.length; i++) {//iterate through all the list
         if (sessionIdList.filter(e => e == sList[i].id).length > 0) {
-          sessionList.push(sList[i]);
+          currentSessionList.push(sList[i]);
         }
       }
-      this.los.setLocalData('userList', sessionList);
+      this.los.setLocalData('userList', currentSessionList);
     }
     console.log('store session', this.los.fetchLocalData('userList'));
   }
