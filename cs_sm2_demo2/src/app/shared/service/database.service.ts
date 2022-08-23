@@ -230,11 +230,23 @@ export class DatabaseService {
 
   getUserCustomizeInfo(info) {
     return new Promise((resolve, reject) => {
-      this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
-        .subscribe(v => {
-          console.log('user session Id list with Id', JSON.parse(localStorage.getItem('user')).uid, v.data()[info]);
-          resolve(v.data()[info]);
-        });
+      console.log('get info', info)
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            // console.log('user session Id list with Id', JSON.parse(localStorage.getItem('user')).uid, v.data()[info]);
+            if (v.data() == null || v.data() == undefined || v.data()[info] == null || v.data()[info] == undefined) {
+              console.log('user database nonexist');
+              resolve([]);
+            } else {
+              console.log(v.data());
+              resolve(v.data()[info]);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve([]);
+      }
     });
 
   }
@@ -272,7 +284,12 @@ export class DatabaseService {
   }
 
   getLocalUserSessionList() {
-    return JSON.parse(localStorage.getItem('sessionList'));
+    const returnV = JSON.parse(localStorage.getItem('sessionList'));
+    if (returnV == undefined || returnV == null) {
+      return [];
+    } else {
+      return JSON.parse(localStorage.getItem('sessionList'));
+    }
   }
 
   async uploadUserAnswer(userList: any[]) {
