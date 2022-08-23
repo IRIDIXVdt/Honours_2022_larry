@@ -9,7 +9,7 @@ import { LocalStorageService } from './shared/service/local-storage.service';
 export class AppComponent {
   public appPages = [
     { title: 'Account', url: '/tabs/account', icon: 'cog' },
-    // { title: 'CALL: Spaced Repetition Software Demo', url: '/tabs/demo01', icon: 'clipboard' },
+    { title: 'Test', url: '/tabs/demo01', icon: 'clipboard' },
     { title: 'Task', url: '/tabs/demo02', icon: 'clipboard' },
     // { title: 'Add', url: '/tabs/add', icon: 'add-circle' },
     // { title: 'Browse', url: '/tabs/browse', icon: 'albums' },
