@@ -107,6 +107,8 @@ export class UserRecordService {
       console.log(qId, 'local exist');
     }
     // console.log(targetQuestion);
+    console.log('fetch question with id', targetQuestion);
+    //to do: update question so that it can process dynamic changes
     return targetQuestion;
   }
 }

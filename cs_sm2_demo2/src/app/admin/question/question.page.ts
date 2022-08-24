@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic/';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-custom-test01/';
+import * as ClassicEditor from '@ckeditor/ckeditor5-35.0.1-41p6gtbyxuvr';
 import { DatabaseService } from '../../shared/service/database.service';
+// import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 
+    
 @Component({
   selector: 'app-question',
   templateUrl: './question.page.html',
