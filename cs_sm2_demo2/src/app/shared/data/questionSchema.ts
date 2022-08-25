@@ -1,4 +1,4 @@
-export interface Question {
+export interface QuestionItem {
     type: string;
     background: string;
     course: string;

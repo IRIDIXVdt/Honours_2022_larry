@@ -17,9 +17,9 @@
             <ion-item>
               <ion-label>Question Type</ion-label>
               <ion-select (ionChange)="updateEditorField()" [(ngModel)]="qType" okText="Okay" cancelText="Dismiss">
-                <ion-select-option value="ba">Basic</ion-select-option>
+                <ion-select-option value="df">Definition/Coding</ion-select-option>
                 <ion-select-option value="mu">Multiple Choice</ion-select-option>
-                <ion-select-option value="co">Coding</ion-select-option>
+                <!-- <ion-select-option value="co">Coding</ion-select-option> -->
               </ion-select>
             </ion-item>
           </ion-col>
@@ -30,6 +30,7 @@
               <ion-label>Course</ion-label>
               <ion-select [(ngModel)]="qCourse" okText="Okay" cancelText="Dismiss">
                 <ion-select-option value="cosc304">COSC 304</ion-select-option>
+                <ion-select-option value="test2022">Test Session 2022</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-col>
@@ -37,9 +38,10 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ckeditor #editorQuestion [editor]="Editor" data="<p>Term:&nbsp;</p>" class="ion-padding"></ckeditor>
+      <!-- <ckeditor #editorQuestion [editor]="Editor" data="<p>Term:&nbsp;</p>" class="ion-padding"></ckeditor>
       <ckeditor #editorAnswer [editor]="Editor" data="<p>Definition:&nbsp;</p>" class="ion-padding"></ckeditor>
-      <ckeditor #editorDescription [editor]="Editor" data="<p>Description:&nbsp;</p>" class="ion-padding"></ckeditor>
+      <ckeditor #editorDescription [editor]="Editor" data="<p>Description:&nbsp;</p>" class="ion-padding"></ckeditor> -->
+      <ckeditor #editorBody [editor]="Editor" data="<p>Body Description:&nbsp;</p>" class="ion-padding"></ckeditor>
     </div>
   </div>
   <div class="bottomButtons">
