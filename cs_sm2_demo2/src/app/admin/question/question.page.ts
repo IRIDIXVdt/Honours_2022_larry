@@ -62,5 +62,9 @@ export class QuestionPage implements OnInit {
 
   }
 
+  logData(){
+    console.log(this.editorQuestion.editorInstance.getData());
+  }
+
 
 }
