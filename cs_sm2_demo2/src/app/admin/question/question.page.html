@@ -48,7 +48,7 @@
 
       <ion-list *ngFor="let item of this.qQAP;let index = index">
         <ion-item>
-          <ion-button color="light" class="ion-padding">
+          <ion-button color="primary" class="ion-padding">
             QA {{index}}
           </ion-button>
         </ion-item>
@@ -62,7 +62,7 @@
         </ion-item>
       </ion-list>
 
-      <div class="ion-padding">
+      <div class="ion-padding" *ngIf="this.qType=='df'">
         <ion-button color="light" (click)="qaAdd()">
           <ion-icon name="caret-down-circle-outline"></ion-icon>
         </ion-button>
@@ -71,8 +71,30 @@
         </ion-button>
       </div>
 
+      <ion-list *ngFor="let item of this.qWA;let index = index">
+        <ion-item>
+          <ion-button color="secondary" class="ion-padding">
+            WA {{index}}
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Wrong Answer</ion-label>
+          <ion-input [(ngModel)]="item.content"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <div class="ion-padding" *ngIf="this.qType=='mu'">
+        <ion-button color="light" (click)="waAdd()">
+          <ion-icon name="caret-down-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="light" (click)="waRemove()">
+          <ion-icon name="caret-up-circle-outline"></ion-icon>
+        </ion-button>
+      </div>
+
     </div>
   </div>
+
   <div class="bottomButtons">
     <ion-button size="large" class="ion-padding-end" (click)="addDataToDataBase()">
       Add

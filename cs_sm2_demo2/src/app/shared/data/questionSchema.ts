@@ -4,12 +4,16 @@ export interface QuestionItem {
     course: string;
     des: string;
     qaPair: QuestionAnswerPair[];
-    choice: string[];
+    wrongAnswer: WrongAnswer[];
 }
 
 export interface QuestionAnswerPair {
     question: string;
     answer: string;//answer and explanation
+}
+
+export interface WrongAnswer{
+    content: string;
 }
 
 //there should only be two types: multiple choice or definition question
