@@ -5,7 +5,7 @@ import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-35.0.1-41p6gtbyxuvr';
 import { DatabaseService } from '../../shared/service/database.service';
 // import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
-import { QuestionItem } from 'src/app/shared/data/questionSchema';
+import { QuestionItem, QuestionAnswerPair } from 'src/app/shared/data/questionSchema';
 
 @Component({
   selector: 'app-question',
@@ -24,8 +24,14 @@ export class QuestionPage implements OnInit {
 
   public qType: string = 'df';//question type
   public qCourse: string = 'cosc304';//course type
-  public qDes: string = 'describe this question so that TAs know when to use it';
-  
+  public qDes: string = '';
+  // public qQAP: QuestionAnswerPair[] = [{ question: '', answer: '' }];
+
+  public qQAP: QuestionAnswerPair[] = [
+    { question: 'oneq', answer: 'onea' },
+    { question: 'twoq', answer: 'twoa' }
+  ];
+
   constructor(
     private dt: DatabaseService,
   ) {
@@ -59,8 +65,8 @@ export class QuestionPage implements OnInit {
       type: this.qType,
       background: this.editorBody.editorInstance.getData(),
       course: this.qCourse,
-      des: '',
-      qaPair: [],
+      des: this.qDes,
+      qaPair: this.qQAP,
       choice: []
     }
 

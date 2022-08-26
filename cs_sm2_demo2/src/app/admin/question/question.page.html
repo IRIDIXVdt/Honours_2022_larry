@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>question</ion-title>
+    <ion-title>Question Generation Page</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -41,7 +41,35 @@
       <!-- <ckeditor #editorQuestion [editor]="Editor" data="<p>Term:&nbsp;</p>" class="ion-padding"></ckeditor>
       <ckeditor #editorAnswer [editor]="Editor" data="<p>Definition:&nbsp;</p>" class="ion-padding"></ckeditor>
       <ckeditor #editorDescription [editor]="Editor" data="<p>Description:&nbsp;</p>" class="ion-padding"></ckeditor> -->
-      <ckeditor #editorBody [editor]="Editor" data="<p>Body Description:&nbsp;</p>" class="ion-padding"></ckeditor>
+
+      <ion-item-divider>
+        <ion-label>
+          Question Details
+        </ion-label>
+      </ion-item-divider>
+      <ckeditor #editorBody [editor]="Editor" data="<p>Background of the question</p>" class="ion-padding"></ckeditor>
+      <ion-item>
+        <ion-label position="stacked">Question Description</ion-label>
+        <ion-input [(ngModel)]="qDes" placeholder="describe this question so that TAs know when to use it"></ion-input>
+      </ion-item>
+
+
+      <ion-list lines="full" class="ion-no-margin" *ngFor="let item of this.qQAP;let index = index">
+        <!-- <ion-item-divider><ion-label>QA {{index}}</ion-label></ion-item-divider> -->
+        <ion-list-header lines="full">
+          <ion-label size="large">QA {{index}}</ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-label position="stacked">Question</ion-label>
+          <ion-input [(ngModel)]="item.question"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Answer</ion-label>
+          <ion-input [(ngModel)]="item.answer"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
     </div>
   </div>
   <div class="bottomButtons">
