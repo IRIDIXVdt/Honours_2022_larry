@@ -38,27 +38,20 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <!-- <ckeditor #editorQuestion [editor]="Editor" data="<p>Term:&nbsp;</p>" class="ion-padding"></ckeditor>
-      <ckeditor #editorAnswer [editor]="Editor" data="<p>Definition:&nbsp;</p>" class="ion-padding"></ckeditor>
-      <ckeditor #editorDescription [editor]="Editor" data="<p>Description:&nbsp;</p>" class="ion-padding"></ckeditor> -->
 
-      <ion-item-divider>
-        <ion-label>
-          Question Details
-        </ion-label>
-      </ion-item-divider>
-      <ckeditor #editorBody [editor]="Editor" data="<p>Background of the question</p>" class="ion-padding"></ckeditor>
       <ion-item>
         <ion-label position="stacked">Question Description</ion-label>
         <ion-input [(ngModel)]="qDes" placeholder="describe this question so that TAs know when to use it"></ion-input>
       </ion-item>
 
+      <ckeditor #editorBody [editor]="Editor" data="<p>Background of the question</p>" class="ion-padding"></ckeditor>
 
-      <ion-list lines="full" class="ion-no-margin" *ngFor="let item of this.qQAP;let index = index">
-        <!-- <ion-item-divider><ion-label>QA {{index}}</ion-label></ion-item-divider> -->
-        <ion-list-header lines="full">
-          <ion-label size="large">QA {{index}}</ion-label>
-        </ion-list-header>
+      <ion-list *ngFor="let item of this.qQAP;let index = index">
+        <ion-item>
+          <ion-button color="light" class="ion-padding">
+            QA {{index}}
+          </ion-button>
+        </ion-item>
         <ion-item>
           <ion-label position="stacked">Question</ion-label>
           <ion-input [(ngModel)]="item.question"></ion-input>
@@ -67,8 +60,16 @@
           <ion-label position="stacked">Answer</ion-label>
           <ion-input [(ngModel)]="item.answer"></ion-input>
         </ion-item>
-
       </ion-list>
+
+      <div class="ion-padding">
+        <ion-button color="light" (click)="qaAdd()">
+          <ion-icon name="caret-down-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="light" (click)="qaRemove()">
+          <ion-icon name="caret-up-circle-outline"></ion-icon>
+        </ion-button>
+      </div>
 
     </div>
   </div>
