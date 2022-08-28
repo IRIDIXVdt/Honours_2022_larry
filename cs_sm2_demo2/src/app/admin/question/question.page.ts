@@ -73,14 +73,22 @@ export class QuestionPage implements OnInit {
       wrongAnswer: this.qWA,
     }
 
-    console.log("add data", data);
-    // if (this.dt.addData("QuestionCollection", data)) {
-    //   this.updateEditorField();
-    // }
+    // console.log("add data", data);
+    if (this.dt.addData("QuestionCollection", data)) {
+      this.updateEditorField();
+    }
   }
 
   logData() {
-    console.log(this.editorBody.editorInstance.getData());
+    const data: QuestionItem = {
+      type: this.qType,
+      background: this.editorBody.editorInstance.getData(),
+      course: this.qCourse,
+      des: this.qDes,
+      qaPair: this.qQAP,
+      wrongAnswer: this.qWA,
+    }
+    console.log(data);
   }
 
   ngOnInit() { }
