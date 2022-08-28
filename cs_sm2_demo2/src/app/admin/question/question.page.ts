@@ -53,7 +53,8 @@ export class QuestionPage implements OnInit {
   waAdd() {
     if (this.qType === 'mu') {
       const data: WrongAnswer = { content: 'wrong answer' };
-      this.qWA.push();
+      console.log("waAdd")
+      this.qWA.push(data);
     }
   }
 
