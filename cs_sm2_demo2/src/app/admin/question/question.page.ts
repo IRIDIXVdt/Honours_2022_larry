@@ -52,7 +52,7 @@ export class QuestionPage implements OnInit {
 
   waAdd() {
     if (this.qType === 'mu') {
-      const data: WrongAnswer = { content:'wrong answer' };
+      const data: WrongAnswer = { content: 'wrong answer' };
       this.qWA.push();
     }
   }
@@ -74,9 +74,14 @@ export class QuestionPage implements OnInit {
     }
 
     // console.log("add data", data);
-    if (this.dt.addData("QuestionCollection", data)) {
+    const uploadSuccess = await this.dt.addData("QuestionCollection", data);
+    if (uploadSuccess){
       this.updateEditorField();
+      this.qDes="";
+      this.editorBody.editorInstance.setData("");
     }
+      
+
   }
 
   logData() {

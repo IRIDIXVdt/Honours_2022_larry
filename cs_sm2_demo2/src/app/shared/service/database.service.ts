@@ -7,6 +7,7 @@ import { User } from "../data/userSchema";
 import { getAdditionalUserInfo, user } from '@angular/fire/auth';
 import { LocalStorageService } from './local-storage.service';
 import firebase from 'firebase/compat/app';
+import { resolve } from 'dns';
 
 @Injectable({
   providedIn: 'root'
@@ -23,19 +24,20 @@ export class DatabaseService {
       message: 'Please wait...',
     });
     loading.present();
-
-    this.fas.addDataService(collection, data).then((res: any) => {
-      console.log(res);
-      console.log("Changes saved to cloud!");
-      this.als.displayMessage("Upload Success");
-      loading.dismiss();
-      // return true;
-    }).catch((error) => {
-      loading.dismiss();
-      this.als.displayMessage('Fail to save changes. Try again!');
-      console.log("error", error);
-    })
-    // return false;
+    return new Promise(resolve => {
+      this.fas.addDataService(collection, data).then((res: any) => {
+        console.log(res);
+        console.log("Changes saved to cloud!");
+        this.als.displayMessage("Upload Success");
+        loading.dismiss();
+        resolve(true);
+      }).catch((error) => {
+        loading.dismiss();
+        this.als.displayMessage('Fail to save changes. Try again!');
+        console.log("error", error);
+        resolve(false);
+      })
+    });
   }
 
   getQuestionItemData(id: string) {
