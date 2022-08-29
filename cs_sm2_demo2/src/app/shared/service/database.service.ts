@@ -8,6 +8,7 @@ import { getAdditionalUserInfo, user } from '@angular/fire/auth';
 import { LocalStorageService } from './local-storage.service';
 import firebase from 'firebase/compat/app';
 import { resolve } from 'dns';
+import { QuestionItem } from 'src/app/shared/data/questionSchema';
 
 @Injectable({
   providedIn: 'root'
@@ -46,11 +47,12 @@ export class DatabaseService {
         .subscribe((res) => {
           resolve({
             id: res.id,
-            qType: res.data()['qType'],
-            qCourse: res.data()['qCourse'],
-            question: res.data()['question'],
-            answer: res.data()['answer'],
-            description: res.data()['description'],
+            type: res.data()['type'],
+            background: res.data()['background'],
+            course: res.data()['course'],
+            des: res.data()['des'],
+            qaPair: res.data()['qaPair'],
+            wrongAnswer: res.data()['wrongAnswer'],
           });
         }, (err: any) => {
           console.log(err);
@@ -68,11 +70,12 @@ export class DatabaseService {
           const receiveValue = res.docs.map(e => {
             return {
               id: e.id,
-              qType: e.data()['qType'],
-              qCourse: e.data()['qCourse'],
-              question: e.data()['question'],
-              answer: e.data()['answer'],
-              description: e.data()['description'],
+              type: e.data()['type'],
+              background: e.data()['background'],
+              course: e.data()['course'],
+              des: e.data()['des'],
+              qaPair: e.data()['qaPair'],
+              wrongAnswer: e.data()['wrongAnswer'],
             }
           });
           resolve(receiveValue);
@@ -86,16 +89,17 @@ export class DatabaseService {
 
   filterQuestionData(course) {
     return new Promise((resolve, reject) => {
-      this.fas.getDataWithFilter('QuestionCollection', 'qCourse', course)
+      this.fas.getDataWithFilter('QuestionCollection', 'course', course)
         .subscribe((res) => {
           const receiveValue = res.docs.map(e => {
             return {
               id: e.id,
-              qType: e.data()['qType'],
-              qCourse: e.data()['qCourse'],
-              question: e.data()['question'],
-              answer: e.data()['answer'],
-              description: e.data()['description'],
+              type: e.data()['type'],
+              background: e.data()['background'],
+              course: e.data()['course'],
+              des: e.data()['des'],
+              qaPair: e.data()['qaPair'],
+              wrongAnswer: e.data()['wrongAnswer'],
             }
           });
           resolve(receiveValue);

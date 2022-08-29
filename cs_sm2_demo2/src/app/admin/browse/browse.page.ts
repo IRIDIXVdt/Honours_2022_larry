@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/shared/service/alert.service';
 import { DatabaseService } from 'src/app/shared/service/database.service';
+import { QuestionItem } from 'src/app/shared/data/questionSchema';
 
 @Component({
   selector: 'app-browse',
@@ -24,12 +25,12 @@ export class BrowsePage implements OnInit {
     this.fetchSession();
     this.currentSeg = 'nr';
   }
-    //fetch the checked list from database
-    //with the checked list, update the list display in the browse page
-    //specifically, depending on the status on the question (checked or not checked), 
-    //they should be in different segment
+  //fetch the checked list from database
+  //with the checked list, update the list display in the browse page
+  //specifically, depending on the status on the question (checked or not checked), 
+  //they should be in different segment
 
-    ngOnInit() { }
+  ngOnInit() { }
 
   async changeState() {
     // console.log(this.questionList);
@@ -49,7 +50,7 @@ export class BrowsePage implements OnInit {
           // console.log(currentItem);
         }
       }
-    
+
     //refresh question
     this.updateQuestionData();
   }
@@ -93,7 +94,8 @@ export class BrowsePage implements OnInit {
     //fetch all the quesiton id, given the session code. Result store in list
     this.questionList = await this.das.filterQuestionData(this.sList.filter(
       e => e.id == this.sessionId)[0].sCode.toLowerCase());
-    
+    console.log(this.sessionId, this.questionList, this.sList.filter(
+      e => e.id == this.sessionId)[0].sCode.toLowerCase());
     //with the questionList and checkedQuestionList, update the nr and ir list
 
     //first reset the list
