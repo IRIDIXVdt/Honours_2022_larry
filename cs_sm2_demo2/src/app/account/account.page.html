@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>User Profile</ion-title>
-
+    <ion-button (click)="this.los.questionRemove()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+      Remove Question Storage
+    </ion-button>
     <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
       Display Storage
     </ion-button>

@@ -26,22 +26,21 @@
     <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
       <div class="ion-padding">
         <div>{{currentTermItem.id}}</div>
-        <div [innerHTML]="currentTermItem.question"></div>
+        <div [innerHTML]="currentTermItem.background"></div>
         <ion-item-divider></ion-item-divider>
-
-        <div class="answer" *ngIf="currentTermItem.qType === 'co'">
-          <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your code here">
+        <div>{{currentTermItem.qaPair}}</div>
+        <div>{{currentTermItem.qaPair.wrongAnswer}}</div>
+        <div class="answer" *ngIf="currentTermItem.qType === 'df'">
+          <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your Answer here">
           </ion-input>
         </div>
         <div class="answer" *ngIf="currentTermItem.qType === 'mu'">
           <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
         </div>
-        <div class="answer" *ngIf="currentTermItem.qType === 'ba'">
-          <p></p>
-        </div>
+
         <div *ngIf="displayAnswer">
-          <div [innerHTML]="currentTermItem.answer"></div>
+          <div [innerHTML]="currentTermItem.qaPair.answer"></div>
         </div>
 
       </div>
@@ -89,3 +88,10 @@
 
   </ng-container>
 </ion-content>
+<ion-footer class="ion-no-border">
+  <ng-container *ngIf="!sessionEnd && currentTermItem && qList.length>0">
+    <ion-button size="small" fill="clear">
+      {{currentTermItem.id}}
+    </ion-button>
+  </ng-container>
+</ion-footer>

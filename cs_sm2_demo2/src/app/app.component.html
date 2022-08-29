@@ -4,7 +4,8 @@
       <ion-content>
         <ion-list id="inbox-list">
           <ion-list-header *ngIf="!this.los.userStatus()">Sign in to continue</ion-list-header>
-          <ion-list-header *ngIf="this.los.userStatus()">V.C.A.L.L.T.</ion-list-header>
+          <ion-note *ngIf="!this.los.userStatus()"></ion-note>
+          <ion-list-header *ngIf="this.los.userStatus()">Account</ion-list-header>
           <ion-note *ngIf="this.los.userStatus()">{{this.los.emailStatus()}}</ion-note>
 
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
