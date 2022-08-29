@@ -156,20 +156,20 @@ export class Demo02Page implements OnInit {
   //if local storage contains it, then read it
   //if not, read from remote database, and store it in local storage
 
-  async fetchFromRemoteDatabaseObsolete() {
-    //then initialize all the question as unanswered
-    const v = await this.das.getQuestionData();
-    this.qList = v as any[];
-    for (let i = 0; i < this.qList.length; i++) {
-      this.qList[i].answered = false;
-    }
-    console.log(this.qList);
-    const previousList = await this.das.fetchUserPreviousProgress();
-    if (previousList != null || previousList != undefined) {
-      console.log('true')
-    }
-    this.updateEnableDisplayAnswer();
-  }
+  // async fetchFromRemoteDatabaseObsolete() {
+  //   //then initialize all the question as unanswered
+  //   const v = await this.das.getQuestionData();
+  //   this.qList = v as any[];
+  //   for (let i = 0; i < this.qList.length; i++) {
+  //     this.qList[i].answered = false;
+  //   }
+  //   console.log(this.qList);
+  //   const previousList = await this.das.fetchUserPreviousProgress();
+  //   if (previousList != null || previousList != undefined) {
+  //     console.log('true')
+  //   }
+  //   this.updateEnableDisplayAnswer();
+  // }
 
   check() {//invoked in front end page to reveal the button
     this.displayAnswer = true;
