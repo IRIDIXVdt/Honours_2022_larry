@@ -26,26 +26,30 @@
     <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
       <div class="ion-padding">
         <!-- <div>{{currentTermItem.id}}</div> -->
-        <div [innerHTML]="currentTermItem.background"></div>
-        <div>{{currentTermItem.qaPair[0].question}}</div>
-        <div *ngIf="currentTermItem.type === 'mu'">
-          
-        </div>
-        <!-- <div>{{currentTermItem.qaPair.wrongAnswer}}</div> -->
-        <ion-item-divider></ion-item-divider>
-        <div class="answer" *ngIf="currentTermItem.type === 'df'">
+        <ion-item lines="none">
+          <div [innerHTML]="currentTermItem.background"></div>
+        </ion-item>
+        <ion-item color="primary">
+          {{currentTermItem.qaPair[0].question}}
+        </ion-item>
+        <ng-container *ngIf="currentTermItem.type === 'mu'">
+          <ion-item *ngFor="let choiceItem of currentTermItem.wrongAnswer">
+            &#8226; {{choiceItem.content}}
+          </ion-item>
+        </ng-container>
+
+        <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'df'">
           <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your Answer here">
           </ion-input>
-        </div>
-        <div class="answer" *ngIf="currentTermItem.type === 'mu'">
+        </ion-item>
+        <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'mu'">
           <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
-        </div>
+        </ion-item>
 
-        <div *ngIf="displayAnswer">
+        <ion-item lines="none" *ngIf="displayAnswer">
           <div [innerHTML]="currentTermItem.qaPair[0].answer"></div>
-        </div>
-
+        </ion-item>
       </div>
     </div>
 
@@ -56,14 +60,6 @@
 
     <div class="bottomButtons">
       <!-- the list of buttons indicating how were the user remembers the term -->
-
-      <!-- <ion-button size="large" class="ion-padding-end" (click)="check()"
-        *ngIf="!displayAnswer && !disableDisplayAnswer">
-        Display Answer
-      </ion-button>
-      <ion-button size="large" class="ion-padding-end" disabled="true" *ngIf="!displayAnswer && disableDisplayAnswer">
-        Display Answer
-      </ion-button> -->
       <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="!displayAnswer">
         Display Answer
       </ion-button>
@@ -88,7 +84,9 @@
         More
       </ion-button>
     </div>
+    <div class="ion-padding-bottom">
 
+    </div>
   </ng-container>
 </ion-content>
 <ion-footer class="ion-no-border">
