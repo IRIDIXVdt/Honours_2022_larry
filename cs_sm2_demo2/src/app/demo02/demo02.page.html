@@ -25,22 +25,25 @@
 
     <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
       <div class="ion-padding">
-        <div>{{currentTermItem.id}}</div>
+        <!-- <div>{{currentTermItem.id}}</div> -->
         <div [innerHTML]="currentTermItem.background"></div>
+        <div>{{currentTermItem.qaPair[0].question}}</div>
+        <div *ngIf="currentTermItem.type === 'mu'">
+          
+        </div>
+        <!-- <div>{{currentTermItem.qaPair.wrongAnswer}}</div> -->
         <ion-item-divider></ion-item-divider>
-        <div>{{currentTermItem.qaPair}}</div>
-        <div>{{currentTermItem.qaPair.wrongAnswer}}</div>
-        <div class="answer" *ngIf="currentTermItem.qType === 'df'">
+        <div class="answer" *ngIf="currentTermItem.type === 'df'">
           <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your Answer here">
           </ion-input>
         </div>
-        <div class="answer" *ngIf="currentTermItem.qType === 'mu'">
+        <div class="answer" *ngIf="currentTermItem.type === 'mu'">
           <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
         </div>
 
         <div *ngIf="displayAnswer">
-          <div [innerHTML]="currentTermItem.qaPair.answer"></div>
+          <div [innerHTML]="currentTermItem.qaPair[0].answer"></div>
         </div>
 
       </div>
