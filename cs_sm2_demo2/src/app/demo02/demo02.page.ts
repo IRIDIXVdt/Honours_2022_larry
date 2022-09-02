@@ -31,12 +31,12 @@ export class Demo02Page implements OnInit {
   loaded: boolean = false;
   userAnswer: number = 3;
   userAnswerMessage: string[] = [
-    'complete blackout',
-    'incorrect response; the correct one remembered',
-    'incorrect response; where the correct one seemed easy to recall',
-    'correct response recalled with serious difficulty',
-    'correct response after a hesitation',
-    'perfect response',
+    'complete blackout - 0',
+    'incorrect response; the correct one remembered - 1',
+    'incorrect response; where the correct one seemed easy to recall - 2',
+    'correct response recalled with serious difficulty - 3',
+    'correct response after a hesitation - 4',
+    'perfect response - 5',
   ]
   //contains a list of all the questions
   sessionList: any[];
@@ -250,7 +250,7 @@ export class Demo02Page implements OnInit {
           this.insertItem(currentItem);
         }
       }
-      this.userAnswer = 3;
+      // this.userAnswer = 3;
     }
 
     //update question display
@@ -264,7 +264,7 @@ export class Demo02Page implements OnInit {
     //reset input space
     this.userCode = '';
     this.userMulti = '';
-    this.userAnswer = 4;
+    this.userAnswer = 3;
   }
 
   qualityCheck(answer: number) {

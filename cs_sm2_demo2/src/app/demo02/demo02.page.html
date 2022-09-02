@@ -1,14 +1,55 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Task Page</ion-title>
-    <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
-      Display Storage
-    </ion-button>
-    <ion-button (click)="displayLocalProgress()" class="ion-padding-end" slot="end" color="primary" fill="clear">
-      Display In Progress
-    </ion-button>
-    <ion-button (click)="displayLocalCompleted()" class="ion-padding-end" slot="end" color="primary" fill="clear">
-      Display Completed
+    <ng-container *ngIf="false">
+      <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display Storage
+      </ion-button>
+      <ion-button (click)="displayLocalProgress()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display In Progress
+      </ion-button>
+      <ion-button (click)="displayLocalCompleted()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display Completed
+      </ion-button>
+    </ng-container>
+
+  </ion-toolbar>
+  <div *ngIf="!currentTermItem">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </div>
+  <ion-toolbar class="ion-padding-horizontal">
+    <!-- question section -->
+    <ng-container *ngIf="!sessionEnd">
+      <ng-container *ngIf="currentTermItem">
+        <ion-label>
+          {{currentTermItem.qaPair[0].question}}
+        </ion-label>
+        <ion-button *ngIf="currentTermItem && !displayAnswer" (click)="check()" slot="end" color="primary" fill="clear">
+          Display Answer
+        </ion-button>
+        <div *ngIf="displayAnswer" class="rangeSection" slot="end">
+          <ion-range [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true" [min]="0" [max]="5">
+          </ion-range>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ion-toolbar>
+  <ion-toolbar class="ion-padding-horizontal">
+    <!-- answer section -->
+    <ng-container *ngIf="!sessionEnd">
+      <ng-container *ngIf="currentTermItem && displayAnswer">
+        <ion-label>
+          {{currentTermItem.qaPair[0].answer}}
+        </ion-label>
+        <ion-label slot="end" color="secondary">
+          {{userAnswerMessage[userAnswer]}}
+        </ion-label>
+      </ng-container>
+    </ng-container>
+  </ion-toolbar>
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-button *ngIf="displayAnswer" (click)="answer()" slot="end" color="primary" fill="clear">
+      Submit
     </ion-button>
   </ion-toolbar>
 </ion-header>
@@ -30,60 +71,65 @@
           <ion-card>
             <div class="ion-padding" [innerHTML]="currentTermItem.background"></div>
           </ion-card>
-          
+
         </ion-item>
-        <ion-item color="light">
+
+        <!-- <ion-item color="light">
           {{currentTermItem.qaPair[0].question}}
-        </ion-item>
+        </ion-item> -->
+
         <ng-container *ngIf="currentTermItem.type === 'mu'">
           <ion-item *ngFor="let choiceItem of currentTermItem.wrongAnswer">
             &#8226; {{choiceItem.content}}
           </ion-item>
         </ng-container>
 
-        <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'df'">
+        <!-- <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'df'">
           <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your Answer here">
           </ion-input>
         </ion-item>
         <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'mu'">
           <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
             maxlength="1"></ion-input>
-        </ion-item>
+        </ion-item> -->
 
-        <ion-item lines="none" *ngIf="displayAnswer">
+        <!-- <ion-item lines="none" *ngIf="displayAnswer">
           <div [innerHTML]="currentTermItem.qaPair[0].answer"></div>
-        </ion-item>
+        </ion-item> -->
       </div>
     </div>
 
-    <div *ngIf="!currentTermItem">
+    <!-- <div *ngIf="!currentTermItem">
       <ion-progress-bar type="indeterminate"></ion-progress-bar>
-    </div>
+    </div> -->
 
 
-    <div class="bottomText">
+    <!-- <div class="bottomText">
       <div class="centerText" *ngIf="displayAnswer">
         {{ userAnswerMessage[userAnswer] }}
       </div>
-    </div>
-    <div class="bottomSlides">
+    </div> -->
+
+    <!-- <div class="bottomSlides">
       <div *ngIf="displayAnswer" class="rangeSection">
         <ion-range [pin]="true" [pinFormatter]="pinFormatter" [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true"
           [min]="0" [max]="5"></ion-range>
       </div>
-    </div>
+    </div> -->
 
-    <div class="bottomButtons">
-      <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="!displayAnswer">
+    <!-- <div class="bottomButtons">
+      <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="currentTermItem && !displayAnswer">
         Display Answer
       </ion-button>
       <ion-button size="large" class="ion-padding-end" (click)="answer()" *ngIf="displayAnswer">Submit</ion-button>
-    </div>
-    <div class="bottomRightButtons">
+    </div> -->
+
+    <!-- <div class="bottomRightButtons">
       <ion-button size="large" class="ion-padding-end" (click)="this.los.resetAnswerAndProgress()">
         More
       </ion-button>
-    </div>
+    </div> -->
+
     <div class="ion-padding-bottom">
     </div>
   </ng-container>
