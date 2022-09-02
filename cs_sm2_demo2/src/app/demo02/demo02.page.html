@@ -12,11 +12,15 @@
         Display Completed
       </ion-button>
     </ng-container>
-
+    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" (click)="answer()"
+      slot="end" color="primary" fill="clear">
+      Submit
+    </ion-button>
+    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" (click)="check()"
+      slot="end" color="primary" fill="clear">
+      Display Answer
+    </ion-button>
   </ion-toolbar>
-  <div *ngIf="!currentTermItem">
-    <ion-progress-bar type="indeterminate"></ion-progress-bar>
-  </div>
   <ion-toolbar class="ion-padding-horizontal">
     <!-- question section -->
     <ng-container *ngIf="!sessionEnd">
@@ -24,9 +28,6 @@
         <ion-label>
           {{currentTermItem.qaPair[0].question}}
         </ion-label>
-        <ion-button *ngIf="currentTermItem && !displayAnswer" (click)="check()" slot="end" color="primary" fill="clear">
-          Display Answer
-        </ion-button>
         <div *ngIf="displayAnswer" class="rangeSection" slot="end">
           <ion-range [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true" [min]="0" [max]="5">
           </ion-range>
@@ -47,11 +48,11 @@
       </ng-container>
     </ng-container>
   </ion-toolbar>
-  <ion-toolbar class="ion-padding-horizontal">
-    <ion-button *ngIf="displayAnswer" (click)="answer()" slot="end" color="primary" fill="clear">
-      Submit
-    </ion-button>
-  </ion-toolbar>
+  <!-- <ion-toolbar class="ion-padding-horizontal">
+  </ion-toolbar> -->
+  <div *ngIf="!currentTermItem && !sessionEnd">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </div>
 </ion-header>
 
 <ion-content>
@@ -68,10 +69,9 @@
       <div class="ion-padding">
         <!-- <div>{{currentTermItem.id}}</div> -->
         <ion-item lines="none">
-          <ion-card>
+          <ion-card *ngIf="currentTermItem.background.length>1">
             <div class="ion-padding" [innerHTML]="currentTermItem.background"></div>
           </ion-card>
-
         </ion-item>
 
         <!-- <ion-item color="light">
@@ -136,7 +136,7 @@
 </ion-content>
 <ion-footer class="ion-no-border">
   <ng-container *ngIf="!sessionEnd && currentTermItem && qList.length>0">
-    <ion-button size="small" fill="clear">
+    <ion-button size="small" fill="clear" class="ion-padding-horizontal">
       {{currentTermItem.id}}
     </ion-button>
   </ng-container>
