@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic/';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-custom-test01/';
+import * as ClassicEditor from '@ckeditor/ckeditor5-35.0.1-41p6gtbyxuvr';
 import { DatabaseService } from '../../shared/service/database.service';
+// import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
+import { QuestionItem, QuestionAnswerPair, WrongAnswer } from 'src/app/shared/data/questionSchema';
 
 @Component({
   selector: 'app-question',
@@ -13,50 +17,86 @@ export class QuestionPage implements OnInit {
   public Editor = ClassicEditor;//ckeditor component
   public modelQuestion;//tracking question field
   public modelAnswer;//trakcing answer field
-  @ViewChild('editorQuestion') editorQuestion: CKEditorComponent;
-  @ViewChild('editorAnswer') editorAnswer: CKEditorComponent;
-  @ViewChild('editorDescription') editorDescription: CKEditorComponent;
 
-  public qType: string = 'ba';//question type
+  @ViewChild('editorBody') editorBody: CKEditorComponent;
+
+  public qType: string = 'df';//question type
   public qCourse: string = 'cosc304';//course type
-
-  constructor(
-    private dt: DatabaseService,
-  ) {
-   }
+  public qDes: string = '';
+  public qQAP: QuestionAnswerPair[] = [{ question: '', answer: '' }];
+  public qWA: WrongAnswer[] = [];
+  constructor(private dt: DatabaseService) { }
 
   updateEditorField() {
     //update the question and answer datafield based on the current qType
-    if (this.qType === "ba") {
-      this.editorQuestion.editorInstance.setData('<p>Term:&nbsp;</p>');
-      this.editorAnswer.editorInstance.setData('<p>Definition:&nbsp;</p>');
-    } else if (this.qType === "mu") {
-      this.editorQuestion.editorInstance.setData('<p>Question:&nbsp;</p><p>&nbsp;</p><p>A):&nbsp;</p><p>B):&nbsp;</p><p>C):&nbsp;</p><p>D):&nbsp;</p><p>E):&nbsp;</p>');
-      this.editorAnswer.editorInstance.setData('<p>Correct Answer:&nbsp;</p><p>&nbsp;</p>');
+    if (this.qType === "df") {
+      this.qWA = [];
     } else {
-      this.editorQuestion.editorInstance.setData('<p>Coding Question:&nbsp;</p>');
-      this.editorAnswer.editorInstance.setData('');
+      this.qWA = [{ content: 'one' }, { content: 'two' }];
     }
-    this.editorDescription.editorInstance.setData('<p>Description:&nbsp;</p>');
+    this.qQAP = [{ question: "new question", answer: "new answer" }];
   }
 
-  ngOnInit() {
+  qaAdd() {
+    if (this.qType === 'df') {//only definition questions can have multiple qa pairs
+      const data: QuestionAnswerPair = { question: "", answer: "" };
+      this.qQAP.push(data);
+    }
+  }
+
+  qaRemove() {
+    if (this.qQAP.length > 1 && this.qType === 'df') {//never remove the last item
+      this.qQAP.pop();
+    }
+  }
+
+  waAdd() {
+    if (this.qType === 'mu') {
+      const data: WrongAnswer = { content: 'wrong answer' };
+      console.log("waAdd")
+      this.qWA.push(data);
+    }
+  }
+
+  waRemove() {
+    if (this.qWA.length > 1 && this.qType === 'mu') {
+      this.qWA.pop()
+    }
   }
 
   async addDataToDataBase() {
-    console.log("add data");
-    const data = {
-      qType: this.qType,
-      qCourse: this.qCourse,
-      question: this.editorQuestion.editorInstance.getData(),
-      answer: this.editorAnswer.editorInstance.getData(),
-      description: this.editorDescription.editorInstance.getData(),
+    const data: QuestionItem = {
+      type: this.qType,
+      background: this.editorBody.editorInstance.getData(),
+      course: this.qCourse,
+      des: this.qDes,
+      qaPair: this.qQAP,
+      wrongAnswer: this.qWA,
     }
-    if (this.dt.addData("QuestionCollection", data)) {
+
+    // console.log("add data", data);
+    const uploadSuccess = await this.dt.addData("QuestionCollection", data);
+    if (uploadSuccess){
       this.updateEditorField();
+      this.qDes="";
+      this.editorBody.editorInstance.setData("");
     }
+      
 
   }
 
+  logData() {
+    const data: QuestionItem = {
+      type: this.qType,
+      background: this.editorBody.editorInstance.getData(),
+      course: this.qCourse,
+      des: this.qDes,
+      qaPair: this.qQAP,
+      wrongAnswer: this.qWA,
+    }
+    console.log(data);
+  }
+
+  ngOnInit() { }
 
 }

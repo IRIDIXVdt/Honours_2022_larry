@@ -107,6 +107,15 @@ export class UserRecordService {
       console.log(qId, 'local exist');
     }
     // console.log(targetQuestion);
+    console.log('fetch question with id', targetQuestion);
+    //to do: update question so that it can process dynamic changes
+    if (targetQuestion.type == "df") {
+      targetQuestion.qaPair.sort(() => .5 - Math.random());//shuffle
+    } else if (targetQuestion.type == "mu") {
+      targetQuestion.wrongAnswer.push({ content: targetQuestion.qaPair[0].answer });
+      targetQuestion.wrongAnswer.sort(() => .5 - Math.random());//shuffle
+    }
+
     return targetQuestion;
   }
 }

@@ -29,7 +29,7 @@
   </ng-container>
   <div class="ionMaxContent" *ngIf="sList">
     <ion-item *ngFor="let item of questionList">
-      <div [innerHTML]="item.description"></div>
+      <div [innerHTML]="item.des"></div>
       <ion-checkbox slot="start" [(ngModel)]="item.isChecked"></ion-checkbox>
     </ion-item>
     <ion-button class="ion-padding" *ngIf="questionList" (click)="changeState()">Hide/Release The Selected Question</ion-button>
