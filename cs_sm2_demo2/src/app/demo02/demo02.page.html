@@ -27,9 +27,12 @@
       <div class="ion-padding">
         <!-- <div>{{currentTermItem.id}}</div> -->
         <ion-item lines="none">
-          <div [innerHTML]="currentTermItem.background"></div>
+          <ion-card>
+            <div class="ion-padding" [innerHTML]="currentTermItem.background"></div>
+          </ion-card>
+          
         </ion-item>
-        <ion-item color="primary">
+        <ion-item color="light">
           {{currentTermItem.qaPair[0].question}}
         </ion-item>
         <ng-container *ngIf="currentTermItem.type === 'mu'">
@@ -58,26 +61,23 @@
     </div>
 
 
+    <div class="bottomText">
+      <div class="centerText" *ngIf="displayAnswer">
+        {{ userAnswerMessage[userAnswer] }}
+      </div>
+    </div>
+    <div class="bottomSlides">
+      <div *ngIf="displayAnswer" class="rangeSection">
+        <ion-range [pin]="true" [pinFormatter]="pinFormatter" [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true"
+          [min]="0" [max]="5"></ion-range>
+      </div>
+    </div>
+
     <div class="bottomButtons">
-      <!-- the list of buttons indicating how were the user remembers the term -->
       <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="!displayAnswer">
         Display Answer
       </ion-button>
-
-      <ng-container *ngIf="displayAnswer">
-        <ion-button size="large" class="ion-padding-end" (click)="answer(0)">
-          Again
-        </ion-button>
-        <ion-button size="large" class="ion-padding-end" (click)="answer(1)">
-          Hard
-        </ion-button>
-        <ion-button size="large" class="ion-padding-end" (click)="answer(2)">
-          Good
-        </ion-button>
-        <ion-button size="large" class="ion-padding-end" (click)="answer(3)">
-          Easy
-        </ion-button>
-      </ng-container>
+      <ion-button size="large" class="ion-padding-end" (click)="answer()" *ngIf="displayAnswer">Submit</ion-button>
     </div>
     <div class="bottomRightButtons">
       <ion-button size="large" class="ion-padding-end" (click)="this.los.resetAnswerAndProgress()">
@@ -85,7 +85,6 @@
       </ion-button>
     </div>
     <div class="ion-padding-bottom">
-
     </div>
   </ng-container>
 </ion-content>

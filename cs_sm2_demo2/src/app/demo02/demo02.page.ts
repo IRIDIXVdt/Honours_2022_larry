@@ -29,7 +29,15 @@ export class Demo02Page implements OnInit {
   userCode: string = '';
   userMulti: string = '';
   loaded: boolean = false;
-
+  userAnswer: number = 3;
+  userAnswerMessage: string[] = [
+    'complete blackout',
+    'incorrect response; the correct one remembered',
+    'incorrect response; where the correct one seemed easy to recall',
+    'correct response recalled with serious difficulty',
+    'correct response after a hesitation',
+    'perfect response',
+  ]
   //contains a list of all the questions
   sessionList: any[];
 
@@ -172,6 +180,7 @@ export class Demo02Page implements OnInit {
   // }
 
   check() {//invoked in front end page to reveal the button
+    console.log("check answer");
     this.displayAnswer = true;
   }
 
@@ -202,7 +211,8 @@ export class Demo02Page implements OnInit {
         if quality is good or easy, check if there are repeat time left
           if no repeat time left, store info end this
   */
-  answer(answer: number) {
+  answer() {
+    const answer = this.userAnswer;
     //first store qList in local, in case reload
     this.los.setLocalData('qList', this.qList);
     var currentItem = this.qList.shift();//pop the very first item of the list
@@ -240,6 +250,7 @@ export class Demo02Page implements OnInit {
           this.insertItem(currentItem);
         }
       }
+      this.userAnswer = 3;
     }
 
     //update question display
@@ -253,14 +264,15 @@ export class Demo02Page implements OnInit {
     //reset input space
     this.userCode = '';
     this.userMulti = '';
+    this.userAnswer = 4;
   }
 
   qualityCheck(answer: number) {
     //to do: update the check quality, so that it showes up in scale of 6
     //good medium poor
-    if (answer == 3) {
+    if (answer >= 4) {
       return 'g';
-    } else if (answer == 2) {
+    } else if (answer >= 2) {
       return 'm';
     } else {
       return 'p';
