@@ -59,7 +59,7 @@
           </small>
         </ng-container>
       </div>
-      
+
       <ion-button class="login-button" expand='block' (click)="aus.signUp(userEmail.value, userPwd.value)"
         [disabled]="signUpForm.invalid">Sign Up
       </ion-button>
@@ -67,10 +67,9 @@
       <ion-button class="google-connect" expand='block' (click)="aus.GoogleAuth()">
         <ion-icon name='logo-google'></ion-icon> Connect with Google
       </ion-button>
-
-
-      <p class="footer-text">I'm already a member, <a routerLink="/tabs/account/login">Sign In</a></p>
     </form>
+    <p class="footer-text">I'm already a member, <a routerLink="/tabs/account/login">Sign In</a></p>
+
   </div>
 
   <!-- <form>
