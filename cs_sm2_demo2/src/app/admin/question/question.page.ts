@@ -7,6 +7,8 @@ import { DatabaseService } from '../../shared/service/database.service';
 // import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 import { QuestionItem, QuestionAnswerPair, WrongAnswer } from 'src/app/shared/data/questionSchema';
 
+import { list } from 'src/app/shared/data/vc13test';
+
 @Component({
   selector: 'app-question',
   templateUrl: './question.page.html',
@@ -76,12 +78,12 @@ export class QuestionPage implements OnInit {
 
     // console.log("add data", data);
     const uploadSuccess = await this.dt.addData("QuestionCollection", data);
-    if (uploadSuccess){
+    if (uploadSuccess) {
       this.updateEditorField();
-      this.qDes="";
+      this.qDes = "";
       this.editorBody.editorInstance.setData("");
     }
-      
+
 
   }
 
@@ -98,5 +100,25 @@ export class QuestionPage implements OnInit {
   }
 
   ngOnInit() { }
+
+  async uploadJSON() {
+    // this should not show up in the published admin version
+    console.log("Upload this");
+    
+    // const termlist = list as any[];
+    const termlist = [];
+
+    // console.log(termlist);
+    for (let i = 0; i < termlist.length; i++) {
+      const uploadSuccess = await this.dt.addData("QuestionCollection", termlist[i]);
+      if (uploadSuccess) {
+        // this.updateEditorField();
+        // this.qDes = "";
+        // this.editorBody.editorInstance.setData("");
+        console.log("success",termlist[i])
+      }
+    }
+
+  }
 
 }
