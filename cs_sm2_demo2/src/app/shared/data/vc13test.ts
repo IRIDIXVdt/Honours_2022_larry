@@ -1,30 +1,4 @@
-[
-    {
-        "type": "df",
-        "background": "<p>What is the definition and pronunciation of the term?</p>",
-        "course": "jpst200",
-        "des": "ch13 #0",
-        "qaPair": [
-            {
-                "question": "\u30a6\u30a7\u30a4\u30bf\u30fc",
-                "answer": "\u30a6\u30a7\u30a4\u30bf\u30fc - waiter"
-            }
-        ],
-        "wrongAnswer": []
-    },
-    {
-        "type": "df",
-        "background": "<p>What is the definition and pronunciation of the term?</p>",
-        "course": "jpst200",
-        "des": "ch13 #1",
-        "qaPair": [
-            {
-                "question": "\u304a\u3058\u3044\u3055\u3093",
-                "answer": "\u304a\u3058\u3044\u3055\u3093 - grandfather; old man"
-            }
-        ],
-        "wrongAnswer": []
-    },
+export const list = [
     {
         "type": "df",
         "background": "<p>What is the definition and pronunciation of the term?</p>",
