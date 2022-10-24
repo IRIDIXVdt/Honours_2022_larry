@@ -38,7 +38,12 @@ export class AccountPage implements OnInit {
       // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sList, this.sessionList);
+      this.loadDailyLimit();
     }
+  }
+
+  loadDailyLimit() {
+    this.dailyLimit = this.los.fetchLocalData('dailyLimit');
   }
 
   // fetchSession() {
