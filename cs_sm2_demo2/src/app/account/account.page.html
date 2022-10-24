@@ -98,6 +98,16 @@
                         <div *ngFor="let item of this.sessionList">
                           <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
                         </div>
+
+                        <ion-label>Maximum Daily Limit: </ion-label><ion-label color="primary">{{dailyLimit}}</ion-label>
+                        <div></div>
+                        <div>
+                          <ion-range [(ngModel)]="dailyLimit" [min]="20" [max]="200">
+                          </ion-range>
+                        </div>
+                        <ion-toolbar>
+                          <ion-button slot="end">Update Daily Maximum</ion-button>
+                        </ion-toolbar>
                       </ng-container>
                       <ng-container *ngIf="!this.sessionList">
                         <!-- *ngIf="!this.allowJoinSession" -->

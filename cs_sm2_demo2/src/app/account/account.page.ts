@@ -19,6 +19,8 @@ export class AccountPage implements OnInit {
   sessionList;
   //decide whether user is allowed to join other sessions
   // allowJoinSession: boolean;
+  dailyLimit: number;
+  //setting limit to what the user want to do every day
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
