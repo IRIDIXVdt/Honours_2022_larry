@@ -257,6 +257,28 @@ export class DatabaseService {
 
   }
 
+  getUserDailyLimit() {
+    return new Promise((resolve, reject) => {
+      console.log('get daily limit');
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            if (v.data() == null || v.data() == undefined || v.data()['dailyLimit'] == null || v.data()['dailyLimit'] == undefined) {
+              console.log('daily limit undefined');
+              resolve(20);
+            } else {
+              console.log(v.data());
+              resolve(v.data()['dailyLimit']);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve(20);
+      }
+    });
+
+  }
+
   getAdminWithEmail(email) {
     return new Promise((resolve, reject) => {
       this.fas.getCollectionFilter("adminUsers", 'email', email)
