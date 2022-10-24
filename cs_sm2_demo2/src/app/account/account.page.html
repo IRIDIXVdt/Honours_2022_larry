@@ -13,10 +13,10 @@
       routerLink="/tabs/account/register">
       Sign Up
     </ion-button>
-    <ion-button *ngIf="!this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
+    <!-- <ion-button *ngIf="!this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
       routerLink="/tabs/account/login">
       Sign In
-    </ion-button>
+    </ion-button> -->
     <ion-button *ngIf="this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
       (click)='this.aus.signOut()'>
       Sign Out
@@ -39,7 +39,7 @@
               <!-- logged in -->
               <ng-container *ngIf="this.aus.isLogin()">
                 <h1 class="display-2 text-white">
-                  Hello, {{this.aus.getUserEmail()}}
+                  Hello
                 </h1>
                 <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made here.
                 </p>
@@ -98,7 +98,9 @@
                         <div *ngFor="let item of this.sessionList">
                           <ion-label>{{item.sCode + ' '+ item.sNumber + ' ' + item.sTime}}</ion-label>
                         </div>
-
+                        <div>
+                          <ion-label>&nbsp;</ion-label>
+                        </div>
                         <ion-label>Maximum Daily Limit: </ion-label><ion-label color="primary">{{dailyLimit}}</ion-label>
                         <div></div>
                         <div>
