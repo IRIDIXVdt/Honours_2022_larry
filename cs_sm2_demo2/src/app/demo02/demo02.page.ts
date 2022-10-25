@@ -30,7 +30,8 @@ export class Demo02Page implements OnInit {
   userMulti: string = '';
   loaded: boolean = false;
   userAnswer: number = 3;
-  todayProgress:number = 0.2;
+  todayProgress: number = 1;
+  initialQLength = 1;
   userAnswerMessage: string[] = [
     'complete blackout - 0',
     'incorrect response; the correct one remembered - 1',
@@ -56,6 +57,15 @@ export class Demo02Page implements OnInit {
 
   ngOnInit() { }
 
+  updateQuestionProgress() {
+    if (this.qList != null || this.qList != undefined) {
+      console.log(this.qList.length, this.initialQLength);
+      this.todayProgress = 1 - this.qList.length / this.initialQLength;
+    } else {
+      this.todayProgress = 0;
+    }
+  }
+
   //when user has not select any session, 
   //then direct them back to home page to select question
   async ionViewDidEnter() {
@@ -67,6 +77,7 @@ export class Demo02Page implements OnInit {
       this.router.navigate([this.homeAddress]);
     } else {
       //first initialize time
+      this.updateQuestionProgress();
       if (this.tms.initializeAll()) {
         console.log('overTime, reset');
         const loading = await this.als.startLoading();
@@ -154,8 +165,10 @@ export class Demo02Page implements OnInit {
     //so the qList will not have element more than the daily maximum
     const dailyLimit = this.los.fetchLocalData('dailyLimit');
     this.qList = this.qList.slice(0, dailyLimit);
-    console.log('qList',this.qList.length)
+    console.log('qList', this.qList.length);
+    this.initialQLength = this.qList.length;
     this.los.setLocalData('qList', this.qList);
+    this.updateQuestionProgress();
   }
 
   async fetchProgress() {
@@ -273,6 +286,7 @@ export class Demo02Page implements OnInit {
     this.userCode = '';
     this.userMulti = '';
     this.userAnswer = 3;
+    this.updateQuestionProgress();
   }
 
   qualityCheck(answer: number) {
