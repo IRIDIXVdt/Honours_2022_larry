@@ -17,6 +17,11 @@ export class UserRecordService {
     public als: AlertService,
   ) { }
 
+  dailyLimitUpdate(limit: number) {
+    this.los.setLocalData('dailyLimit', limit);
+    this.das.saveDailyLimitChangesToCloud(limit);
+  }
+
   storeLocalInfo(item) {
     //we need to store two things:
     //user record, for the purpose of data collection for research

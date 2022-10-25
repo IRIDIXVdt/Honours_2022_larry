@@ -4,6 +4,7 @@ import { AuthService } from '../shared/service/auth.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { FirebaseService } from '../shared/service/firebase.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
+import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
   selector: 'app-account',
@@ -27,6 +28,7 @@ export class AccountPage implements OnInit {
     public das: DatabaseService,
     public als: AlertService,
     public los: LocalStorageService,
+    public urs: UserRecordService,
   ) { }
 
   ionViewDidEnter() {
@@ -44,6 +46,11 @@ export class AccountPage implements OnInit {
 
   loadDailyLimit() {
     this.dailyLimit = this.los.fetchLocalData('dailyLimit');
+  }
+
+  setDailyLimit() {
+    this.urs.dailyLimitUpdate(this.dailyLimit);
+    this.als.displayMessage("Daily Limit set to: " + this.dailyLimit);
   }
 
   // fetchSession() {

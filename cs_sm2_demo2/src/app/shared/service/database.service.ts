@@ -234,6 +234,15 @@ export class DatabaseService {
     return this.fas.getUser(id).update(userSessionData);
   }
 
+  saveDailyLimitChangesToCloud(limit: number){
+    const userData = {
+      dailyLimit: limit,
+    }
+    const id = JSON.parse(localStorage.getItem('user')).uid;
+    console.log('user daily limit update', id, userData);
+    return this.fas.getUser(id).update(userData);
+  }
+
   getUserCustomizeInfo(info) {
     return new Promise((resolve, reject) => {
       console.log('get info', info)

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>User Profile</ion-title>
-    <ng-container *ngIf="true">
+    <ng-container *ngIf="false">
       <ion-button (click)="this.los.questionRemove()" class="ion-padding-end" slot="end" color="primary" fill="clear">
         Remove Question Storage
       </ion-button>
@@ -108,7 +108,7 @@
                           </ion-range>
                         </div>
                         <ion-toolbar>
-                          <ion-button slot="end">Update Daily Maximum</ion-button>
+                          <ion-button slot="end" (click)="setDailyLimit()">Update Daily Maximum</ion-button>
                         </ion-toolbar>
                       </ng-container>
                       <ng-container *ngIf="!this.sessionList">
