@@ -32,15 +32,16 @@ export class AccountPage implements OnInit {
   ) { }
 
   ionViewDidEnter() {
+    console.log('enter');
     // this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
+    this.loadDailyLimit();
     // console.log(this.sList);
     if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
       //for now, if user already has a sesssion, then prevent them from joining others
       // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sList, this.sessionList);
-      this.loadDailyLimit();
     }
   }
 
