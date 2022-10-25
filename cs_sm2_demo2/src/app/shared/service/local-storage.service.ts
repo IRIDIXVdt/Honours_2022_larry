@@ -29,6 +29,7 @@ export class LocalStorageService {
     localStorage.setItem('qList', null);
     localStorage.setItem('time', null);
     localStorage.setItem('dailyLimit', null);
+    localStorage.setItem('todayLimit', null);
   }
 
   setLocalData(list, data) {

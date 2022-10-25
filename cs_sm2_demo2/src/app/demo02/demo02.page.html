@@ -12,12 +12,12 @@
         Display Completed
       </ion-button>
     </ng-container>
-    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" (click)="answer()"
-      slot="end" color="primary" fill="clear">
+    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" class="desktopItem"
+      (click)="answer()" slot="end" color="primary" fill="clear">
       Submit
     </ion-button>
-    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" (click)="check()"
-      slot="end" color="primary" fill="clear">
+    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" class="desktopItem"
+      (click)="check()" slot="end" color="primary" fill="clear">
       Display Answer
     </ion-button>
   </ion-toolbar>
@@ -28,7 +28,7 @@
         <ion-label>
           {{currentTermItem.qaPair[0].question}}
         </ion-label>
-        <div *ngIf="displayAnswer" class="rangeSection" slot="end">
+        <div *ngIf="displayAnswer" slot="end" class="rangeSection">
           <ion-range [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true" [min]="0" [max]="5">
           </ion-range>
         </div>
@@ -37,13 +37,12 @@
   </ion-toolbar>
   <ion-toolbar class="ion-padding-horizontal">
     <!-- answer section -->
-    <ion-progress-bar [value]="todayProgress"></ion-progress-bar>
     <ng-container *ngIf="!sessionEnd">
       <ng-container *ngIf="currentTermItem && displayAnswer">
         <ion-label>
           {{currentTermItem.qaPair[0].answer}}
         </ion-label>
-        <ion-label slot="end" color="secondary">
+        <ion-label class="desktopItem" slot="end" color="secondary">
           {{userAnswerMessage[userAnswer]}}
         </ion-label>
       </ng-container>
@@ -51,8 +50,8 @@
   </ion-toolbar>
   <!-- <ion-toolbar class="ion-padding-horizontal">
   </ion-toolbar> -->
-  <div *ngIf="!currentTermItem && !sessionEnd">
-    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  <div *ngIf="!sessionEnd">
+    <ion-progress-bar [value]="todayProgress"></ion-progress-bar>
   </div>
 </ion-header>
 
@@ -136,9 +135,32 @@
   </ng-container>
 </ion-content>
 <ion-footer class="ion-no-border">
-  <ng-container *ngIf="!sessionEnd && currentTermItem && qList.length>0">
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-range *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="phoneItem" [(ngModel)]="userAnswer"
+      [ticks]="true" [snaps]="true" [min]="0" [max]="5">
+    </ion-range>
+  </ion-toolbar>
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-label *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="phoneItem" color="secondary">
+      {{userAnswerMessage[userAnswer]}}</ion-label>
+
+    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" class="phoneItem"
+      (click)="answer()" slot="end" color="primary" fill="clear">
+      Submit
+    </ion-button>
+    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" class="phoneItem"
+      (click)="check()" slot="end" color="primary" fill="clear">
+      Display Answer
+    </ion-button>
+
+  </ion-toolbar>
+
+  <!-- <ng-container *ngIf="!sessionEnd && currentTermItem && qList.length>0">
     <ion-button size="small" fill="clear" class="ion-padding-horizontal">
       {{currentTermItem.id}}
     </ion-button>
-  </ng-container>
+  </ng-container> -->
+  <div *ngIf="!currentTermItem && !sessionEnd">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </div>
 </ion-footer>
