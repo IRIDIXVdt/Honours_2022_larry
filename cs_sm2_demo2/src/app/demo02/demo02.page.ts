@@ -30,6 +30,7 @@ export class Demo02Page implements OnInit {
   userMulti: string = '';
   loaded: boolean = false;
   userAnswer: number = 3;
+  todayProgress:number = 0.2;
   userAnswerMessage: string[] = [
     'complete blackout - 0',
     'incorrect response; the correct one remembered - 1',
@@ -111,6 +112,7 @@ export class Demo02Page implements OnInit {
   //if a question belongs session question list, but does not belong user previous progress
   // then initialize the new process in the question
   async decideQuestionList() {
+    console.log('decide question list');
     var dummyList = [];//this dummy list stores the list which user will look at today
     for (let i = 0; i < this.sessionList.length; i++) {
       //iterate through all sessions
@@ -147,6 +149,12 @@ export class Demo02Page implements OnInit {
     // console.log(dummyList);
     this.qList = dummyList;
     console.log(this.qList)
+
+    //set maximum
+    //so the qList will not have element more than the daily maximum
+    const dailyLimit = this.los.fetchLocalData('dailyLimit');
+    this.qList = this.qList.slice(0, dailyLimit);
+    console.log('qList',this.qList.length)
     this.los.setLocalData('qList', this.qList);
   }
 
