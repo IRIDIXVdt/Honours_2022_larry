@@ -4,6 +4,7 @@ import { AuthService } from '../shared/service/auth.service';
 import { DatabaseService } from '../shared/service/database.service';
 import { FirebaseService } from '../shared/service/firebase.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
+import { UserRecordService } from '../shared/service/user-record.service';
 
 @Component({
   selector: 'app-account',
@@ -19,17 +20,22 @@ export class AccountPage implements OnInit {
   sessionList;
   //decide whether user is allowed to join other sessions
   // allowJoinSession: boolean;
+  dailyLimit: number;
+  //setting limit to what the user want to do every day
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
     public das: DatabaseService,
     public als: AlertService,
     public los: LocalStorageService,
+    public urs: UserRecordService,
   ) { }
 
   ionViewDidEnter() {
+    console.log('enter');
     // this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
+    this.loadDailyLimit();
     // console.log(this.sList);
     if (!this.aus.isAdmin() && this.los.userStatus() && !this.sessionList) {//normal user
       //for now, if user already has a sesssion, then prevent them from joining others
@@ -37,6 +43,15 @@ export class AccountPage implements OnInit {
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sList, this.sessionList);
     }
+  }
+
+  loadDailyLimit() {
+    this.dailyLimit = this.los.fetchLocalData('dailyLimit');
+  }
+
+  setDailyLimit() {
+    this.urs.dailyLimitUpdate(this.dailyLimit);
+    this.als.displayMessage("Daily Limit set to: " + this.dailyLimit);
   }
 
   // fetchSession() {

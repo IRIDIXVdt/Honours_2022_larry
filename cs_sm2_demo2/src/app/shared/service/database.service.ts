@@ -234,6 +234,15 @@ export class DatabaseService {
     return this.fas.getUser(id).update(userSessionData);
   }
 
+  saveDailyLimitChangesToCloud(limit: number){
+    const userData = {
+      dailyLimit: limit,
+    }
+    const id = JSON.parse(localStorage.getItem('user')).uid;
+    console.log('user daily limit update', id, userData);
+    return this.fas.getUser(id).update(userData);
+  }
+
   getUserCustomizeInfo(info) {
     return new Promise((resolve, reject) => {
       console.log('get info', info)
@@ -252,6 +261,28 @@ export class DatabaseService {
       } catch {
         console.log('error');
         resolve([]);
+      }
+    });
+
+  }
+
+  getUserDailyLimit() {
+    return new Promise((resolve, reject) => {
+      console.log('get daily limit');
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            if (v.data() == null || v.data() == undefined || v.data()['dailyLimit'] == null || v.data()['dailyLimit'] == undefined) {
+              console.log('daily limit undefined');
+              resolve(20);
+            } else {
+              console.log(v.data());
+              resolve(v.data()['dailyLimit']);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve(20);
       }
     });
 

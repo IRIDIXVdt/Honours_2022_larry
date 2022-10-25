@@ -84,7 +84,7 @@ export class AuthService {
       //store user session data
       await this.storeSesssion();
       // //fetch user previous progress
-      // await this.fetchProgress();
+      await this.storeDailyLimit();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -123,6 +123,12 @@ export class AuthService {
         resolve(true);
       }
     });
+  }
+
+  async storeDailyLimit() {
+    const userDataDailyLimit = await this.das.getUserDailyLimit()
+    console.log('daily limit is', userDataDailyLimit);
+    this.los.setLocalData('dailyLimit', userDataDailyLimit);
   }
 
 

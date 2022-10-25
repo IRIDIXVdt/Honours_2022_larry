@@ -30,6 +30,7 @@ export class Demo02Page implements OnInit {
   userMulti: string = '';
   loaded: boolean = false;
   userAnswer: number = 3;
+  todayProgress: number = 1;
   userAnswerMessage: string[] = [
     'complete blackout - 0',
     'incorrect response; the correct one remembered - 1',
@@ -55,6 +56,19 @@ export class Demo02Page implements OnInit {
 
   ngOnInit() { }
 
+  updateQuestionProgress() {
+    if (this.qList != null || this.qList != undefined) {
+      var initialQLength = 1;
+      if (this.los.fetchLocalData('todayLimit') != null || this.los.fetchLocalData('todayLimit') != undefined) {
+        initialQLength = this.los.fetchLocalData('todayLimit');
+      }
+      console.log(this.qList.length, initialQLength);
+      this.todayProgress = 1 - this.qList.length / initialQLength;
+    } else {
+      this.todayProgress = 0;
+    }
+  }
+
   //when user has not select any session, 
   //then direct them back to home page to select question
   async ionViewDidEnter() {
@@ -66,6 +80,7 @@ export class Demo02Page implements OnInit {
       this.router.navigate([this.homeAddress]);
     } else {
       //first initialize time
+      this.updateQuestionProgress();
       if (this.tms.initializeAll()) {
         console.log('overTime, reset');
         const loading = await this.als.startLoading();
@@ -111,6 +126,7 @@ export class Demo02Page implements OnInit {
   //if a question belongs session question list, but does not belong user previous progress
   // then initialize the new process in the question
   async decideQuestionList() {
+    console.log('decide question list');
     var dummyList = [];//this dummy list stores the list which user will look at today
     for (let i = 0; i < this.sessionList.length; i++) {
       //iterate through all sessions
@@ -147,7 +163,15 @@ export class Demo02Page implements OnInit {
     // console.log(dummyList);
     this.qList = dummyList;
     console.log(this.qList)
+
+    //set maximum
+    //so the qList will not have element more than the daily maximum
+    const dailyLimit = this.los.fetchLocalData('dailyLimit');
+    this.qList = this.qList.slice(0, dailyLimit);
+    console.log('qList', this.qList.length);
+    this.los.setLocalData('todayLimit', this.qList.length)
     this.los.setLocalData('qList', this.qList);
+    this.updateQuestionProgress();
   }
 
   async fetchProgress() {
@@ -257,14 +281,16 @@ export class Demo02Page implements OnInit {
     this.updateQuestionDisplay();
 
     this.updateEnableDisplayAnswer();
-    this.qList.forEach(e => {//display all the items in the qList
-      console.log(e);
-    });
+    // this.qList.forEach(e => {//display all the items in the qList
+    //   console.log(e);
+    // });
+    console.log(this.qList);
     console.log('----------');
     //reset input space
     this.userCode = '';
     this.userMulti = '';
     this.userAnswer = 3;
+    this.updateQuestionProgress();
   }
 
   qualityCheck(answer: number) {

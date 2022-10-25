@@ -7,16 +7,48 @@ ion-range {
     --bar-background-active: #0083f6;
 }
 
-.rangeSection {
-    // left: 50%;
-    // transform: translate(50%, 0);
-    width:40%;
-}
+
+
 .submitSection {
     // position: relative;
     left: 50%;
     transform: translate(-50%, 0);
 }
-.backgroundMaterial{
+
+.backgroundMaterial {
     border-style: solid;
+}
+
+
+@media (max-width: 991px) {
+    .phoneItem {
+        display: block;
+    }
+    .rangeSection {
+        // left: 50%;
+        // transform: translate(50%, 0);
+        display: none;
+        width: 40%;
+    }
+
+    .desktopItem {
+        display: None;
+    }
+}
+
+@media (min-width: 992px) {
+    .desktopItem {
+        display: block;
+    }
+
+    .rangeSection {
+        // left: 50%;
+        // transform: translate(50%, 0);
+        display: block;
+        width: 40%;
+    }
+
+    .phoneItem {
+        display: none;
+    }
 }
