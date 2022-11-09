@@ -1,4 +1,4 @@
-[
+export const list = [
     {
         "type": "df",
         "background": "<p>What is the definition and pronunciation of the term?</p>",

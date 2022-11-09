@@ -7,7 +7,7 @@ import { DatabaseService } from '../../shared/service/database.service';
 // import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 import { QuestionItem, QuestionAnswerPair, WrongAnswer } from 'src/app/shared/data/questionSchema';
 
-import { list } from 'src/app/shared/data/vc13test';
+import { list } from 'src/app/shared/data/vc16test';
 
 @Component({
   selector: 'app-question',
@@ -105,8 +105,8 @@ export class QuestionPage implements OnInit {
     // this should not show up in the published admin version
     console.log("Upload this");
     
-    // const termlist = list as any[];
-    const termlist = [];
+    const termlist = list as any[];
+    // const termlist = [];
 
     // console.log(termlist);
     for (let i = 0; i < termlist.length; i++) {
