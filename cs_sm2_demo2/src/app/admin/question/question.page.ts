@@ -105,8 +105,8 @@ export class QuestionPage implements OnInit {
     // this should not show up in the published admin version
     console.log("Upload this");
     
-    const termlist = list as any[];
-    // const termlist = [];
+    // const termlist = list as any[];
+    const termlist = [];
 
     // console.log(termlist);
     for (let i = 0; i < termlist.length; i++) {

@@ -4,9 +4,11 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Question Generation Page</ion-title>
-    <ion-button (click)="uploadJSON()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+
+    <!-- <ion-button (click)="uploadJSON()" class="ion-padding-end" slot="end" color="primary" fill="clear">
       Add Through Command
-    </ion-button>
+    </ion-button> -->
+
   </ion-toolbar>
 </ion-header>
 
@@ -32,6 +34,7 @@
             <ion-item>
               <ion-label>Course</ion-label>
               <ion-select [(ngModel)]="qCourse" okText="Okay" cancelText="Dismiss">
+                <ion-select-option value="cosc211">COSC 211</ion-select-option>
                 <ion-select-option value="cosc304">COSC 304</ion-select-option>
                 <ion-select-option value="test2022">Test Session 2022</ion-select-option>
                 <ion-select-option value="jpst200">JPST 200</ion-select-option>
