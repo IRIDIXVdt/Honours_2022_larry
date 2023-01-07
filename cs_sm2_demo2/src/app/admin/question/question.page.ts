@@ -80,7 +80,7 @@ export class QuestionPage implements OnInit {
     const uploadSuccess = await this.dt.addData("QuestionCollection", data);
     if (uploadSuccess) {
       this.updateEditorField();
-      this.qDes = "";
+      // this.qDes = "";
       this.editorBody.editorInstance.setData("");
     }
 
