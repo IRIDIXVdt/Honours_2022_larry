@@ -23,7 +23,7 @@ export class QuestionPage implements OnInit {
   @ViewChild('editorBody') editorBody: CKEditorComponent;
 
   public qType: string = 'df';//question type
-  public qCourse: string = 'cosc304';//course type
+  public qCourse: string = 'cosc211';//course type
   public qDes: string = '';
   public qQAP: QuestionAnswerPair[] = [{ question: '', answer: '' }];
   public qWA: WrongAnswer[] = [];
