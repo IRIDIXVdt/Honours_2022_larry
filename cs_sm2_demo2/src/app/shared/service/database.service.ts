@@ -125,10 +125,31 @@ export class DatabaseService {
     });
   }
 
+  getCOSC211SessionData() {
+    //deprecated
+    return new Promise((resolve, reject) => {
+      this.fas.getCOSC211Collection().subscribe((res) => {
+        const receiveValue = res.docs.map(e => {//value 
+          return {//store value from result array
+            id: e.id,//document id
+            sCode: e.data()['sCode'],
+            sTime: e.data()['sTime'],
+            sNumber: e.data()['sNumber'],
+          }
+        });
+        resolve(receiveValue);//return value in promise
+      }, (err: any) => {
+        console.log(err);
+        reject();
+        this.als.displayMessage('Fail to fetch data from database. Please try again.');
+      })
+    });
+  }
+
   getSessionData(code) {
     return new Promise((resolve, reject) => {//invoke method on filter type
       (code == 'All' ? this.fas.getCollection("sessionCollection")
-        : this.fas.getSessionWithFilter('sessionCollection', code, 'sTime'))
+        : this.fas.getSessionWithFilter('sessionCollection', code, 'des'))
         .subscribe((res) => {//retrieve data which contains an array of each question
           const receiveValue = res.docs.map(e => {//value 
             return {//store value from result array
@@ -234,7 +255,7 @@ export class DatabaseService {
     return this.fas.getUser(id).update(userSessionData);
   }
 
-  saveDailyLimitChangesToCloud(limit: number){
+  saveDailyLimitChangesToCloud(limit: number) {
     const userData = {
       dailyLimit: limit,
     }

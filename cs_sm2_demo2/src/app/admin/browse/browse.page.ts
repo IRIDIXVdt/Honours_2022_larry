@@ -97,7 +97,7 @@ export class BrowsePage implements OnInit {
     console.log(this.sessionId, this.questionList, this.sList.filter(
       e => e.id == this.sessionId)[0].sCode.toLowerCase());
     //with the questionList and checkedQuestionList, update the nr and ir list
-
+    this.questionList.sort(this.termCompare);
     //first reset the list
     this.irList = []; this.nrList = [];
     while (this.questionList.length > 0) {
@@ -125,6 +125,17 @@ export class BrowsePage implements OnInit {
       console.log(this.sList);
       // this.generateSessionList();
     });
+
+  }
+
+  termCompare(a, b) {
+    if (a.des > b.des) {
+      return -1;
+    }
+    if (a.des < b.des) {
+      return 1;
+    }
+    return 0;
   }
 
 }
