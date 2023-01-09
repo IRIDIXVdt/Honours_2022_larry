@@ -1,6 +1,140 @@
 <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ng-container *ngIf="false">
+      <!-- test purpose -->
+      <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display Storage
+      </ion-button>
+      <ion-button (click)="displayLocalProgress()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display In Progress
+      </ion-button>
+      <ion-button (click)="displayLocalCompleted()" class="ion-padding-end" slot="end" color="primary" fill="clear">
+        Display Completed
+      </ion-button>
+      <ion-button (click)="currentTermItemDisplay()" class="ion-padding-end" slot="end" color="primary"
+        fill="clear">Current Term</ion-button>
+      <ion-button (click)="clearCache()" class="ion-padding-end" slot="end" color="primary" fill="clear">clear
+        cache</ion-button>
+    </ng-container>
+    <ng-container>
+      <ion-button class="ion-padding-end" slot="end" color="primary" fill="clear" id="helpButton">Help</ion-button>
+      <ion-popover trigger="helpButton" triggerAction="hover" size="auto">
+        <ng-template>
+          <ion-content class="ion-padding">
 
+            <h3>The slider in the center of the page has three sections:</h3>
+            <p>The question shows up first.</p>
+            <p>You can slide left for hint/extra material.</p>
+            <p>You can <b>slide right for answer</b>.</p>
+
+            <h3>After you see the answer.</h3>
+            <p>A scroll bar would show up at the bottom.</p>
+            <p>Example:</p>
+            <ion-range [ticks]="true" [snaps]="true" [min]="0" [max]="5">
+            </ion-range>
+            <p>Slide the scroll bar to report how well you remembered the answer</p>
+            <p>A text describing the number you selected would show up:</p>
+            <p>Example:</p>
+            <ion-label color="secondary">
+              'correct response recalled with serious difficulty - 3'</ion-label>
+            <p>Click on the submit button to go to the next question.</p>
+            <p>Example:</p>
+
+            <ion-button color="primary" fill="clear">
+              Submit
+            </ion-button>
+
+
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+      <ion-popover trigger="click-trigger" triggerAction="click">
+        <ng-template>
+          <ion-content class="ion-padding">
+            <p>You are looking at a question.</p>
+            <p>Slide left for hint/extra material.</p>
+            <p>Slide right for answer.</p>
+            <p>Hover over 'HELP' for more information.</p>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </ng-container>
+  </ion-toolbar>
+  <div *ngIf="!sessionEnd">
+    <ion-progress-bar [value]="todayProgress"></ion-progress-bar>
+  </div>
 </ion-header>
 <ion-content>
 
+
+  <ion-slides (ionSlideReachEnd)="seeAnswer()" [options]="slideOpts" scrollbar="true" id="click-trigger" #slides>
+    <ion-slide>
+      <ion-card *ngIf="currentTermItem && qList.length>0">
+        <ion-card-header>
+          <ion-card-title>Hint</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content *ngIf="currentTermItem.background.length>1">
+          <span class="ion-padding" [innerHTML]="currentTermItem.background"></span>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card *ngIf="currentTermItem && qList.length>0">
+        <ion-card-header>
+          <ion-card-title>Question</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          {{currentTermItem.qaPair[0].question}}
+
+          <ng-container *ngIf="currentTermItem.type === 'mu'">
+            <ion-item *ngFor="let choiceItem of currentTermItem.wrongAnswer">
+              &#8226; {{choiceItem.content}}
+            </ion-item>
+          </ng-container>
+
+        </ion-card-content>
+      </ion-card>
+      <ion-card *ngIf="sessionEnd">
+        <ion-card-header>
+          <ion-card-title>Congratulations! You have finished today's tasks.</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card *ngIf="currentTermItem && qList.length>0">
+        <ion-card-header>
+          <ion-card-title>Answer</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          {{currentTermItem.qaPair[0].answer}}
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-range *ngIf="!sessionEnd && currentTermItem && displayAnswer" [(ngModel)]="userAnswer" [ticks]="true"
+      [snaps]="true" [min]="0" [max]="5">
+    </ion-range>
+  </ion-toolbar>
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-label *ngIf="!sessionEnd && currentTermItem && displayAnswer" color="secondary">
+      {{userAnswerMessage[userAnswer]}}</ion-label>
+    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" (click)="answer()"
+      slot="end" color="primary" fill="clear">
+      Submit
+    </ion-button>
+  </ion-toolbar>
+  <div *ngIf="!currentTermItem && !sessionEnd">
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  </div>
+</ion-footer>

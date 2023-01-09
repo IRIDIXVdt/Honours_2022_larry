@@ -45,6 +45,7 @@ export class DatabaseService {
     return new Promise((resolve, reject) => {
       this.fas.getDocument("QuestionCollection", id)
         .subscribe((res) => {
+          console.log(res);
           resolve({
             id: res.id,
             type: res.data()['type'],
