@@ -31,7 +31,7 @@ export class AccountPage implements OnInit {
     public urs: UserRecordService,
   ) { }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     console.log('will enter')
   }
 
@@ -46,8 +46,9 @@ export class AccountPage implements OnInit {
       // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sList, this.sessionList);
-      if (!this.sessionList){ //still no session
+      if (!this.sessionList) { //still no session
         this.sessionList = this.los.fetchLocalData('userList');
+        /*
         this.als.presentChoice("Do you want to join COSC 211 Session?").then(loadingItem => {
           if (loadingItem) {//throw loadingItem, dismiss it when action is finished
             loadingItem.dismiss();
@@ -57,6 +58,12 @@ export class AccountPage implements OnInit {
             console.log('dismiss');
           }
         })
+
+        */
+        this.das.addUserSession('PR9r9Tigbv7DFx9xLUUn');
+        //find data
+        this.ionViewDidEnter();
+
       }
     }
     //to do: assign session instantly
