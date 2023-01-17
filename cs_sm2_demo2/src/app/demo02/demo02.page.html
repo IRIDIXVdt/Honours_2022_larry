@@ -25,28 +25,29 @@
         <ng-template>
           <ion-content class="ion-padding">
 
-            <h3>The slider in the center of the page has three sections:</h3>
+            <h3>This is a flashcard question website.</h3>
             <p>The question shows up first.</p>
-            <p>You can slide left for hint/extra material.</p>
-            <p>You can <b>slide right for answer</b>.</p>
+            <p>You can <b>slide right/click on the card to see the answer</b>.</p>
 
             <h3>After you see the answer.</h3>
-            <p>A scroll bar would show up at the bottom.</p>
+            <p>Select a number that best describes how well you can answer the question.</p>
             <p>Example:</p>
-            <ion-range [ticks]="true" [snaps]="true" [min]="0" [max]="5">
-            </ion-range>
-            <p>Slide the scroll bar to report how well you remembered the answer</p>
-            <p>A text describing the number you selected would show up:</p>
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col *ngFor="let item of emotionSVG; let index = index" size="2">
+                  <ion-button fill="clear">
+                    <img src="{{item.address}}" class="{{item.class}}">
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+            <p>Hover over one of the buttons to see a piece of text describing the number:</p>
             <p>Example:</p>
             <ion-label color="secondary">
               'correct response recalled with serious difficulty - 3'</ion-label>
-            <p>Click on the submit button to go to the next question.</p>
-            <p>Example:</p>
-
-            <ion-button color="primary" fill="clear">
-              Submit
-            </ion-button>
-
+            <p>Click on one of the buttons to submit your answer.</p>
 
           </ion-content>
         </ng-template>
@@ -121,7 +122,8 @@
     <ion-row>
       <ion-col size="auto">
         <ion-item>
-          <ion-checkbox slot="start" [(ngModel)]="confirmMessage" (ionChange)="updateSelectionCheckBox()"></ion-checkbox>
+          <ion-checkbox slot="start" [(ngModel)]="confirmMessage"
+            (ionChange)="updateSelectionCheckBox()"></ion-checkbox>
           <ion-label color="medium">Hide confirmation message.</ion-label>
         </ion-item>
       </ion-col>
