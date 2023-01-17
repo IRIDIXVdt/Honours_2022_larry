@@ -1,15 +1,16 @@
 ion-card {
     // width: 30vw;
     height: 60vh;
-    width: max(30vw, 320px);
+    width: min(1200px, 90vw);
 }
+
 
 ion-row {
     text-align: center;
 }
 
 ion-grid {
-    width: max(40vw, 320px);
+    max-width: 1200px;
 }
 
 ion-col ion-button {

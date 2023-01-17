@@ -37,6 +37,7 @@ export class Demo02Page implements OnInit {
   displayAnswer: boolean;
   // disableDisplayAnswer: boolean;
   sessionEnd: boolean;
+  confirmMessage: boolean;
   userCode: string = '';
   userMulti: string = '';
   loaded: boolean = false;
@@ -128,6 +129,7 @@ export class Demo02Page implements OnInit {
         this.updateQuestionDisplay();
       }
       this.slides.slideTo(0);
+      this.confirmMessage = this.los.getCheckBox();
     }
   }
 
@@ -262,6 +264,12 @@ export class Demo02Page implements OnInit {
     }
   }
 
+  updateSelectionCheckBox() {
+    // this.confirmMessage = !this.confirmMessage;
+    console.log('updateSelection', this.confirmMessage);
+    this.los.setLocalData('confirmSubmit', this.confirmMessage);
+  }
+
   /*
   handle the responsive with user answer: repeat some of the question and store the others
       if user is first time answering this question
@@ -275,15 +283,17 @@ export class Demo02Page implements OnInit {
   answer() {
     // const answer = this.userAnswer;
     const answerHover = this.hoverIndex;
-
-    this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
-      if (loadingItem) {
-        this.answerHelper();
-        loadingItem.dismiss();
-      }
-    })
-
-
+    this.confirmMessage = this.los.getCheckBox();
+    if (this.confirmMessage) {
+      this.answerHelper();
+    } else {
+      this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
+        if (loadingItem) {
+          this.answerHelper();
+          loadingItem.dismiss();
+        }
+      })
+    }
   }
 
   answerHelper() {
