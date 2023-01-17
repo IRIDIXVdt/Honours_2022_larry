@@ -1,7 +1,7 @@
 ion-card {
     // width: 30vw;
     height: 60vh;
-    min-width: max(30vw, 320px);
+    width: max(30vw, 320px);
 }
 
 ion-row {
@@ -13,6 +13,7 @@ ion-grid {
 }
 
 ion-col ion-button {
+    min-width: 60px;
     --background-hover: green;
 }
 
