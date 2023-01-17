@@ -118,6 +118,14 @@
         </ion-button>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-label color="medium">Hide confirmation message.</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
   </ion-grid>
   <div *ngIf="!currentTermItem && !sessionEnd">
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
