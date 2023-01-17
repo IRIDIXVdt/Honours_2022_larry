@@ -274,9 +274,22 @@ export class Demo02Page implements OnInit {
   */
   answer() {
     // const answer = this.userAnswer;
-    const answer = this.hoverIndex;
+    const answerHover = this.hoverIndex;
+
+    this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
+      if (loadingItem) {
+        this.answerHelper();
+        loadingItem.dismiss();
+      }
+    })
+
+
+  }
+
+  answerHelper() {
+    const answerHover = this.hoverIndex;
     this.hoverIndex = 6;
-    if (answer == 6) {
+    if (answerHover == 6) {
       console.log('error* answer = 6');
     }
     //first store qList in local, in case reload
@@ -285,14 +298,14 @@ export class Demo02Page implements OnInit {
     // var currentItem = this.currentTermItem;
 
     if (currentItem.repeatTime == -1) {//first time answering a new item
-      currentItem.q = answer;//first store the quality of response
+      currentItem.q = answerHover;//first store the quality of response
 
       //if this item belongs a previous progress, also update its EF
       if (currentItem.n != 0) {
         currentItem.EF = this.efCalculator(currentItem.EF, currentItem.q);
       }
 
-      if (this.qualityCheck(answer) == 'g') {//quality easy
+      if (this.qualityCheck(answerHover) == 'g') {//quality easy
         //remove and store directly
         this.urs.storeLocalInfo(currentItem);
       } else {
@@ -300,10 +313,10 @@ export class Demo02Page implements OnInit {
         this.insertItem(currentItem);
       }
     } else {//second or more time answering
-      if (this.qualityCheck(answer) == 'p') {
+      if (this.qualityCheck(answerHover) == 'p') {
         currentItem.repeatTime = 3;
         this.insertItem(currentItem);
-      } else if (this.qualityCheck(answer) == 'm') {
+      } else if (this.qualityCheck(answerHover) == 'm') {
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
@@ -316,7 +329,6 @@ export class Demo02Page implements OnInit {
           this.insertItem(currentItem);
         }
       }
-      // this.userAnswer = 3;
     }
 
     //update question display
