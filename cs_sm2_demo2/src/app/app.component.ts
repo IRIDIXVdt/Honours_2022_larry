@@ -11,6 +11,7 @@ export class AppComponent {
     { title: 'Account', url: '/tabs/account', icon: 'cog' },
     // { title: 'Test', url: '/tabs/demo01', icon: 'clipboard' },
     { title: 'Task', url: '/tabs/demo02', icon: 'clipboard' },
+    { title: 'Consent Form', url: '/tabs/consent', icon: 'information' },
     // { title: 'Add', url: '/tabs/add', icon: 'add-circle' },
     // { title: 'Browse', url: '/tabs/browse', icon: 'albums' },
   ];
