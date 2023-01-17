@@ -1,5 +1,45 @@
 ion-card {
     // width: 30vw;
     height: 60vh;
-    min-width: max(30vw,320px);
+    min-width: max(30vw, 320px);
+}
+
+ion-row {
+    text-align: center;
+}
+
+ion-grid {
+    width: max(40vw, 320px);
+}
+
+ion-col ion-button {
+    --background-hover: green;
+}
+
+.filter-00 {
+    filter: invert(46%) sepia(18%) saturate(1959%) hue-rotate(314deg) brightness(95%) contrast(98%);
+}
+
+.filter-01 {
+    filter: invert(58%) sepia(85%) saturate(446%) hue-rotate(331deg) brightness(98%) contrast(87%);
+}
+
+.filter-02 {
+    filter: invert(91%) sepia(61%) saturate(5618%) hue-rotate(319deg) brightness(103%) contrast(84%);
+}
+
+.filter-03 {
+    filter: invert(100%) sepia(34%) saturate(4267%) hue-rotate(332deg) brightness(106%) contrast(84%);
+}
+
+.filter-04 {
+    filter: invert(100%) sepia(64%) saturate(1823%) hue-rotate(31deg) brightness(104%) contrast(85%);
+}
+
+.filter-05 {
+    filter: invert(69%) sepia(93%) saturate(354%) hue-rotate(67deg) brightness(97%) contrast(94%);
+}
+
+img {
+    width: 32px;
 }

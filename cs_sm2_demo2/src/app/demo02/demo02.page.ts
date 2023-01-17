@@ -19,6 +19,15 @@ import { IonSlides } from '@ionic/angular';
 export class Demo02Page implements OnInit {
   @ViewChild('slides', { static: true }) slides: IonSlides;
   homeAddress: string = 'tabs/account';
+
+  emotionSVG = [
+    { value: 0, address: '../../assets/icon/emotion/00.svg', class: 'filter-00' },
+    { value: 1, address: '../../assets/icon/emotion/01.svg', class: 'filter-01' },
+    { value: 2, address: '../../assets/icon/emotion/02.svg', class: 'filter-02' },
+    { value: 3, address: '../../assets/icon/emotion/03.svg', class: 'filter-03' },
+    { value: 4, address: '../../assets/icon/emotion/04.svg', class: 'filter-04' },
+    { value: 5, address: '../../assets/icon/emotion/05.svg', class: 'filter-05' },
+  ]
   // qList = questionList;
 
   //stop using qList for front end display: now current Term item handles it
@@ -33,6 +42,7 @@ export class Demo02Page implements OnInit {
   loaded: boolean = false;
   userAnswer: number = 3;
   todayProgress: number = 1;
+  hoverIndex: number = 6;
   userAnswerMessage: string[] = [
     'complete blackout - 0',
     'incorrect response; the correct one remembered - 1',
@@ -40,6 +50,7 @@ export class Demo02Page implements OnInit {
     'correct response recalled with serious difficulty - 3',
     'correct response after a hesitation - 4',
     'perfect response - 5',
+    ''
   ]
   //contains a list of all the questions
   sessionList: any[];
@@ -68,6 +79,14 @@ export class Demo02Page implements OnInit {
     } else {
       this.todayProgress = 0;
     }
+  }
+
+  buttonSection(index) {
+    // console.log('button section', index)
+    this.hoverIndex = index;
+  }
+  buttonAway() {
+    this.hoverIndex = 6;
   }
 
   //when user has not select any session, 
@@ -108,7 +127,7 @@ export class Demo02Page implements OnInit {
         await this.decideQuestionList();
         this.updateQuestionDisplay();
       }
-      this.slides.slideTo(1);
+      this.slides.slideTo(0);
     }
   }
 
@@ -126,6 +145,14 @@ export class Demo02Page implements OnInit {
     if (!this.sessionEnd) {
       this.check();
     }
+  }
+
+  async slideOnClick() {
+    console.log('slide on click', this.slides.isEnd());
+    if (await this.slides.isEnd())
+      this.slides.slidePrev();
+    else
+      this.slides.slideNext();
   }
 
   //when user first time opens program, the software decides task list
@@ -246,7 +273,12 @@ export class Demo02Page implements OnInit {
           if no repeat time left, store info end this
   */
   answer() {
-    const answer = this.userAnswer;
+    // const answer = this.userAnswer;
+    const answer = this.hoverIndex;
+    this.hoverIndex = 6;
+    if (answer == 6) {
+      console.log('error* answer = 6');
+    }
     //first store qList in local, in case reload
     this.los.setLocalData('qList', this.qList);
     var currentItem = this.qList.shift();//pop the very first item of the list
@@ -288,7 +320,7 @@ export class Demo02Page implements OnInit {
     }
 
     //update question display
-    this.slides.slideTo(1);
+    this.slides.slideTo(0);
     this.updateQuestionDisplay();
 
     this.updateEnableDisplayAnswer();
