@@ -277,10 +277,18 @@
           </p> -->
 
           <ion-item>
-            <ion-checkbox slot="start" [(ngModel)]="consent" (ionChange)="consentOnChange()"></ion-checkbox>
+            <ion-checkbox slot="start" [(ngModel)]="consent" (ionChange)="consentOnChange()"
+              disabled="{{consent}}"></ion-checkbox>
             <ion-label color="primary">By marking this box and completing tasks on the website, <br>
               you are confirming that you have read and understood this consent form, <br>
               and you consent to participate in this study.</ion-label>
+          </ion-item>
+          <ion-item *ngIf="consent">
+            <ion-checkbox slot="start" [(ngModel)]="consentW" (ionChange)="withdraw()"></ion-checkbox>
+            <ion-label color="danger">By marking this box, <br>
+              you are confirming to withdraw consent. <br>
+              Your data will not be collected in the research, but you will still be able to access this
+              website.</ion-label>
           </ion-item>
         </td>
       </tr>
