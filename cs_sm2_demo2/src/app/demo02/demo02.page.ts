@@ -51,7 +51,7 @@ export class Demo02Page implements OnInit {
     'correct response recalled with serious difficulty - 3',
     'correct response after a hesitation - 4',
     'perfect response - 5',
-    ''
+    ' - '
   ]
   //contains a list of all the questions
   sessionList: any[];
@@ -87,7 +87,7 @@ export class Demo02Page implements OnInit {
     this.hoverIndex = index;
   }
   buttonAway() {
-    this.hoverIndex = 6;
+    // this.hoverIndex = 6;
   }
 
   //when user has not select any session, 
@@ -283,17 +283,18 @@ export class Demo02Page implements OnInit {
   answer() {
     // const answer = this.userAnswer;
     const answerHover = this.hoverIndex;
-    this.confirmMessage = this.los.getCheckBox();
-    if (this.confirmMessage) {
-      this.answerHelper();
-    } else {
-      this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
-        if (loadingItem) {
-          this.answerHelper();
-          loadingItem.dismiss();
-        }
-      })
-    }
+    // this.confirmMessage = this.los.getCheckBox();
+    // if (this.confirmMessage) {
+    //   this.answerHelper();
+    // } else {
+    //   this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
+    //     if (loadingItem) {
+    //       this.answerHelper();
+    //       loadingItem.dismiss();
+    //     }
+    //   })
+    // }
+    this.answerHelper();
   }
 
   answerHelper() {
