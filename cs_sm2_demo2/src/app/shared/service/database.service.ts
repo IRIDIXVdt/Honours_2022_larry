@@ -147,6 +147,26 @@ export class DatabaseService {
     });
   }
 
+  getConsentCheck() {
+    return new Promise((resolve, reject) => {
+      console.log('get consent');
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            if (v.data() == null || v.data() == undefined || v.data()['consent'] == null || v.data()['consent'] == undefined) {
+              console.log('consent info undefined');
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve(false);
+      }
+    });
+  }
+
   uploadConsent(consentInfo: boolean) {
     const userData = {
       consent: consentInfo,
