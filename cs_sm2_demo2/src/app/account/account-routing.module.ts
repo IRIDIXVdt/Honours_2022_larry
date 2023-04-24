@@ -19,7 +19,11 @@ const routes: Routes = [
   {
     path: 'email-verify',
     loadChildren: () => import('./email-verify/email-verify.module').then( m => m.EmailVerifyPageModule)
+  },  {
+    path: 'consent',
+    loadChildren: () => import('./consent/consent.module').then( m => m.ConsentPageModule)
   },
+
 ];
 
 @NgModule({

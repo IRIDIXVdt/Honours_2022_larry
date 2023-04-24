@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Task Page</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ng-container *ngIf="false">
+      <!-- test purpose -->
       <ion-button (click)="displayLocalStorage()" class="ion-padding-end" slot="end" color="primary" fill="clear">
         Display Storage
       </ion-button>
@@ -11,155 +14,159 @@
       <ion-button (click)="displayLocalCompleted()" class="ion-padding-end" slot="end" color="primary" fill="clear">
         Display Completed
       </ion-button>
+      <ion-button (click)="currentTermItemDisplay()" class="ion-padding-end" slot="end" color="primary"
+        fill="clear">Current Term</ion-button>
+      <ion-button (click)="clearCache()" class="ion-padding-end" slot="end" color="primary" fill="clear">clear
+        cache</ion-button>
     </ng-container>
-    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" class="desktopItem"
-      (click)="answer()" slot="end" color="primary" fill="clear">
-      Submit
-    </ion-button>
-    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" class="desktopItem"
-      (click)="check()" slot="end" color="primary" fill="clear">
-      Display Answer
-    </ion-button>
-  </ion-toolbar>
-  <ion-toolbar class="ion-padding-horizontal">
-    <!-- question section -->
-    <ng-container *ngIf="!sessionEnd">
-      <ng-container *ngIf="currentTermItem">
-        <ion-label>
-          {{currentTermItem.qaPair[0].question}}
-        </ion-label>
-        <div *ngIf="displayAnswer" slot="end" class="rangeSection">
-          <ion-range [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true" [min]="0" [max]="5">
-          </ion-range>
-        </div>
-      </ng-container>
+    <ng-container>
+      <ion-button class="ion-padding-end" slot="end" color="primary" fill="clear" id="helpButton">Help</ion-button>
+      <ion-popover trigger="helpButton" triggerAction="hover" size="auto">
+        <ng-template>
+          <ion-content class="ion-padding">
+
+            <h3>This is a flashcard question website.</h3>
+            <p>The question shows up first.</p>
+            <p>You can <b>slide right/click on the card to see the answer</b>.</p>
+
+            <h3>After you see the answer.</h3>
+            <p>Select a number that best describes how well you can answer the question.</p>
+            <p>Example:</p>
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col *ngFor="let item of emotionSVG; let index = index" size="2">
+                  <ion-button fill="clear">
+                    <img src="{{item.address}}" class="{{item.class}}">
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+            <p>Hover over one of the buttons to see a piece of text describing the number:</p>
+            <p>Example:</p>
+            <ion-label color="secondary">
+              'correct response recalled with serious difficulty - 3'</ion-label>
+            <p>Click on one of the buttons to submit your answer.</p>
+
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+
     </ng-container>
   </ion-toolbar>
-  <ion-toolbar class="ion-padding-horizontal">
-    <!-- answer section -->
-    <ng-container *ngIf="!sessionEnd">
-      <ng-container *ngIf="currentTermItem && displayAnswer">
-        <ion-label>
-          {{currentTermItem.qaPair[0].answer}}
-        </ion-label>
-        <ion-label class="desktopItem" class="userMessage" slot="end" color="secondary">
-          {{userAnswerMessage[userAnswer]}}
-        </ion-label>
-      </ng-container>
-    </ng-container>
-  </ion-toolbar>
-  <!-- <ion-toolbar class="ion-padding-horizontal">
-  </ion-toolbar> -->
   <div *ngIf="!sessionEnd">
     <ion-progress-bar [value]="todayProgress"></ion-progress-bar>
   </div>
 </ion-header>
-
 <ion-content>
-  <ng-container *ngIf="sessionEnd">
-    <!-- Congratulations! You have finished this deck for now. -->
-    <div class="centerText">
-      <p>Congratulations! You have finished this deck for now.</p>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="!sessionEnd">
-
-    <div class="ionMaxContent" *ngIf="currentTermItem && qList.length>0">
-      <div class="ion-padding">
-        <!-- <div>{{currentTermItem.id}}</div> -->
-        <ion-item lines="none">
-          <ion-card *ngIf="currentTermItem.background.length>1">
-            <div class="ion-padding" [innerHTML]="currentTermItem.background"></div>
-          </ion-card>
-        </ion-item>
-
-        <!-- <ion-item color="light">
-          {{currentTermItem.qaPair[0].question}}
-        </ion-item> -->
-
-        <ng-container *ngIf="currentTermItem.type === 'mu'">
-          <ion-item *ngFor="let choiceItem of currentTermItem.wrongAnswer">
-            &#8226; {{choiceItem.content}}
-          </ion-item>
-        </ng-container>
-
-        <!-- <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'df'">
-          <ion-input class="centerText" #codeInput [(ngModel)]="userCode" placeholder="Your Answer here">
-          </ion-input>
-        </ion-item>
-        <ion-item lines="none" class="answer" *ngIf="currentTermItem.type === 'mu'">
-          <ion-input class="centerText" #multiInput [(ngModel)]="userMulti" placeholder="Your selection here"
-            maxlength="1"></ion-input>
-        </ion-item> -->
-
-        <!-- <ion-item lines="none" *ngIf="displayAnswer">
-          <div [innerHTML]="currentTermItem.qaPair[0].answer"></div>
-        </ion-item> -->
-      </div>
-    </div>
-
-    <!-- <div *ngIf="!currentTermItem">
-      <ion-progress-bar type="indeterminate"></ion-progress-bar>
-    </div> -->
 
 
-    <!-- <div class="bottomText">
-      <div class="centerText" *ngIf="displayAnswer">
-        {{ userAnswerMessage[userAnswer] }}
-      </div>
-    </div> -->
+  <ion-slides (ionSlideReachEnd)="seeAnswer()" (click)="slideOnClick()" [options]="slideOpts" id="click-trigger"
+    #slides>
+    <ion-slide>
+      <ion-card *ngIf="currentTermItem && qList.length>0" color="secondary">
+        <!-- <ion-card-header>
+          <ion-card-title>Question</ion-card-title>
+        </ion-card-header> -->
 
-    <!-- <div class="bottomSlides">
-      <div *ngIf="displayAnswer" class="rangeSection">
-        <ion-range [pin]="true" [pinFormatter]="pinFormatter" [(ngModel)]="userAnswer" [ticks]="true" [snaps]="true"
-          [min]="0" [max]="5"></ion-range>
-      </div>
-    </div> -->
+        <ion-card-content>
+          <!-- {{currentTermItem.qaPair[0].question}} -->
+          <div style="font-size: 40px;">{{currentTermItem.qaPair[0].question}}</div>
+          <ng-container *ngIf="currentTermItem.type === 'mu'">
+            <ion-item *ngFor="let choiceItem of currentTermItem.wrongAnswer">
+              &#8226; {{choiceItem.content}}
+            </ion-item>
+          </ng-container>
+        </ion-card-content>
 
-    <!-- <div class="bottomButtons">
-      <ion-button size="large" class="ion-padding-end" (click)="check()" *ngIf="currentTermItem && !displayAnswer">
-        Display Answer
-      </ion-button>
-      <ion-button size="large" class="ion-padding-end" (click)="answer()" *ngIf="displayAnswer">Submit</ion-button>
-    </div> -->
+        <ion-card-header *ngIf="currentTermItem.background.length>0">
+          <ion-card-title>Focus</ion-card-title>
+        </ion-card-header>
+        <ion-card-content *ngIf="currentTermItem.background.length>0">
+          <span class="ion-padding" [innerHTML]="currentTermItem.background"></span>
+        </ion-card-content>
+      </ion-card>
+      <ion-card *ngIf="sessionEnd" color="primary">
+        <ion-card-header>
+          <ion-card-title>Congratulations! You have finished today's tasks.</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card *ngIf="currentTermItem && qList.length>0" color="success">
+        <ion-card-header>
+          <ion-card-title>Answer</ion-card-title>
+        </ion-card-header>
 
-    <!-- <div class="bottomRightButtons">
-      <ion-button size="large" class="ion-padding-end" (click)="this.los.resetAnswerAndProgress()">
-        More
-      </ion-button>
-    </div> -->
+        <ion-card-content>
+          <div style="font-size: 25px;">{{currentTermItem.qaPair[0].answer}}</div>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
 
-    <div class="ion-padding-bottom">
-    </div>
-  </ng-container>
 </ion-content>
+
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="ion-padding-horizontal">
-    <ion-range *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="phoneItem" [(ngModel)]="userAnswer"
-      [ticks]="true" [snaps]="true" [min]="0" [max]="5">
-    </ion-range>
-  </ion-toolbar>
-  <ion-toolbar class="ion-padding-horizontal">
-    <ion-label *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="phoneItem" color="secondary">
-      {{userAnswerMessage[userAnswer]}}</ion-label>
 
-    <ion-button *ngIf="!sessionEnd && currentTermItem && displayAnswer" class="ion-padding-end" class="phoneItem"
-      (click)="answer()" slot="end" color="primary" fill="clear">
-      Submit
-    </ion-button>
-    <ion-button *ngIf="!sessionEnd && currentTermItem && !displayAnswer" class="ion-padding-end" class="phoneItem"
-      (click)="check()" slot="end" color="primary" fill="clear">
-      Display Answer
-    </ion-button>
+  <ion-grid *ngIf="!sessionEnd && currentTermItem && displayAnswer">
+    <ion-row>
+      <ion-col>
+        <ion-label>
+          How well do you remember the answer?
+          <ion-icon id="selectionHelp" color="primary" name="information-circle-outline"></ion-icon>
+        </ion-label>
+      </ion-col>
+      <ion-popover trigger="selectionHelp" triggerAction="hover" side="top" alignment="center">
+        <ng-template>
+          <ion-content class="ion-padding">
+            Click on one of the six buttons to see which one best matches your understanding of the question.
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col *ngFor="let item of emotionSVG; let index = index" size="2">
+                  <ion-button fill="clear">
+                    <img src="{{item.address}}" class="{{item.class}}">
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
 
-  </ion-toolbar>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </ion-row>
 
-  <!-- <ng-container *ngIf="!sessionEnd && currentTermItem && qList.length>0">
-    <ion-button size="small" fill="clear" class="ion-padding-horizontal">
-      {{currentTermItem.id}}
-    </ion-button>
-  </ng-container> -->
+    <ion-row class="ion-justify-content-center" >
+      <ion-col *ngFor="let item of emotionSVG; let index = index" size="auto">
+        <!-- <ion-button fill="clear" (mouseover)="buttonSection(index)" (mouseout)="buttonAway()" (click)="answer()">
+          <img src="{{item.address}}" class="{{item.class}}">
+        </ion-button> -->
+        <ion-button *ngIf="index == hoverIndex" fill="solid" (click)="buttonSection(index)">
+          <img src="{{item.address}}" class="{{item.class}}">
+        </ion-button>
+
+        <ion-button *ngIf="index != hoverIndex" fill="clear" (click)="buttonSection(index)">
+          <img src="{{item.address}}" class="{{item.class}}">
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><ion-label color="medium">{{userAnswerMessage[hoverIndex]}}</ion-label></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><ion-button fill="clear" disabled="{{hoverIndex == 6}}" (click)="answer()">Submit</ion-button></ion-col>
+    </ion-row>
+    <!-- <ion-row>
+      <ion-col size="auto">
+        <ion-item>
+          <ion-checkbox slot="start" [(ngModel)]="confirmMessage"
+            (ionChange)="updateSelectionCheckBox()"></ion-checkbox>
+          <ion-label color="medium">Hide confirmation message.</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row> -->
+  </ion-grid>
   <div *ngIf="!currentTermItem && !sessionEnd">
     <ion-progress-bar type="indeterminate"></ion-progress-bar>
   </div>

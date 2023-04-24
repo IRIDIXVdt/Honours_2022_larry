@@ -23,6 +23,12 @@ export class FirebaseService {
     return this.db.collection(collection).get();
   }
 
+  getCOSC211Collection() {
+    return this.db.collection("QuestionCollection", ref =>
+      ref.orderBy("des", "asc")
+    ).get();
+  }
+
   getCollectionWithOrder(collection, order) {
     return this.db.collection(collection, ref =>
       ref.orderBy(order, "asc")).get();

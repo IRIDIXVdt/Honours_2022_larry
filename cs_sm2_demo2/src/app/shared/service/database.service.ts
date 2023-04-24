@@ -45,6 +45,7 @@ export class DatabaseService {
     return new Promise((resolve, reject) => {
       this.fas.getDocument("QuestionCollection", id)
         .subscribe((res) => {
+          console.log(res);
           resolve({
             id: res.id,
             type: res.data()['type'],
@@ -125,10 +126,105 @@ export class DatabaseService {
     });
   }
 
+  getPerformanceData() {
+    return new Promise((resolve, reject) => {
+      this.fas.getCollection("userAnswerRecord")
+        .subscribe((res) => {
+          const receiveValue = res.docs.map(e => {//value 
+            return {//store value from result array
+              id: e.id,//document id
+              EF: e.data()['EF'],
+              completeTime: e.data()['completeTime'],
+              n: e.data()['n'],
+              q: e.data()['q'],
+              questionid: e.data()['questionid'],
+              userId: e.data()['userId']
+            }
+          });
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
+  getConsent() {
+    return new Promise((resolve, reject) => {
+      console.log('get consent');
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            if (v.data() == null || v.data() == undefined || v.data()['consent'] == null || v.data()['consent'] == undefined) {
+              console.log('consent info undefined');
+              resolve(false);
+            } else {
+              console.log(v.data());
+              resolve(v.data()['consent']);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve(false);
+      }
+    });
+  }
+
+  getConsentCheck() {
+    return new Promise((resolve, reject) => {
+      console.log('get consent');
+      try {
+        this.fas.getDocument('users', JSON.parse(localStorage.getItem('user')).uid)
+          .subscribe(v => {
+            if (v.data() == null || v.data() == undefined || v.data()['consent'] == null || v.data()['consent'] == undefined) {
+              console.log('consent info undefined');
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          })
+      } catch {
+        console.log('error');
+        resolve(false);
+      }
+    });
+  }
+
+  uploadConsent(consentInfo: boolean) {
+    const userData = {
+      consent: consentInfo,
+    }
+    const id = JSON.parse(localStorage.getItem('user')).uid;
+    console.log('consent', id, userData);
+    return this.fas.getUser(id).update(userData);
+  }
+
+  getCOSC211SessionData() {
+    //deprecated
+    return new Promise((resolve, reject) => {
+      this.fas.getCOSC211Collection().subscribe((res) => {
+        const receiveValue = res.docs.map(e => {//value 
+          return {//store value from result array
+            id: e.id,//document id
+            sCode: e.data()['sCode'],
+            sTime: e.data()['sTime'],
+            sNumber: e.data()['sNumber'],
+          }
+        });
+        resolve(receiveValue);//return value in promise
+      }, (err: any) => {
+        console.log(err);
+        reject();
+        this.als.displayMessage('Fail to fetch data from database. Please try again.');
+      })
+    });
+  }
+
   getSessionData(code) {
     return new Promise((resolve, reject) => {//invoke method on filter type
       (code == 'All' ? this.fas.getCollection("sessionCollection")
-        : this.fas.getSessionWithFilter('sessionCollection', code, 'sTime'))
+        : this.fas.getSessionWithFilter('sessionCollection', code, 'des'))
         .subscribe((res) => {//retrieve data which contains an array of each question
           const receiveValue = res.docs.map(e => {//value 
             return {//store value from result array
@@ -234,7 +330,7 @@ export class DatabaseService {
     return this.fas.getUser(id).update(userSessionData);
   }
 
-  saveDailyLimitChangesToCloud(limit: number){
+  saveDailyLimitChangesToCloud(limit: number) {
     const userData = {
       dailyLimit: limit,
     }

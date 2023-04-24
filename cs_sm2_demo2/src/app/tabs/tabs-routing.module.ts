@@ -61,6 +61,11 @@ const routes: Routes = [
         path: '',
         redirectTo: '/tabs/account',
         pathMatch: 'full'
+      },
+      {
+        path: 'consent',
+        canActivate: [LoginGuard],
+        loadChildren: () => import('../account/consent/consent.module').then(m => m.ConsentPageModule)
       }
     ]
   },

@@ -85,6 +85,8 @@ export class AuthService {
       await this.storeSesssion();
       // //fetch user previous progress
       await this.storeDailyLimit();
+      // fetch consent information
+      await this.storeConsent();
       console.log(localStorage);
       this.router.navigate([this.homeAddress]);
     } catch (error) {
@@ -149,6 +151,11 @@ export class AuthService {
       this.los.setLocalData('userList', currentSessionList);
     }
     console.log('store session', this.los.fetchLocalData('userList'));
+  }
+
+  async storeConsent() {
+    const consent = await this.das.getConsent();
+    this.los.setLocalData('consent', consent);
   }
 
   // Sign up with email/password

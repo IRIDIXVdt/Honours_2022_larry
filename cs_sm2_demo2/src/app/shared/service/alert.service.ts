@@ -36,11 +36,21 @@ export class AlertService {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       message: choiceMessage,
-      buttons: ['Cancel', 'Yes']
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+        },
+      ],
     });
     await alert.present();
     const { role } = await alert.onDidDismiss();
-    if (role != "cancel")
+    console.log(role);
+    if (role == "confirm")
       return this.startLoading();
   }
 

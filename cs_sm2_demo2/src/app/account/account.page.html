@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>User Profile</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ng-container *ngIf="false">
       <ion-button (click)="this.los.questionRemove()" class="ion-padding-end" slot="end" color="primary" fill="clear">
         Remove Question Storage
@@ -20,6 +23,9 @@
     <ion-button *ngIf="this.aus.isLogin()" class="ion-padding-end" slot="end" color="primary" fill="clear"
       (click)='this.aus.signOut()'>
       Sign Out
+    </ion-button>
+    <ion-button class="ion-padding-end" slot="end" color="primary" fill="clear" (click)="savePerformance()">
+      Save Collection
     </ion-button>
   </ion-toolbar>
 </ion-header>
@@ -101,7 +107,8 @@
                         <div>
                           <ion-label>&nbsp;</ion-label>
                         </div>
-                        <ion-label>Maximum Daily Limit: </ion-label><ion-label color="primary">{{dailyLimit}}</ion-label>
+                        <ion-label>Maximum Daily Limit: </ion-label><ion-label
+                          color="primary">{{dailyLimit}}</ion-label>
                         <div></div>
                         <div>
                           <ion-range [(ngModel)]="dailyLimit" [min]="20" [max]="200">

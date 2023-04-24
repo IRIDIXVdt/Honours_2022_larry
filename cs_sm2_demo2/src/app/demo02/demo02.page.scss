@@ -1,59 +1,61 @@
-.answer {
-    color: #3880ff;
-}
-
-ion-range {
-    --bar-background: #a2d2ff;
-    --bar-background-active: #0083f6;
+ion-card {
+    // width: 30vw;
+    height: 60vh;
+    width: min(1200px, 90vw);
 }
 
 
-
-.submitSection {
-    // position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
+ion-row {
+    text-align: center;
 }
 
-.backgroundMaterial {
-    border-style: solid;
+.big-font{
+ font-size: 50px;       
 }
 
-
-@media (max-width: 991px) {
-    .phoneItem {
-        display: block;
-    }
-    .rangeSection {
-        // left: 50%;
-        // transform: translate(50%, 0);
-        display: none;
-        width: 40%;
-    }
-
-    .desktopItem {
-        display: None;
-    }
+ion-grid {
+    max-width: 1200px;
 }
 
-@media (min-width: 992px) {
-    .desktopItem {
-        display: block;
-    }
+.selections {
+    text-align: center;
+    max-width: 600px;
+}
 
-    .userMessage {
-        width: 300px;
-    }
+ion-col ion-button {
+    min-width: 60px;
+    // --background-hover: green;
+    // --background: #f9f4f4;
+}
 
-    .rangeSection {
-        // left: 50%;
-        // transform: translate(50%, 0);
-        display: block;
-        // width: 40%;
-        width: 250px;
-    }
+// .ion-card {
+//     font-size: 100px;
+// }
 
-    .phoneItem {
-        display: none;
-    }
+.filter-00 {
+    filter: invert(46%) sepia(18%) saturate(1959%) hue-rotate(314deg) brightness(95%) contrast(98%);
+}
+
+.filter-01 {
+    filter: invert(58%) sepia(85%) saturate(446%) hue-rotate(331deg) brightness(98%) contrast(87%);
+}
+
+.filter-02 {
+    filter: invert(91%) sepia(61%) saturate(5618%) hue-rotate(319deg) brightness(103%) contrast(84%);
+}
+
+.filter-03 {
+    filter: invert(100%) sepia(34%) saturate(4267%) hue-rotate(332deg) brightness(106%) contrast(84%);
+}
+
+.filter-04 {
+    filter: invert(100%) sepia(64%) saturate(1823%) hue-rotate(31deg) brightness(104%) contrast(85%);
+}
+
+.filter-05 {
+    filter: invert(69%) sepia(93%) saturate(354%) hue-rotate(67deg) brightness(97%) contrast(94%);
+}
+
+img {
+    width: 32px;
 }

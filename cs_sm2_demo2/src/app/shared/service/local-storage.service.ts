@@ -113,6 +113,15 @@ export class LocalStorageService {
     // console.log(JSON.parse(localStorage.getItem('answerQuestion')));
   }
 
+  getCheckBox() {
+    console.log(JSON.parse(localStorage.getItem('confirmSubmit')));
+    if (JSON.parse(localStorage.getItem('confirmSubmit'))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonItem } from '@ionic/angular';
 import { threadId } from 'worker_threads';
@@ -9,6 +9,7 @@ import { DatabaseService } from '../shared/service/database.service';
 import { LocalStorageService } from '../shared/service/local-storage.service';
 import { TimeService } from '../shared/service/time.service';
 import { UserRecordService } from '../shared/service/user-record.service';
+import { IonSlides } from '@ionic/angular';
 
 @Component({
   selector: 'app-demo02',
@@ -16,7 +17,17 @@ import { UserRecordService } from '../shared/service/user-record.service';
   styleUrls: ['./demo02.page.scss'],
 })
 export class Demo02Page implements OnInit {
+  @ViewChild('slides', { static: true }) slides: IonSlides;
   homeAddress: string = 'tabs/account';
+
+  emotionSVG = [
+    { value: 0, address: '../../assets/icon/emotion/00.svg', class: 'filter-00' },
+    { value: 1, address: '../../assets/icon/emotion/01.svg', class: 'filter-01' },
+    { value: 2, address: '../../assets/icon/emotion/02.svg', class: 'filter-02' },
+    { value: 3, address: '../../assets/icon/emotion/03.svg', class: 'filter-03' },
+    { value: 4, address: '../../assets/icon/emotion/04.svg', class: 'filter-04' },
+    { value: 5, address: '../../assets/icon/emotion/05.svg', class: 'filter-05' },
+  ]
   // qList = questionList;
 
   //stop using qList for front end display: now current Term item handles it
@@ -26,11 +37,13 @@ export class Demo02Page implements OnInit {
   displayAnswer: boolean;
   // disableDisplayAnswer: boolean;
   sessionEnd: boolean;
+  confirmMessage: boolean;
   userCode: string = '';
   userMulti: string = '';
   loaded: boolean = false;
   userAnswer: number = 3;
   todayProgress: number = 1;
+  hoverIndex: number = 6;
   userAnswerMessage: string[] = [
     'complete blackout - 0',
     'incorrect response; the correct one remembered - 1',
@@ -38,6 +51,7 @@ export class Demo02Page implements OnInit {
     'correct response recalled with serious difficulty - 3',
     'correct response after a hesitation - 4',
     'perfect response - 5',
+    ' - '
   ]
   //contains a list of all the questions
   sessionList: any[];
@@ -51,7 +65,6 @@ export class Demo02Page implements OnInit {
     public tms: TimeService,
   ) {
     // this.fetchFromRemoteDatabase();
-
   }
 
   ngOnInit() { }
@@ -67,6 +80,14 @@ export class Demo02Page implements OnInit {
     } else {
       this.todayProgress = 0;
     }
+  }
+
+  buttonSection(index) {
+    // console.log('button section', index)
+    this.hoverIndex = index;
+  }
+  buttonAway() {
+    // this.hoverIndex = 6;
   }
 
   //when user has not select any session, 
@@ -107,6 +128,8 @@ export class Demo02Page implements OnInit {
         await this.decideQuestionList();
         this.updateQuestionDisplay();
       }
+      this.slides.slideTo(0);
+      this.confirmMessage = this.los.getCheckBox();
     }
   }
 
@@ -117,6 +140,21 @@ export class Demo02Page implements OnInit {
   inProgress() {
     const progress = this.los.fetchLocalData('qList');
     return progress != undefined && progress != null;
+  }
+
+  seeAnswer() {
+    console.log('reveal');
+    if (!this.sessionEnd) {
+      this.check();
+    }
+  }
+
+  async slideOnClick() {
+    console.log('slide on click', this.slides.isEnd());
+    if (await this.slides.isEnd())
+      this.slides.slidePrev();
+    else
+      this.slides.slideNext();
   }
 
   //when user first time opens program, the software decides task list
@@ -221,8 +259,15 @@ export class Demo02Page implements OnInit {
       this.urs.uploadAnswerAndProgress();
       this.los.setLocalData('qList', null);
     } else {
+      console.log('before loading current Term')
       this.currentTermItem = await this.urs.fetchQuestionWithId(this.qList[0].qId);
     }
+  }
+
+  updateSelectionCheckBox() {
+    // this.confirmMessage = !this.confirmMessage;
+    console.log('updateSelection', this.confirmMessage);
+    this.los.setLocalData('confirmSubmit', this.confirmMessage);
   }
 
   /*
@@ -236,21 +281,42 @@ export class Demo02Page implements OnInit {
           if no repeat time left, store info end this
   */
   answer() {
-    const answer = this.userAnswer;
+    // const answer = this.userAnswer;
+    const answerHover = this.hoverIndex;
+    // this.confirmMessage = this.los.getCheckBox();
+    // if (this.confirmMessage) {
+    //   this.answerHelper();
+    // } else {
+    //   this.als.presentChoice('Button <b>' + answerHover + '</b> Selected').then(loadingItem => {
+    //     if (loadingItem) {
+    //       this.answerHelper();
+    //       loadingItem.dismiss();
+    //     }
+    //   })
+    // }
+    this.answerHelper();
+  }
+
+  answerHelper() {
+    const answerHover = this.hoverIndex;
+    this.hoverIndex = 6;
+    if (answerHover == 6) {
+      console.log('error* answer = 6');
+    }
     //first store qList in local, in case reload
     this.los.setLocalData('qList', this.qList);
     var currentItem = this.qList.shift();//pop the very first item of the list
     // var currentItem = this.currentTermItem;
 
     if (currentItem.repeatTime == -1) {//first time answering a new item
-      currentItem.q = answer;//first store the quality of response
+      currentItem.q = answerHover;//first store the quality of response
 
       //if this item belongs a previous progress, also update its EF
       if (currentItem.n != 0) {
         currentItem.EF = this.efCalculator(currentItem.EF, currentItem.q);
       }
 
-      if (this.qualityCheck(answer) == 'g') {//quality easy
+      if (this.qualityCheck(answerHover) == 'g') {//quality easy
         //remove and store directly
         this.urs.storeLocalInfo(currentItem);
       } else {
@@ -258,10 +324,10 @@ export class Demo02Page implements OnInit {
         this.insertItem(currentItem);
       }
     } else {//second or more time answering
-      if (this.qualityCheck(answer) == 'p') {
+      if (this.qualityCheck(answerHover) == 'p') {
         currentItem.repeatTime = 3;
         this.insertItem(currentItem);
-      } else if (this.qualityCheck(answer) == 'm') {
+      } else if (this.qualityCheck(answerHover) == 'm') {
         this.insertItem(currentItem);
       } else {
         if (currentItem.repeatTime == 1) {
@@ -274,10 +340,10 @@ export class Demo02Page implements OnInit {
           this.insertItem(currentItem);
         }
       }
-      // this.userAnswer = 3;
     }
 
     //update question display
+    this.slides.slideTo(0);
     this.updateQuestionDisplay();
 
     this.updateEnableDisplayAnswer();
@@ -291,6 +357,7 @@ export class Demo02Page implements OnInit {
     this.userMulti = '';
     this.userAnswer = 3;
     this.updateQuestionProgress();
+
   }
 
   qualityCheck(answer: number) {
@@ -333,7 +400,9 @@ export class Demo02Page implements OnInit {
   }
 
   displayLocalStorage() {
-    console.log(this.los.fetchLocalData('qList'));
+    // console.log(this.los.fetchLocalData('qList'));
+    console.log(localStorage);
+
     // console.log(this.qList);
   }
 
@@ -344,4 +413,102 @@ export class Demo02Page implements OnInit {
   displayLocalCompleted() {
     console.log(this.los.fetchLocalData('answerQuestion'));
   }
+
+  currentTermItemDisplay() {
+    console.log(this.currentTermItem);
+  }
+
+  clearCache() {
+    localStorage.clear();
+    // this.los.setLocalData('previousProgress', null);
+  }
+
+
+  slideOpts = {
+    on: {
+      beforeInit() {
+        const swiper = this;
+        swiper.classNames.push(`${swiper.params.containerModifierClass}flip`);
+        swiper.classNames.push(`${swiper.params.containerModifierClass}3d`);
+        const overwriteParams = {
+          slidesPerView: 1,
+          slidesPerColumn: 1,
+          slidesPerGroup: 1,
+          watchSlidesProgress: true,
+          spaceBetween: 0,
+          virtualTranslate: true,
+        };
+        swiper.params = Object.assign(swiper.params, overwriteParams);
+        swiper.originalParams = Object.assign(swiper.originalParams, overwriteParams);
+      },
+      setTranslate() {
+        const swiper = this;
+        const { $, slides, rtlTranslate: rtl } = swiper;
+        for (let i = 0; i < slides.length; i += 1) {
+          const $slideEl = slides.eq(i);
+          let progress = $slideEl[0].progress;
+          if (swiper.params.flipEffect.limitRotation) {
+            progress = Math.max(Math.min($slideEl[0].progress, 1), -1);
+          }
+          const offset$$1 = $slideEl[0].swiperSlideOffset;
+          const rotate = -180 * progress;
+          let rotateY = rotate;
+          let rotateX = 0;
+          let tx = -offset$$1;
+          let ty = 0;
+          if (!swiper.isHorizontal()) {
+            ty = tx;
+            tx = 0;
+            rotateX = -rotateY;
+            rotateY = 0;
+          } else if (rtl) {
+            rotateY = -rotateY;
+          }
+
+          $slideEl[0].style.zIndex = -Math.abs(Math.round(progress)) + slides.length;
+
+          if (swiper.params.flipEffect.slideShadows) {
+            // Set shadows
+            let shadowBefore = swiper.isHorizontal() ? $slideEl.find('.swiper-slide-shadow-left') : $slideEl.find('.swiper-slide-shadow-top');
+            let shadowAfter = swiper.isHorizontal() ? $slideEl.find('.swiper-slide-shadow-right') : $slideEl.find('.swiper-slide-shadow-bottom');
+            if (shadowBefore.length === 0) {
+              shadowBefore = swiper.$(`<div class="swiper-slide-shadow-${swiper.isHorizontal() ? 'left' : 'top'}"></div>`);
+              $slideEl.append(shadowBefore);
+            }
+            if (shadowAfter.length === 0) {
+              shadowAfter = swiper.$(`<div class="swiper-slide-shadow-${swiper.isHorizontal() ? 'right' : 'bottom'}"></div>`);
+              $slideEl.append(shadowAfter);
+            }
+            if (shadowBefore.length) shadowBefore[0].style.opacity = Math.max(-progress, 0);
+            if (shadowAfter.length) shadowAfter[0].style.opacity = Math.max(progress, 0);
+          }
+          $slideEl
+            .transform(`translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`);
+        }
+      },
+      setTransition(duration) {
+        const swiper = this;
+        const { slides, activeIndex, $wrapperEl } = swiper;
+        slides
+          .transition(duration)
+          .find('.swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left')
+          .transition(duration);
+        if (swiper.params.virtualTranslate && duration !== 0) {
+          let eventTriggered = false;
+          // eslint-disable-next-line
+          slides.eq(activeIndex).transitionEnd(function onTransitionEnd() {
+            if (eventTriggered) return;
+            if (!swiper || swiper.destroyed) return;
+
+            eventTriggered = true;
+            swiper.animating = false;
+            const triggerEvents = ['webkitTransitionEnd', 'transitionend'];
+            for (let i = 0; i < triggerEvents.length; i += 1) {
+              $wrapperEl.trigger(triggerEvents[i]);
+            }
+          });
+        }
+      }
+    }
+  };
 }

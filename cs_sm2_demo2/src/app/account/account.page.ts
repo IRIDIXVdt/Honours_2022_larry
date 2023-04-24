@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertService } from '../shared/service/alert.service';
 import { AuthService } from '../shared/service/auth.service';
 import { DatabaseService } from '../shared/service/database.service';
@@ -22,6 +23,7 @@ export class AccountPage implements OnInit {
   // allowJoinSession: boolean;
   dailyLimit: number;
   //setting limit to what the user want to do every day
+  consentPage = 'tabs/consent';
   constructor(
     public aus: AuthService,
     public afs: FirebaseService,
@@ -29,13 +31,14 @@ export class AccountPage implements OnInit {
     public als: AlertService,
     public los: LocalStorageService,
     public urs: UserRecordService,
+    public router: Router,
   ) { }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     console.log('will enter')
   }
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
     console.log('enter');
     // this.allowJoinSession = true;
     this.sList = this.los.fetchLocalData('allList');
@@ -46,8 +49,9 @@ export class AccountPage implements OnInit {
       // this.allowJoinSession = false;
       this.sessionList = this.los.fetchLocalData('userList');
       console.log(this.sList, this.sessionList);
-      if (!this.sessionList){ //still no session
+      if (!this.sessionList) { //still no session
         this.sessionList = this.los.fetchLocalData('userList');
+        /*
         this.als.presentChoice("Do you want to join COSC 211 Session?").then(loadingItem => {
           if (loadingItem) {//throw loadingItem, dismiss it when action is finished
             loadingItem.dismiss();
@@ -57,11 +61,31 @@ export class AccountPage implements OnInit {
             console.log('dismiss');
           }
         })
+
+        */
+        this.das.addUserSession('PR9r9Tigbv7DFx9xLUUn');
+        //find data
+        this.ionViewDidEnter();
+
+      }
+    } else if (!this.aus.isAdmin() && this.los.userStatus() && this.sessionList) {
+      console.log('check consent form');
+      const nav = await this.das.getConsentCheck();
+      if (!nav) {
+        this.als.displayMessage('Please read through the consent form once before proceeding to the Task Page.').then(res => {
+          console.log('check consent form');
+          this.los.setLocalData('consent', false);
+          this.das.uploadConsent(false);
+          this.router.navigate([this.consentPage]);
+        })
       }
     }
-    //to do: assign session instantly
   }
 
+  async savePerformance() {
+    const p = await this.das.getPerformanceData();
+    console.log(p);
+  }
   loadDailyLimit() {
     this.dailyLimit = this.los.fetchLocalData('dailyLimit');
   }
