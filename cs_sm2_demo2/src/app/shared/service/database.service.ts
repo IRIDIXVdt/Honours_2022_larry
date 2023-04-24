@@ -126,6 +126,30 @@ export class DatabaseService {
     });
   }
 
+  getPerformanceData() {
+    return new Promise((resolve, reject) => {
+      this.fas.getCollection("userAnswerRecord")
+        .subscribe((res) => {
+          const receiveValue = res.docs.map(e => {//value 
+            return {//store value from result array
+              id: e.id,//document id
+              EF: e.data()['EF'],
+              completeTime: e.data()['completeTime'],
+              n: e.data()['n'],
+              q: e.data()['q'],
+              questionid: e.data()['questionid'],
+              userId: e.data()['userId']
+            }
+          });
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   getConsent() {
     return new Promise((resolve, reject) => {
       console.log('get consent');
