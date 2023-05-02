@@ -126,6 +126,30 @@ export class DatabaseService {
     });
   }
 
+  getQuestionCollection() {
+    return new Promise((resolve, reject) => {
+      this.fas.getCollection("QuestionCollection")
+        .subscribe((res) => {
+          const receiveValue = res.docs.map(e => {//value 
+            return {//store value from result array
+              id: e.id,//document id
+              background: e.data()['background'],
+              course: e.data()['course'],
+              des: e.data()['des'],
+              qaPair: e.data()['qaPair'],
+              type: e.data()['type'],
+              wrongAnswer: e.data()['wrongAnswer'],
+            }
+          });
+          resolve(receiveValue);//return value in promise
+        }, (err: any) => {//catch error
+          console.log(err);
+          reject();//reject and display error message
+          this.als.displayMessage('Fail to fetch data from database. Please try again.');
+        })
+    });
+  }
+
   getPerformanceData() {
     return new Promise((resolve, reject) => {
       this.fas.getCollection("userAnswerRecord")
