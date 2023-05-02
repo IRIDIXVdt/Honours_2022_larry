@@ -84,7 +84,9 @@ export class AccountPage implements OnInit {
 
   async savePerformance() {
     const p = await this.das.getPerformanceData();
-    console.log(p);
+    // const p = await this.das.getQuestionCollection();
+    
+    console.log(JSON.stringify(p));
   }
   loadDailyLimit() {
     this.dailyLimit = this.los.fetchLocalData('dailyLimit');
